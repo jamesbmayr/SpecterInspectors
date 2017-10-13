@@ -3,7 +3,6 @@
 	var fs       = require("fs")
 	var mongo    = require("mongodb").MongoClient
 	var database = "mongodb://" + getEnvironment("database_username") + ":" + getEnvironment("database_password") + getEnvironment("database_url")
-
 	module.exports = {}
 
 /*** logs ***/
@@ -46,7 +45,7 @@
 					domain:            "localhost",
 					database_username: "localhost",
 					database_password: "",
-					database_url:      "27017/ss"
+					database_url:      "27017/specterinspectors"
 				}
 			}
 
@@ -68,13 +67,14 @@
 
 				case "meta":
 					return '<meta charset="UTF-8"/>\
-							<meta name="description" content="Specters and Suspects is a game of ghosts and guesses."/>\
+							<meta name="description" content="Specter Inspectors is a game of ghosts and guesses."/>\
 							<meta name="keywords" content="game,ghost,guess,mystery,deduction,bluffing,team,deception"/>\
 							<meta name="author" content="James Mayr"/>\
-							<meta property="og:title" content="Specters and Suspects: a game of ghosts and guesses"/>\
-							<meta property="og:url" content="https://www.spectersandsuspects.com"/>\
-							<meta property="og:description" content="Specters and Suspects is a game of ghosts and guesses."/>\
-							<meta property="og:image" content="https://www.spectersandsuspects.com/banner.png"/>'
+							<meta property="og:title" content="Specter Inspectors: a game of ghosts and guesses"/>\
+							<meta property="og:url" content="https://www.specterinspectors.com"/>\
+							<meta property="og:description" content="Specter Inspectors is a game of ghosts and guesses."/>\
+							<meta property="og:image" content="https://www.specterinspectors.com/banner.png"/>\
+							<meta name="viewport" content="width=device-width, user-scalable=no"/>'
 				break
 
 				default:
@@ -182,6 +182,17 @@
 			return output
 		}
 
+	/* chooseRandom */
+		module.exports.chooseRandom = chooseRandom
+		function chooseRandom(options) {
+			if (!Array.isArray(options)) {
+				return false
+			}
+			else {
+				return options[Math.floor(Math.random() * options.length)]
+			}
+		}
+
 	/* getIP */
 		module.exports.getIP = getIP
 		function getIP(id, ip) {
@@ -207,7 +218,17 @@
 								country: data.country || null
 							}
 
-							storeData("sessions", {id: id}, {$push: {activity: activity}, $set: {"info.org": data.org, "info.isp": data.isp, "info.city": data.city, "info.state": data.regionName, "info.country": data.country, updated: new Date().getTime()}}, {}, function (data) {
+							var push = {}
+								push.activity = activity
+							var set = {}
+								set["info.org"]     = data.org
+								set["info.isp"]     = data.isp
+								set["info.city"]    = data.city
+								set["info.state"]   = data.regionName
+								set["info.country"] = data.country
+								set.updated         = new Date().getTime()
+
+							storeData("sessions", {id: id}, {$push: push, $set: set}, {}, function (data) {
 								logMessage("ip located")
 							})
 						})
@@ -222,75 +243,108 @@
 			}
 		}
 
+	/* sanitizeString */
+		module.exports.sanitizeString = sanitizeString
+		function sanitizeString(string) {
+			if (string.length > 0) {
+				return string.replace(/[^a-zA-Z0-9_\s\!\@\#\$\%\^\&\*\(\)\+\=\-\[\]\\\{\}\|\;\'\:\"\,\.\/\<\>\?]/gi, "")
+			}
+			else {
+				return ""
+			}
+		}
+
 /*** database ***/
 	/* getSession */
 		module.exports.getSession = getSession
 		function getSession(request, callback) {
-			var activity = {
-				time: new Date().getTime(),
-				url:  request.url,
-				post: request.post ? request.post.action : null
-			}
-
-			if (!request.cookie.session || request.cookie.session == null) {
-				request.session = {
-					id: generateRandom(),
-					created: new Date().getTime(),
-					updated: new Date().getTime(),
-					info: {
-						"ip":         request.ip,
-						"user-agent": request.headers["user-agent"],
-						"language":   request.headers["accept-language"],
-						name:         isBot(request.headers["user-agent"]),
-						org:          null,
-						isp:          null,
-						city:         null,
-						state:        null,
-						country:      null,
-					},
-					activity: [
-						activity,
-						{
-							time:         new Date().getTime(),
-							"ip":         request.ip,
-							"user-agent": request.headers["user-agent"],
-							"language":   request.headers["accept-language"],
-						}
-					]
+			// new activity
+				var activity = {
+					time: new Date().getTime(),
+					url:  request.url,
+					post: request.post ? request.post.action : null
 				}
 
-				storeData("sessions", null, request.session, {}, function (results) {
-					getIP(request.session.id, request.ip)
-					callback()
-				})
-			}
-			else {
-				storeData("sessions", {id: request.cookie.session}, {$push: {activity: activity}, $set: {updated: new Date().getTime()}}, {}, function (result) {
-					if (!result) {
-						request.cookie.session = false
-						getSession(request, callback) //try again
-					}
-					else if (result.info.ip !== request.ip) { //new location
-						request.session = result
-
-						var activity = {
-							time:         new Date().getTime(),
+			// new session
+				if (!request.cookie.session || request.cookie.session == null) {
+					request.session = {
+						id: generateRandom(),
+						created: new Date().getTime(),
+						updated: new Date().getTime(),
+						info: {
 							"ip":         request.ip,
 							"user-agent": request.headers["user-agent"],
 							"language":   request.headers["accept-language"],
-						}
+							name:         isBot(request.headers["user-agent"]),
+							org:          null,
+							isp:          null,
+							city:         null,
+							state:        null,
+							country:      null,
+						},
+						activity: [
+							activity,
+							{
+								time:         new Date().getTime(),
+								"ip":         request.ip,
+								"user-agent": request.headers["user-agent"],
+								"language":   request.headers["accept-language"],
+							}
+						]
+					}
 
-						storeData("sessions", {id: result.id}, {$push: {activity: activity}, $set: {"info.ip": request.ip, "info.user-agent": request.headers["user-agent"], "info.accept-language": request.headers["accept-language"], updated: new Date().getTime()}}, {}, function (result) {
-							getIP(request.session.id, request.ip)
-							callback()
-						})
-					}
-					else {
-						request.session = result
+					storeData("sessions", null, request.session, {}, function (results) {
+						getIP(request.session.id, request.ip)
 						callback()
-					}
-				})
-			}
+					})
+				}
+
+			// existing session
+				else {
+					var push = {}
+						push.activity = activity
+					var set = {}
+						set.updated = new Date().getTime()
+
+					storeData("sessions", {id: request.cookie.session}, {$push: push, $set: set}, {}, function (result) {
+						// invalid session id
+							if (!result) {
+								request.cookie.session = false
+								getSession(request, callback)
+							}
+
+						// new ip address
+							else if (result.info.ip !== request.ip) {
+								request.session = result
+
+								var activity = {
+									time:         new Date().getTime(),
+									"ip":         request.ip,
+									"user-agent": request.headers["user-agent"],
+									"language":   request.headers["accept-language"],
+								}
+
+								var push = {}
+									push.activity = activity
+								var set = {}
+									set["info.ip"] = request.ip
+									set["info.user-agent"] = request.headers["user-agent"]
+									set["info.accept-language"] = request.headers["accept-language"]
+									set.updated = new Date().getTime()
+
+								storeData("sessions", {id: result.id}, {$push: push, $set: set}, {}, function (result) {
+									getIP(request.session.id, request.ip)
+									callback()
+								})
+							}
+
+						// others
+							else {
+								request.session = result
+								callback()
+							}
+					})
+				}
 		}
 
 	/* retrieveData */

@@ -1,12 +1,12 @@
 /* modules */
 	var main = require("../main/logic")
-
+	var game = require("../game/logic")
 	module.exports = {}
 
 /* createGame */
 	module.exports.createGame = createGame
 	function createGame(request, callback) {
-		var game = {
+		request.game = {
 			id: main.generateRandom(),
 			created: new Date().getTime(),
 			updated: new Date().getTime(),
@@ -17,18 +17,20 @@
 				pause:  false,
 				day:    0,
 			},
-			players: [createPlayer(request)],
+			players: {},
 			roles:   [],
 			events:  [],
 			chats: {
-				killers:   [],
-				ghosts:    [],
-				telepaths: []
+				killer:   [],
+				ghost:    [],
+				telepath: []
 			}
 		}
 
-		main.storeData("games", null, game, {}, function (results) {
-			callback({success: true, message: "created game", location: "../../game/" + game.id.substring(0,4)})
+		request.game.players[request.session.id] = createPlayer(request)
+
+		main.storeData("games", null, request.game, {}, function (results) {
+			callback({success: true, message: "created game", location: "../../game/" + request.game.id.substring(0,4)})
 		})
 
 	}
@@ -53,14 +55,19 @@
 					callback({success: false, message: "game code not found"})
 				}
 				else {
-					var game = games[0]
-					if (game.players.filter(function(p) { return p.id === request.session.id }).length > 0) {
+					request.game = games[0]
+					if (request.game.players[request.session.id]) {
 						callback({success: false, message: "player has already joined this game"})
 					}
 					else {
-						var player = createPlayer(request)
-						main.storeData("games", {$where: "this.id.substring(0,4) === '" + gameCode + "'"}, { $push: {players: player}, $set: {updated: new Date().getTime()} }, {}, function (game) {
-							callback({success: true, message: "joined game", location: "../../game/" + game.id.substring(0,4)})
+						var push = {}
+							push.events = game.createEvent(request, "createPlayer")
+						var set = {}
+							set["players." + request.session.id] = createPlayer(request)
+							set.updated = new Date().getTime()
+
+						main.storeData("games", {$where: "this.id.substring(0,4) === '" + gameCode + "'"}, {$set: set}, {}, function (data) {
+							callback({success: true, message: "joined game", location: "../../game/" + request.game.id.substring(0,4)})
 						})
 					}
 				}

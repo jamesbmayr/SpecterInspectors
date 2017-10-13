@@ -1,7 +1,7 @@
 {
-  "name": "spectersandsuspects",
+  "name": "specterinspectors",
   "version": "1.0.0",
-  "description": "a spooky game of ghosts and suspicion",
+  "description": "specter inspectors: a game of ghosts and guesses",
   "main": "index.js",
   "scripts": {
     "test": "echo \"test\"",

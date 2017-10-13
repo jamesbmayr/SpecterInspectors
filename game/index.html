@@ -1,12 +1,67 @@
 <!DOCTYPE html>
-	<html>
+<html>
 	<head>
-		<title>specters & suspects</title>
+		<title>specter inspectors</title>
+		<script node> getAsset("meta") </script>node>
+		<link rel="shortcut icon" type="image/png" href="logo.png"/>
+		<link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+		<script type="text/javascript" src="script.js"></script>
+		<script>window.game = <script node>JSON.stringify(request.game)</script>node></script>
+		<script node>var player = request.game.players[request.session.id] || null</script>node>
 	</head>
 	<body>
-		this is a test
-		<pre>
-<script node>JSON.stringify(request.game, 2, 2, true)</script>node>
-		</pre>
+		<div id="error" class="hidden" style="opacity: 1"></div>
+		<div id="container">
+			<div id="notes">
+				<div class="spacer"></div>
+				<div class="content">
+					<div class="header">notes</div>
+					<textarea id="notes-input" placeholder="add your notes here" rows="5" value=""><script node>player ? player.notes : ""</script>node></textarea>
+				</div>
+				<button class="slideContainer" value="left">&#8594;</button>
+				<button class="slideContainer" value="right">&#8592;<br><br>&#8592;<br><br>&#8592;</button>
+			</div>
+			<div id="story">
+				<div class="content">
+					<div class="header">story</div>
+					<div class="events-list">
+						<pre><script node>JSON.stringify(request.game, 2, 2, true)</script>node></pre>
+					</div>
+				</div>
+			</div>
+			<div id="chats">
+				<button class="slideContainer" value="left">&#8594;<br><br>&#8594;<br><br>&#8594;</button>
+				<button class="slideContainer" value="right">&#8592;</button>
+				<div class="content">
+					<div class="header">chats</div>
+					<div id="chats-list">
+						<script node>
+							if (["killer", "ghost", "telepath"].indexOf(player.status.role) !== -1) {
+								var chats = request.game.chats[player.status.role]
+								var chatList = ""
+								for (var c in chats) {
+									try {
+										chatList = chatList + '<div class="chat">\
+											<div class="chat-info">\
+												<div class="chat-author">' + request.game.players[chats[c].author].name + '</div>\
+												<div class="chat-time">' + (new Date(chats[c].created).toLocaleString().split(",")[1]) + '</div>\
+											</div>\
+											<div class="chat-text">' + chats[c].text + '</div>\
+										</div>'
+									}
+									catch (error) {
+										main.logError("unable to display chat: " + JSON.stringify(chats[c]))
+									}
+								}
+							}
+
+							chatList || ""
+						</script>node>
+					</div>
+					<input id="chats-input" type="text" placeholder="type your message here"/><button id="chats-button">&#x21ea;</button>
+				</div>
+				<div class="spacer"></div>
+			</div>
+		</div>
 	</body>
 </html>

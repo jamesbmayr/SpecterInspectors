@@ -115,14 +115,13 @@
 								case (/^\/game\/[0-9a-zA-Z_]*\/?$/).test(request.url):
 									try {
 										main.retrieveData("games", {$where: "this.id.substring(0,4) === '" + request.path[2].toLowerCase() + "'"}, {$multi: true}, function (games) {
-											if (games) {
+											if (!games) {
+												_302()
+											}
+											else {
 												request.game = games[0]
 												response.end(main.renderHTML(request, "./game/index.html"))
 											}
-											else {
-												_302()
-											}
-											
 										})
 									}
 									catch (error) {_404(error)}
@@ -162,7 +161,7 @@
 							// game
 								case "getData":
 									try {
-										game.getData(function (data) {
+										game.getData(request, function (data) {
 											response.end(JSON.stringify(data))
 										})
 									}
@@ -171,7 +170,7 @@
 
 								case "pauseGame":
 									try {
-										game.pauseGame(function (data) {
+										game.pauseGame(request, function (data) {
 											response.end(JSON.stringify(data))
 										})
 									}
@@ -180,7 +179,7 @@
 
 								case "resumeGame":
 									try {
-										game.resumeGame(function (data) {
+										game.resumeGame(request, function (data) {
 											response.end(JSON.stringify(data))
 										})
 									}
@@ -189,25 +188,25 @@
 
 								case "submitEvent":
 									try {
-										game.submitEvent(function (data) {
+										game.submitEvent(request, function (data) {
 											response.end(JSON.stringify(data))
 										})
 									}
 									catch (error) {_403(error)}
 								break
 
-								case "submitNote":
+								case "submitNotes":
 									try {
-										game.submitNote(function (data) {
+										game.submitNotes(request, function (data) {
 											response.end(JSON.stringify(data))
 										})
 									}
 									catch (error) {_403(error)}
 								break
 
-								case "submitMessage":
+								case "submitChat":
 									try {
-										game.submitMessage(function (data) {
+										game.submitChat(request, function (data) {
 											response.end(JSON.stringify(data))
 										})
 									}
