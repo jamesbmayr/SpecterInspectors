@@ -1,3 +1,13 @@
+/* scrollToNewest */
+	scrollToNewest()
+	function scrollToNewest() {
+		var events = document.getElementById("events-list")
+			events.scrollBy(0, 1000000)
+
+		var chats = document.getElementById("chats-list")
+			chats.scrollBy(0, 1000000)
+	}
+
 /* slideContainer */
 	var buttons = Array.prototype.slice.call(document.getElementsByClassName("slideContainer"))
 	for (var b in buttons) { buttons[b].addEventListener("click", slideContainer) }
@@ -123,6 +133,7 @@
 
 		var chats = document.getElementById("chats-list")
 			chats.appendChild(chatBlock)
+			chats.scrollBy(0, 1000000)
 	}
 
 /* submitEvent */
@@ -133,3 +144,90 @@
 		console.log(button)
 	}
 	
+/* buildEvent */
+	function buildEvent(event) {
+		var type  = event.type  || "story"
+		var text  = event.text  || "..."
+		var input = event.input || false
+		var time  = event.time ? new Date(event.time) : new Date()
+			time  = time.toLocaleString().split(",")[1]
+
+		var typeBlock = document.createElement("div")
+			typeBlock.className = "event-type"
+			typeBlock.appendChild(document.createTextNode(type))
+
+		var timeBlock = document.createElement("div")
+			timeBlock.className = "event-time"
+			timeBlock.appendChild(document.createTextNode(time))
+
+		var textBlock = document.createElement("div")
+			textBlock.className = "event-text"
+			textBlock.appendChild(document.createTextNode(text))
+
+		var inputBlocks = []
+		if (input) {
+			if (input.type == "text") {
+				var inputBlock = document.createElement("input")
+					inputBlock.className = "event-input"
+					inputBlock.type = "text"
+					inputBlock.placeholder = "type your response here"
+
+				var buttonBlock = document.createElement("button")
+					buttonBlock.className = "event-button"
+					buttonBlock.value = "submit"
+					buttonBlock.appendChild(document.createTextNode(`&#x21ea;`))
+
+				inputBlocks = [inputBlock, buttonBlock]
+			}
+			else if (input.type == "select") {
+				var labelBlock = document.createElement("optgroup")
+					labelBlock.setAttribute("label", "select...")
+
+				var selectBlock = document.createElement("select")
+					selectBlock.className = "event-select"
+					selectBlock.appendChild(labelBlock)
+
+				for (var o in input.options) {
+					var optionBlock = document.createElement("option")
+						optionBlock.value = input.options[o]
+						optionBlock.appendChild(document.createTextNode(input.options[o]))
+
+					selectBlock.appendChild(optionBlock)
+				}
+
+				var buttonBlock = document.createElement("button")
+					buttonBlock.className = "event-button"
+					buttonBlock.value = "submit"
+					buttonBlock.innerHTML = "&#x21ea;"
+
+				inputBlocks = [selectBlock, buttonBlock]
+			}
+			else if (input.type == "buttons") {
+				var buttonBlock1 = document.createElement("button")
+					buttonBlock1.className = "event-button"
+					buttonBlock1.value = true
+					buttonBlock1.appendChild(document.createTextNode(input.options[0]))
+
+				var buttonBlock2 = document.createElement("button")
+					buttonBlock2.className = "event-button"
+					buttonBlock2.value = false
+					buttonBlock2.appendChild(document.createTextNode(input.options[1]))
+
+				inputBlocks = [buttonBlock1, buttonBlock2]
+			}
+		}
+
+		var eventBlock = document.createElement("div")
+			eventBlock.className = "event"
+			eventBlock.appendChild(typeBlock)
+			eventBlock.appendChild(timeBlock)
+			eventBlock.appendChild(textBlock)
+			for (var i in inputBlocks) {
+				eventBlock.appendChild(inputBlocks[i])
+			}
+
+		var events = document.getElementById("events-list")
+			events.appendChild(eventBlock)
+			events.scrollBy(0, 1000000)
+	}
+

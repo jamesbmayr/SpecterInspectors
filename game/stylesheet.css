@@ -1,39 +1,3 @@
-/* page */
-	body {
-		height: 100vh;
-		width: 100vw;
-		position: absolute;
-		top: 0px;
-		left: 0px;
-		margin: 0px;
-		border: 0px;
-		padding: 0px;
-		overflow: hidden;
-		background-color: #333333;
-		color: #dddddd;
-		font-family: sans-serif;
-		font-size: 16px;
-	}
-
-	.hidden {
-		display: none;
-	}
-
-	#error {
-		position: fixed;
-		top: 20px;
-		left: 50%;
-		transform: translateX(-50%);
-		color: #dddddd;
-		font-size: 20px;
-		padding: 10px;
-		background-color: rgba(0,0,0,0.8);
-		box-shadow: 0px 0px 10px #000000;
-		border-radius: 30px;
-		z-index: 5;
-		opacity: 1;
-	}
-
 /* container */
 	#container {
 		width: 300vw;
@@ -60,30 +24,28 @@
 
 	.header {
 		padding: 10px;
-		height: 40px;
-		font-size: 30px;
-		font-weight: bold;
+		height: 60px;
+		font-size: 50px;
 		background-color: rgba(0,0,0,0);
+		user-select: none;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		-o-user-select: none;
+		cursor: default;
 	}
 
 /* slide controls */
 	.slideContainer {
 		width: 10vw;
 		height: 100vh;
-		text-align: center;
-		vertical-align: middle;
-		font-size: 30px;
 		color: #dddddd;
-		border: 0px;
-		cursor: pointer;
-		outline: none;
-		user-select: none;
 		float: left;
 		text-shadow: 0px 0px 10px #aaaaaa;
 		background-color: rgba(0,0,0,0);
 	}
 
-	.slideContainer:hover {
+	.slideContainer:hover, .slideContainer:focus {
 		text-shadow: 0px 0px 20px #dddddd;
 	}
 
@@ -97,49 +59,31 @@
 	#notes-input {
 		min-width: calc(80vw - 20px);
 		max-width: calc(80vw - 20px);
-		min-height: calc(100vh - 85px);
-		max-height: calc(100vh - 85px);
+		min-height: calc(100vh - 100px);
+		max-height: calc(100vh - 100px);
 		padding: 10px;
 		margin: 0px;
 		resize: none;
 		background-color: rgba(0,0,0,0);
-		border: 0px;
 		outline: none;
 		color: #dddddd;
-		font-size: 20px;
-	}
-
-	#notes-input::-webkit-input-placeholder {
-		text-align: center;
-	}
-
-	#notes-input::-moz-placeholder {
-		text-align: center;  
-	}
-
-	#notes-input:-ms-input-placeholder {  
-		text-align: center; 
 	}
 
 /* chats */
 	#chats-list {
 		float: left;
 		width: 80vw;
-		height: calc(100vh - 120px);
+		height: calc(100vh - 80px - 60px);
 		overflow-x: hidden;
 		overflow-y: scroll;
 		-ms-overflow-style: none;
-	}
-
-	#chats-list::-webkit-scrollbar {
-		width: 0 !important;
 	}
 
 	.chat {
 		width: 100%;
 		border: 1px solid white;
 		border-width: 1px 0px 0px 0px;
-		margin-bottom: 10px;
+		margin: 10px 0px 10px 0px;
 		float: left;
 	}
 
@@ -152,16 +96,11 @@
 		padding-right: 10px;
 	}
 
-	.chat-author {
-		font-size: 20px;
-	}
-
 	.chat-time {
-		font-size: 10px;
+		font-size: 15px;
 	}
 
 	.chat-text {
-		font-size: 15px;
 		float: left;
 		height: auto;
 		padding: 0px;
@@ -175,25 +114,10 @@
 		float: left;
 		padding: 10px;
 		height: 30px;
-		font-size: 20px;
 		width: calc(80vw - 20px);
-		border: 0px;
 		margin-bottom: 10px;
 		background-color: rgba(0,0,0,0);
 		color: #dddddd;
-		outline: none;
-	}
-
-	#chats-input::-webkit-input-placeholder {
-		text-align: center;
-	}
-
-	#chats-input::-moz-placeholder {
-		text-align: center;  
-	}
-
-	#chats-input:-ms-input-placeholder {  
-		text-align: center; 
 	}
 
 	#chats-button {
@@ -202,16 +126,12 @@
 		right: 0px;
 		height: 50px;
 		width: 50px;
-		font-size: 30px;
 		padding: 0px;
-		border: 0px;
 		vertical-align: bottom;
 		margin-bottom: 10px;
 		background-color: rgba(0,0,0,0);
 		color: #dddddd;
 		text-shadow: 0px 0px 10px #aaaaaa;
-		outline: none;
-		cursor: pointer;
 		user-select: none;
 	}
 
@@ -232,6 +152,101 @@
 	}
 
 /* events */
+	#event-list {
+		height: calc(100vh - 100px);
+		width: calc(100% - 20px);
+		overflow-x: hidden;
+		overflow-y: scroll;
+		padding: 10px;
+	}
+
 	.event {
-		
+		width: 100%;
+		border: 1px solid #222222;
+		border-width: 1px 0px 0px 0px;
+		margin: 10px 0px 10px 0px;
+		float: left;
+	}
+
+	.event-type {
+		float: left;
+		height: auto;
+		width: auto;
+		margin: 0px;
+		text-align: left;
+		font-size: 15px;
+	}
+
+	.event-time {
+		float: right;
+		font-size: 15px;
+		color: #333333;
+	}
+
+	.event-text {
+		float: left;
+		height: auto;
+		padding: 0px;
+		width: 100%;
+		margin: 0px;
+		text-align: left;
+		color: #222222;
+		margin: 5px 0px 5px 0px;
+	}
+
+/* events inputs */
+	.event-input {
+		float: left;
+		height: 30px;
+		width: calc(100% - 65px);
+		font-size: 25px;
+		padding: 5px 10px 5px 10px;
+		outline: none;
+		background-color: rgba(0,0,0,0.2);
+		cursor: pointer;
+	}
+
+	.event-input[disabled], .event-select[disabled], .event-button[disabled] {
+		background-color: rgba(0,0,0,0);
+		color: #777777;
+	}
+
+	.event-input.complete[disabled], .event-select.complete[disabled], .event-button.complete[disabled] {
+		color: #222222;
+	}
+
+	.event-select {
+		float: left;
+		height: 40px;
+		width: calc(100% - 45px);
+		padding: 5px;
+		background-color: rgba(0,0,0,0.2);
+	}
+
+	.event-button {
+		float: left;
+		height: 40px;
+		padding: 5px;
+		background-color: rgba(0,0,0,0.2);
+		text-shadow: 0px 0px 10px #aaaaaa;
+	}
+
+	.event-button[value="submit"] {
+		width: 40px;
+		margin-left: 5px;
+	}
+
+	.event-button[value=true] {
+		width: calc(50% - 5px);
+		margin-right: 5px;
+	}
+
+	.event-button[value=false] {
+		width: calc(50% - 5px);
+		margin-left: 5px;
+	}
+
+	.event-button:hover:not([disabled]), .event-button:focus:not([disabled]), .event-input:focus:not([disabled]), .event-select:focus:not([disabled]) {
+		background-color: rgba(0,0,0,0.2);
+		box-shadow: 0px 0px 10px #111111;
 	}

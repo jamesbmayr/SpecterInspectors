@@ -61,8 +61,8 @@
 					return "logo.png"
 				break
 				
-				case "fonts":
-					return "https://fonts.googleapis.com/css?family=Roboto|Pacifico"
+				case "google fonts":
+					return '<link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700" rel="stylesheet">'
 				break
 
 				case "meta":
