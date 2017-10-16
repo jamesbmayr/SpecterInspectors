@@ -13,11 +13,13 @@
 		height: 100vh;
 		text-align: center;
 		box-shadow: 0px 0px 50px #000000 inset;
+		overflow: hidden;
 	}
 
 	.content {
-		width: 80vw;
+		width: calc(80vw - 10px);
 		height: 100vh;
+		padding: 5px;
 		text-align: center;
 		float: left;
 	}
@@ -43,6 +45,11 @@
 		float: left;
 		text-shadow: 0px 0px 10px #aaaaaa;
 		background-color: rgba(0,0,0,0);
+		user-select: none;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		-o-user-select: none;
 	}
 
 	.slideContainer:hover, .slideContainer:focus {
@@ -59,8 +66,8 @@
 	#notes-input {
 		min-width: calc(80vw - 20px);
 		max-width: calc(80vw - 20px);
-		min-height: calc(100vh - 100px);
-		max-height: calc(100vh - 100px);
+		min-height: calc(100vh - 105px);
+		max-height: calc(100vh - 105px);
 		padding: 10px;
 		margin: 0px;
 		resize: none;
@@ -146,18 +153,22 @@
 	}
 
 	#story .content {
+		height: 100vh;
+		width: 100%;
 		background-color: #dddddd;
 		box-shadow: 0px 0px 30px #000000 inset;
 		color: #333333;
+		padding: 0px;
 	}
 
 /* events */
-	#event-list {
-		height: calc(100vh - 100px);
+	#events-list {
 		width: calc(100% - 20px);
+		height: calc(100vh - 80px);
+		padding: 0px 10px 0px 10px;
+		margin: 0px;
 		overflow-x: hidden;
 		overflow-y: scroll;
-		padding: 10px;
 	}
 
 	.event {
@@ -208,11 +219,12 @@
 
 	.event-input[disabled], .event-select[disabled], .event-button[disabled] {
 		background-color: rgba(0,0,0,0);
-		color: #777777;
+		color: #222222;
+		cursor: default;
 	}
 
-	.event-input.complete[disabled], .event-select.complete[disabled], .event-button.complete[disabled] {
-		color: #222222;
+	.event-input.incomplete[disabled], .event-select.incomplete[disabled], .event-button.incomplete[disabled] {
+		color: #777777;
 	}
 
 	.event-select {
@@ -231,8 +243,15 @@
 		text-shadow: 0px 0px 10px #aaaaaa;
 	}
 
-	.event-button[value="submit"] {
+	.event-button[value="submit-text"], .event-button[value="submit-select"] {
+		font-size: 25px;
 		width: 40px;
+		margin-left: 5px;
+	}
+
+	.event-button[value="okay"] {
+		width: calc(100% - 10px);
+		margin-right: 5px;
 		margin-left: 5px;
 	}
 

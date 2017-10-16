@@ -1,4 +1,4 @@
-/* modules */
+/*** modules ***/
 	var http     = require("http")
 	var fs       = require("fs")
 	var mongo    = require("mongodb").MongoClient
@@ -11,6 +11,7 @@
 		function logError(error) {
 			console.log("\n*** ERROR @ " + new Date().toLocaleString() + " ***")
 			console.log(" - " + error)
+			console.dir(arguments)
 		}
 
 	/* logStatus */
@@ -193,9 +194,9 @@
 			}
 		}
 
-	/* getIP */
-		module.exports.getIP = getIP
-		function getIP(id, ip) {
+	/* locateIP */
+		module.exports.locateIP = locateIP
+		function locateIP(id, ip) {
 			if (ip && ip.length >= 7) {
 				try {
 					var apiRequest = http.request({
@@ -255,9 +256,9 @@
 		}
 
 /*** database ***/
-	/* getSession */
-		module.exports.getSession = getSession
-		function getSession(request, callback) {
+	/* determineSession */
+		module.exports.determineSession = determineSession
+		function determineSession(request, callback) {
 			// new activity
 				var activity = {
 					time: new Date().getTime(),
@@ -294,7 +295,7 @@
 					}
 
 					storeData("sessions", null, request.session, {}, function (results) {
-						getIP(request.session.id, request.ip)
+						locateIP(request.session.id, request.ip)
 						callback()
 					})
 				}
@@ -310,7 +311,7 @@
 						// invalid session id
 							if (!result) {
 								request.cookie.session = false
-								getSession(request, callback)
+								determineSession(request, callback)
 							}
 
 						// new ip address
@@ -333,7 +334,7 @@
 									set.updated = new Date().getTime()
 
 								storeData("sessions", {id: result.id}, {$push: push, $set: set}, {}, function (result) {
-									getIP(request.session.id, request.ip)
+									locateIP(request.session.id, request.ip)
 									callback()
 								})
 							}

@@ -1,4 +1,4 @@
-/* modules */
+/*** modules ***/
 	var http = require("http")
 	var fs   = require("fs")
 	var qs   = require("querystring")
@@ -6,6 +6,7 @@
 	var home = require("./home/logic")
 	var game = require("./game/logic")
 
+/*** server ***/
 	var port = main.getEnvironment("port")
 	var server = http.createServer(handleRequest)
 		server.listen(port, function (error) {
@@ -17,7 +18,7 @@
 			}
 		})
 
-/* handleRequest */
+/*** handleRequest ***/
 	function handleRequest(request, response) {
 		// collect data
 			var data = ""
@@ -41,7 +42,7 @@
 					routeRequest()
 				}
 				else {
-					main.getSession(request, routeRequest)
+					main.determineSession(request, routeRequest)
 				}
 			}
 
@@ -118,6 +119,9 @@
 											if (!games) {
 												_302()
 											}
+											else if (Object.keys(games[0].players).indexOf(request.session.id) == -1) {
+												_302()
+											}
 											else {
 												request.game = games[0]
 												response.end(main.renderHTML(request, "./game/index.html"))
@@ -159,9 +163,9 @@
 								break
 
 							// game
-								case "getData":
+								case "fetchData":
 									try {
-										game.getData(request, function (data) {
+										game.fetchData(request, function (data) {
 											response.end(JSON.stringify(data))
 										})
 									}
@@ -229,21 +233,30 @@
 		/* _302 */
 			function _302(data) {
 				main.logStatus("redirecting to " + data)
-				response.writeHead(302, {Location: data || "../../../../"})
+				response.writeHead(302, {
+					"Set-Cookie": String( "session=" + request.session.id + "; expires=" + (new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 7)).toUTCString()) + "; path=/; domain=" + main.getEnvironment("domain") ),
+					Location: data || "../../../../"
+				})
 				response.end()
 			}
 
 		/* _403 */
 			function _403(data) {
 				main.logError(data)
-				response.writeHead(403, {"Content-Type": "text/json"});
+				response.writeHead(403, {
+					"Set-Cookie": String( "session=" + request.session.id + "; expires=" + (new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 7)).toUTCString()) + "; path=/; domain=" + main.getEnvironment("domain") ),
+					"Content-Type": "text/json"
+				})
 				response.end( JSON.stringify({success: false, error: data}) );
 			}
 
 		/* _404 */
 			function _404(data) {
 				main.logError(data)
-				response.writeHead(404, {"Content-Type": "text/html"});
+				response.writeHead(404, {
+					"Set-Cookie": String( "session=" + request.session.id + "; expires=" + (new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 7)).toUTCString()) + "; path=/; domain=" + main.getEnvironment("domain") ),
+					"Content-Type": "text/html; charset=utf-8"
+				})
 				response.end(data || main.renderHTML(request, "./main/_404.html"));
 			}
 	}
