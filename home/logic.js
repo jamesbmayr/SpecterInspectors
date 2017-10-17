@@ -31,7 +31,8 @@
 			}
 
 			request.game.players[request.session.id] = createPlayer(request)
-			request.game.events.push(game.createEvent(request, {type: "setup-welcome", viewers: [request.session.id], doers: [request.session.id]}))
+			request.game.events.push(game.createQueueEvent(request))
+			request.game.events.push(game.createActionEvent(request, {type: "setup-welcome", queue: request.game.events[0].id}))
 
 			main.storeData("games", null, request.game, {}, function (results) {
 				callback({success: true, message: "created game", location: "../../game/" + request.game.id.substring(0,4)})
@@ -86,13 +87,18 @@
 							callback({success: false, message: "player has already joined this game"})
 						}
 						else {
-							var push = {}
-								push["events"] = game.createEvent(request, {type: "setup-welcome", viewers: [request.session.id], doers: [request.session.id]})
-							var set  = {}
-								set["players." + request.session.id] = createPlayer(request)
-								set.updated = new Date().getTime()
+							var player = createPlayer(request)
+							var queue = request.game.events[0].id
+								queue.doers.push(player.id)
 
-							main.storeData("games", {$where: "this.id.substring(0,4) === '" + gameCode + "'"}, {$set: set, $push: push}, {}, function (data) {
+							var push = {}
+								push["events"] = game.createActionEvent(request, {type: "setup-welcome"})
+							var set  = {}
+								set.updated = new Date().getTime()
+								set["players." + request.session.id] = player
+								set["events.$.doers"] = queue.doers
+
+							main.storeData("games", {id: request.game.id, "events.id": queue.id}, {$set: set, $push: push}, {}, function (data) {
 								callback({success: true, message: "joined game", location: "../../game/" + request.game.id.substring(0,4)})
 							})
 						}
