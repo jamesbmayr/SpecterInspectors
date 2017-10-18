@@ -1,5 +1,6 @@
 /*** animations ***/
 	/* animateGhosts */
+		var ghostWait = 0
 		window.ghostLoop = setInterval(animateGhosts, 50)
 		function animateGhosts() {
 			//get ghosts
@@ -7,10 +8,16 @@
 				var background = document.getElementById("background")
 				var ghostCount = ghosts.length
 
-			//create ghosts
-				while (ghostCount < 20) {
-					ghostCount++
+			//reduce ghostWait
+				if (ghostWait) {
+					ghostWait--
+				}
+				else {
+					ghostWait = 5
+				}
 
+			//create ghosts
+				if (!ghostWait && ghostCount < 20) {
 					var ghost = document.createElement("div")
 						ghost.className = "ghost"
 						ghost.style.left = Math.round(Math.random() * (window.innerWidth - 100)) + "px"

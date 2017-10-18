@@ -209,9 +209,9 @@
 	.event-input {
 		float: left;
 		height: 30px;
-		width: calc(100% - 65px);
+		width: calc(100% - 55px);
 		font-size: 25px;
-		padding: 5px 10px 5px 10px;
+		padding: 5px;
 		outline: none;
 		background-color: rgba(0,0,0,0.2);
 		cursor: pointer;
@@ -231,14 +231,14 @@
 		float: left;
 		height: 40px;
 		width: calc(100% - 45px);
-		padding: 5px;
+		padding: 0px 5px 0px 5px;
 		background-color: rgba(0,0,0,0.2);
 	}
 
 	.event-button {
 		float: left;
 		height: 40px;
-		padding: 5px;
+		padding: 0px;
 		background-color: rgba(0,0,0,0.2);
 		text-shadow: 0px 0px 10px #aaaaaa;
 	}

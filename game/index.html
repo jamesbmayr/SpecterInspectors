@@ -30,7 +30,7 @@
 							var events = Object.keys(request.game.events).filter(function(e) {
 								return request.game.events[e].viewers.indexOf(request.session.id) !== -1
 							}).sort(function(x, y) {
-								return request.game.events[x].created > requset.game.events[y].created
+								return request.game.events[x].created > request.game.events[y].created
 							})
 							var eventList = ""
 

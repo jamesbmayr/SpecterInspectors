@@ -111,7 +111,7 @@
 						request.game = games[0]
 						request.event = request.game.events[request.post.id]
 						
-						var next = eval(event.next)
+						var next = eval(request.event.next)
 						try {
 							next(request, callback)
 						}
@@ -137,7 +137,8 @@
 					updated: new Date().getTime(),
 					day:     request.game.state.day || 0,
 					type:    data.type    || "error",
-					viewers: data.viewers || Object.keys(request.game.players)
+					viewers: data.viewers || Object.keys(request.game.players),
+					doers:   []
 				}
 
 			// get event content
@@ -414,10 +415,11 @@
 					id:      main.generateRandom(),
 					created: new Date().getTime(),
 					updated: new Date().getTime(),
-					day:     request.game.state.day || 0,
+					day:     request.game.state.day || 1,
 					type:    "queue",
 					author:  data.author || 0,
 					target:  data.target || 0,
+					viewers: [],
 					doers:   data.doers  || Object.keys(request.game.players),
 					results: {}
 				}
@@ -480,7 +482,7 @@
 					var set = {}
 						set.updated = new Date().getTime()
 						set["events." + request.event.id + ".doers"] = request.event.doers = []
-						set["events." +         queue.id + ".doers"] = queue.doers = queue.doers.filter(function (p) { return p.id !== request.session.id })
+						set["events." +         queue.id + ".doers"] = queue.doers = queue.doers.filter(function (p) { return p !== request.session.id })
 
 					if (typeof request.post.value !== "undefined" && request.post.value !== null) {
 						set["events." + request.event.id + ".answer"] = request.event.answer = request.post.value
@@ -491,7 +493,7 @@
 						// incomplete
 							if (queue.doers.length > 0) {
 								var waitingEvent = createStaticEvent(request, {type: "decision-waiting", viewers: [request.session.id]})
-								failure({success: false, events: [waitingEvent]})
+								failure({success: true, events: [waitingEvent]})
 							}
 
 						// complete
@@ -522,7 +524,7 @@
 						set["events." + request.event.id + ".answer"] = request.event.answer = request.post.value
 						set["events." + request.event.id + ".doers"]  = request.event.doers = []
 						
-						var setupEvent = createActionEvent(request, {type: "setup-name",  queue: request.game.events[0].id})
+						var setupEvent = createActionEvent(request, {type: "setup-name"})
 						set["events." + setupEvent.id] = setupEvent
 						myEvents.push(setupEvent)
 					}
@@ -531,7 +533,7 @@
 						set["events." + request.event.id + ".answer"] = request.event.answer = request.post.value
 						set["events." + request.event.id + ".doers"]  = request.event.doers = []
 
-						var setupEvent = createActionEvent(request, {type: "setup-shirt", queue: request.game.events[0].id})
+						var setupEvent = createActionEvent(request, {type: "setup-shirt"})
 						set["events." + setupEvent.id] = setupEvent
 						myEvents.push(setupEvent)
 					}
@@ -540,7 +542,7 @@
 						set["events." + request.event.id + ".answer"] = request.event.answer = request.post.value
 						set["events." + request.event.id + ".doers"]  = request.event.doers = []
 						
-						var setupEvent = createActionEvent(request, {type: "setup-pants", queue: request.game.events[0].id})
+						var setupEvent = createActionEvent(request, {type: "setup-pants"})
 						set["events." + setupEvent.id] = setupEvent
 						myEvents.push(setupEvent)
 					}
@@ -549,7 +551,7 @@
 						set["events." + request.event.id + ".answer"] = request.event.answer = request.post.value
 						set["events." + request.event.id + ".doers"]  = request.event.doers = []
 						
-						var setupEvent = createActionEvent(request, {type: "setup-shoes", queue: request.game.events[0].id})
+						var setupEvent = createActionEvent(request, {type: "setup-shoes"})
 						set["events." + setupEvent.id] = setupEvent
 						myEvents.push(setupEvent)
 					}
@@ -567,6 +569,8 @@
 						callback({success: true, events: myEvents})
 					}
 					else { // checkQueue
+						request.event.queue = Object.keys(request.game.events).find(function (e) { return (request.game.events[e].author == "welcome") })
+
 						checkQueue(request, function(results) { // failure
 							callback(results)
 						}, function(queue) { // success
@@ -687,7 +691,7 @@
 					}					
 				
 				// hide launch events
-					var launchEvents = request.game.events.filter(function (e) { return e.type == "setup-launch" })
+					var launchEvents = Object.keys(request.game.events).filter(function (e) { return request.game.events[e].type == "setup-launch" })
 					for (var l in launchEvents) {
 						set["events." + launchEvents[l] + ".doers"]   = []
 						set["events." + launchEvents[l] + ".viewers"] = []
