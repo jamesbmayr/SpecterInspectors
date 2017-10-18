@@ -27,17 +27,18 @@
 					<div class="header">story</div>
 					<div id="events-list">
 						<script node>
-							var events = request.game.events.filter(function(e) {
-								return e.viewers.indexOf(request.session.id) !== -1
+							var events = Object.keys(request.game.events).filter(function(e) {
+								return request.game.events[e].viewers.indexOf(request.session.id) !== -1
 							}).sort(function(x, y) {
-								return x.created > y.created
+								return request.game.events[x].created > requset.game.events[y].created
 							})
 							var eventList = ""
 
 							for (var e in events) {
+								var event = request.game.events[events[e]]
 								try {
 									// get answer
-										var answer = events[e].answer || ""
+										var answer = event.answer || ""
 										if (answer !== "") {
 											var disabled = " disabled "
 										}
@@ -48,14 +49,14 @@
 									// inputs
 										var inputBlock = ""
 
-										if (events[e].input == "text") {
+										if (event.input == "text") {
 											inputBlock = '<input class="event-input" type="text" placeholder="your response" value="' + answer + '"' + disabled + '/>\
 												<button class="event-button" value="submit-text"' + disabled + '>&#8682;</button>'
 										}
-										else if (events[e].input == "select") {
+										else if (event.input == "select") {
 											var options = []
-											for (var o in events[e].options) {
-												var value = events[e].options[o]
+											for (var o in event.options) {
+												var value = event.options[o]
 												
 												// replace ids with names
 													var p = request.game.players[value] || false
@@ -63,7 +64,7 @@
 														var name = p.name
 													}
 													else {
-														var name = events[e].options[o]
+														var name = event.options[o]
 													}
 
 												// get selected
@@ -84,27 +85,27 @@
 												</select>\
 												<button class="event-button" value="submit-select"' + disabled + '>&#8682;</button>'
 										}
-										else if (events[e].input == "okay") {
-											inputBlock = '<button class="event-button" value="okay"' + disabled + '>' + events[e].options + '</button>'
+										else if (event.input == "okay") {
+											inputBlock = '<button class="event-button" value="okay"' + disabled + '>' + event.options + '</button>'
 										}
-										else if (events[e].input == "buttons") {
-											inputBlock = '<button class="event-button" value=false' + disabled + '>' + events[e].options[0] + '</button>\
-													<button class="event-button" value=true' + disabled + '>' + events[e].options[1] + '</button>'
+										else if (event.input == "buttons") {
+											inputBlock = '<button class="event-button" value=false' + disabled + '>' + event.options[0] + '</button>\
+													<button class="event-button" value=true' + disabled + '>' + event.options[1] + '</button>'
 										}
-										else if (events[e].input == "link") {
-											inputBlock = '<a class="event-link" href="' + events[e].options[0] + '">' + events[e].options[1] + '</a>'
+										else if (event.input == "link") {
+											inputBlock = '<a class="event-link" href="' + event.options[0] + '">' + event.options[1] + '</a>'
 										}
 
 									// info & structure
-										eventList = eventList + '<div class="event" id="' + events[e].id + '">\
-											<div class="event-type">' + events[e].type + '</div>\
-											<div class="event-time">' + (new Date(events[e].created).toLocaleString().split(",")[1]) + '</div>\
-											<div class="event-text">' + events[e].text + '</div>\
+										eventList = eventList + '<div class="event" id="' + event.id + '">\
+											<div class="event-type">' + event.type + '</div>\
+											<div class="event-time">' + (new Date(event.created).toLocaleString().split(",")[1]) + '</div>\
+											<div class="event-text">' + event.text + '</div>\
 											' + inputBlock + '\
 										</div>'
 								}
 								catch (error) {
-									main.logError("unable to display event: " + JSON.stringify(events[e]))
+									main.logError("unable to display event: " + JSON.stringify(event))
 								}
 							}
 
@@ -117,7 +118,11 @@
 				<button class="slideContainer" value="left">&#8594;<br><br>&#8594;<br><br>&#8594;</button>
 				<button class="slideContainer" value="right">&#8592;</button>
 				<div class="content">
-					<div class="header">chats</div>
+					<div class="header"><script node>
+						if (["killer", "ghost", "telepath"].indexOf(player.status.role) == -1) {
+							player.status.role + " "
+						}
+					</script>node>chat</div>
 					<div id="chats-list">
 						<script node>
 							if (["killer", "ghost", "telepath"].indexOf(player.status.role) !== -1) {
