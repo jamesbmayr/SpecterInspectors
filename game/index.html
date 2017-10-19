@@ -97,7 +97,7 @@
 										}
 
 									// info & structure
-										eventList = eventList + '<div class="event" id="' + event.id + '">\
+										eventList = eventList + '<div class="event ' + event.type + '" id="' + event.id + '">\
 											<div class="event-type">' + event.type + '</div>\
 											<div class="event-time">' + (new Date(event.created).toLocaleString().split(",")[1]) + '</div>\
 											<div class="event-text">' + event.text + '</div>\

@@ -1,271 +1,305 @@
-/* container */
-	#container {
-		width: 300vw;
-		position: absolute;
-		top: 0px;
-		left: 0px;
-		transform: translateX(-100vw);
-	}
+/*** page ***/
+	/* container */
+		#container {
+			width: 300vw;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			transform: translateX(-100vw);
+		}
 
-	#notes, #story, #chats {
-		float: left;
-		width: 110vw;
-		height: 100vh;
-		text-align: center;
-		box-shadow: 0px 0px 50px #000000 inset;
-		overflow: hidden;
-	}
+		#notes, #story, #chats {
+			float: left;
+			width: 110vw;
+			height: 100vh;
+			text-align: center;
+			box-shadow: 0px 0px 50px #000000 inset;
+			overflow: hidden;
+		}
 
-	.content {
-		width: calc(80vw - 10px);
-		height: 100vh;
-		padding: 5px;
-		text-align: center;
-		float: left;
-	}
+		.content {
+			width: calc(80vw - 10px);
+			height: 100vh;
+			padding: 5px;
+			text-align: center;
+			float: left;
+		}
 
-	.header {
-		padding: 10px;
-		height: 60px;
-		font-size: 50px;
-		background-color: rgba(0,0,0,0);
-		user-select: none;
-		-webkit-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		-o-user-select: none;
-		cursor: default;
-	}
+		.header {
+			padding: 10px;
+			height: 60px;
+			font-size: 50px;
+			background-color: rgba(0,0,0,0);
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+			cursor: default;
+		}
 
-/* slide controls */
-	.slideContainer {
-		width: 10vw;
-		height: 100vh;
-		color: #dddddd;
-		float: left;
-		text-shadow: 0px 0px 10px #aaaaaa;
-		background-color: rgba(0,0,0,0);
-		user-select: none;
-		-webkit-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		-o-user-select: none;
-	}
+	/* slide controls */
+		.slideContainer {
+			width: 10vw;
+			height: 100vh;
+			color: #dddddd;
+			float: left;
+			text-shadow: 0px 0px 10px #aaaaaa;
+			background-color: rgba(0,0,0,0);
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+		}
 
-	.slideContainer:hover, .slideContainer:focus {
-		text-shadow: 0px 0px 20px #dddddd;
-	}
+		.slideContainer:hover, .slideContainer:focus {
+			text-shadow: 0px 0px 20px #dddddd;
+		}
 
-	.spacer {
-		float: left;
-		width: 10vw;
-		height: 100vh;
-	}
+		.spacer {
+			float: left;
+			width: 10vw;
+			height: 100vh;
+		}
 
-/* notes */
-	#notes-input {
-		min-width: calc(80vw - 20px);
-		max-width: calc(80vw - 20px);
-		min-height: calc(100vh - 105px);
-		max-height: calc(100vh - 105px);
-		padding: 10px;
-		margin: 0px;
-		resize: none;
-		background-color: rgba(0,0,0,0);
-		outline: none;
-		color: #dddddd;
-	}
+/*** notes ***/
+	/* notes-input */
+		#notes-input {
+			min-width: calc(80vw - 20px);
+			max-width: calc(80vw - 20px);
+			min-height: calc(100vh - 105px);
+			max-height: calc(100vh - 105px);
+			padding: 10px;
+			margin: 0px;
+			resize: none;
+			background-color: rgba(0,0,0,0);
+			outline: none;
+			color: #dddddd;
+		}
 
-/* chats */
-	#chats-list {
-		float: left;
-		width: 80vw;
-		height: calc(100vh - 80px - 60px);
-		overflow-x: hidden;
-		overflow-y: scroll;
-		-ms-overflow-style: none;
-	}
+/*** chats ***/
+	/* chats-list */
+		#chats-list {
+			float: left;
+			width: 80vw;
+			height: calc(100vh - 80px - 60px);
+			overflow-x: hidden;
+			overflow-y: scroll;
+			-ms-overflow-style: none;
+		}
 
-	.chat {
-		width: 100%;
-		border: 1px solid white;
-		border-width: 1px 0px 0px 0px;
-		margin: 10px 0px 10px 0px;
-		float: left;
-	}
+		.chat {
+			width: 100%;
+			border: 1px solid white;
+			border-width: 1px 0px 0px 0px;
+			margin: 10px 0px 10px 0px;
+			float: left;
+		}
 
-	.chat-info {
-		float: left;
-		height: auto;
-		width: 110px;
-		margin: 0px;
-		text-align: left;
-		padding-right: 10px;
-	}
+		.chat-info {
+			float: left;
+			height: auto;
+			width: 110px;
+			margin: 0px;
+			text-align: left;
+			padding-right: 10px;
+		}
 
-	.chat-time {
-		font-size: 15px;
-	}
+		.chat-time {
+			font-size: 15px;
+		}
 
-	.chat-text {
-		float: left;
-		height: auto;
-		padding: 0px;
-		width: calc(100% - 120px);
-		margin: 0px;
-		text-align: left;
-	}
+		.chat-text {
+			float: left;
+			height: auto;
+			padding: 0px;
+			width: calc(100% - 120px);
+			margin: 0px;
+			text-align: left;
+		}
 
-/* chats input */
-	#chats-input {
-		float: left;
-		padding: 10px;
-		height: 30px;
-		width: calc(80vw - 20px);
-		margin-bottom: 10px;
-		background-color: rgba(0,0,0,0);
-		color: #dddddd;
-	}
+	/* chats input */
+		#chats-input {
+			float: left;
+			padding: 10px;
+			height: 30px;
+			width: calc(80vw - 20px);
+			margin-bottom: 10px;
+			background-color: rgba(0,0,0,0);
+			color: #dddddd;
+		}
 
-	#chats-button {
-		position: absolute;
-		bottom: 0px;
-		right: 0px;
-		height: 50px;
-		width: 50px;
-		padding: 0px;
-		vertical-align: bottom;
-		margin-bottom: 10px;
-		background-color: rgba(0,0,0,0);
-		color: #dddddd;
-		text-shadow: 0px 0px 10px #aaaaaa;
-		user-select: none;
-	}
+		#chats-button {
+			position: absolute;
+			bottom: 0px;
+			right: 0px;
+			height: 50px;
+			width: 50px;
+			padding: 0px;
+			vertical-align: bottom;
+			margin-bottom: 10px;
+			background-color: rgba(0,0,0,0);
+			color: #dddddd;
+			text-shadow: 0px 0px 10px #aaaaaa;
+			user-select: none;
+		}
 
-	#chats-button:hover, #chats-button:focus {
-		text-shadow: 0px 0px 20px #dddddd;
-	}
+		#chats-button:hover, #chats-button:focus {
+			text-shadow: 0px 0px 20px #dddddd;
+		}
 
-/* story */
-	#story {
-		width: 80vw;
-		z-index: 2;
-	}
+/*** story ***/
+	/* story content */
+		#story {
+			width: 80vw;
+			z-index: 2;
+		}
 
-	#story .content {
-		height: 100vh;
-		width: 100%;
-		background-color: #dddddd;
-		box-shadow: 0px 0px 30px #000000 inset;
-		color: #333333;
-		padding: 0px;
-	}
+		#story .content {
+			height: 100vh;
+			width: 100%;
+			background-color: #dddddd;
+			box-shadow: 0px 0px 30px #000000 inset;
+			color: #333333;
+			padding: 0px;
+		}
 
-/* events */
-	#events-list {
-		width: calc(100% - 20px);
-		height: calc(100vh - 80px);
-		padding: 0px 10px 0px 10px;
-		margin: 0px;
-		overflow-x: hidden;
-		overflow-y: scroll;
-	}
+	/* events */
+		#events-list {
+			width: calc(100% - 20px);
+			height: calc(100vh - 80px);
+			padding: 0px 10px 0px 10px;
+			margin: 0px;
+			overflow-x: hidden;
+			overflow-y: scroll;
+		}
 
-	.event {
-		width: 100%;
-		border: 1px solid #222222;
-		border-width: 1px 0px 0px 0px;
-		margin: 10px 0px 10px 0px;
-		float: left;
-	}
+		.event {
+			width: 100%;
+			border: 1px solid #222222;
+			border-width: 1px 0px 0px 0px;
+			margin: 10px 0px 10px 0px;
+			float: left;
+		}
 
-	.event-type {
-		float: left;
-		height: auto;
-		width: auto;
-		margin: 0px;
-		text-align: left;
-		font-size: 15px;
-	}
+		.event-type {
+			float: left;
+			height: auto;
+			width: auto;
+			margin: 0px;
+			text-align: left;
+			font-size: 15px;
+		}
 
-	.event-time {
-		float: right;
-		font-size: 15px;
-		color: #333333;
-	}
+		.event-time {
+			float: right;
+			font-size: 15px;
+			color: #333333;
+		}
 
-	.event-text {
-		float: left;
-		height: auto;
-		padding: 0px;
-		width: 100%;
-		margin: 0px;
-		text-align: left;
-		color: #222222;
-		margin: 5px 0px 5px 0px;
-	}
+		.event-text {
+			float: left;
+			height: auto;
+			padding: 0px;
+			width: 100%;
+			margin: 0px;
+			text-align: left;
+			color: #222222;
+			margin: 5px 0px 5px 0px;
+		}
 
-/* events inputs */
-	.event-input {
-		float: left;
-		height: 30px;
-		width: calc(100% - 55px);
-		font-size: 25px;
-		padding: 5px;
-		outline: none;
-		background-color: rgba(0,0,0,0.2);
-		cursor: pointer;
-	}
+	/* events inputs */
+		.event-input {
+			float: left;
+			height: 30px;
+			width: calc(100% - 55px);
+			font-size: 25px;
+			padding: 5px;
+			outline: none;
+			background-color: rgba(0,0,0,0.2);
+			cursor: pointer;
+		}
 
-	.event-input[disabled], .event-select[disabled], .event-button[disabled] {
-		background-color: rgba(0,0,0,0);
-		color: #222222;
-		cursor: default;
-	}
+		.event-input[disabled], .event-select[disabled], .event-button[disabled] {
+			background-color: rgba(0,0,0,0);
+			color: #222222;
+			cursor: default;
+		}
 
-	.event-input.incomplete[disabled], .event-select.incomplete[disabled], .event-button.incomplete[disabled] {
-		color: #777777;
-	}
+		.event-input.incomplete[disabled], .event-select.incomplete[disabled], .event-button.incomplete[disabled] {
+			color: #777777;
+		}
 
-	.event-select {
-		float: left;
-		height: 40px;
-		width: calc(100% - 45px);
-		padding: 0px 5px 0px 5px;
-		background-color: rgba(0,0,0,0.2);
-	}
+		.event-select {
+			float: left;
+			height: 40px;
+			width: calc(100% - 45px);
+			padding: 0px 5px 0px 5px;
+			background-color: rgba(0,0,0,0.2);
+		}
 
-	.event-button {
-		float: left;
-		height: 40px;
-		padding: 0px;
-		background-color: rgba(0,0,0,0.2);
-		text-shadow: 0px 0px 10px #aaaaaa;
-	}
+	/* events buttons */
+		.event-button {
+			float: left;
+			height: 40px;
+			padding: 0px;
+			background-color: rgba(0,0,0,0.2);
+			text-shadow: 0px 0px 10px #aaaaaa;
+		}
 
-	.event-button[value="submit-text"], .event-button[value="submit-select"] {
-		font-size: 25px;
-		width: 40px;
-		margin-left: 5px;
-	}
+		.event-button[value="submit-text"], .event-button[value="submit-select"] {
+			font-size: 25px;
+			width: 40px;
+			margin-left: 5px;
+		}
 
-	.event-button[value="okay"] {
-		width: calc(100% - 10px);
-		margin-right: 5px;
-		margin-left: 5px;
-	}
+		.event-button[value="okay"] {
+			width: calc(100% - 10px);
+			margin-right: 5px;
+			margin-left: 5px;
+		}
 
-	.event-button[value=true] {
-		width: calc(50% - 5px);
-		margin-right: 5px;
-	}
+		.event-button[value=true] {
+			width: calc(50% - 5px);
+			margin-right: 5px;
+		}
 
-	.event-button[value=false] {
-		width: calc(50% - 5px);
-		margin-left: 5px;
-	}
+		.event-button[value=false] {
+			width: calc(50% - 5px);
+			margin-left: 5px;
+		}
 
-	.event-button:hover:not([disabled]), .event-button:focus:not([disabled]), .event-input:focus:not([disabled]), .event-select:focus:not([disabled]) {
-		background-color: rgba(0,0,0,0.2);
-		box-shadow: 0px 0px 10px #111111;
-	}
+		.event-button:hover:not([disabled]), .event-button:focus:not([disabled]), .event-input:focus:not([disabled]), .event-select:focus:not([disabled]) {
+			background-color: rgba(0,0,0,0.2);
+			box-shadow: 0px 0px 10px #111111;
+		}
+
+	/* events types */
+		.event.story-day {
+			box-shadow: 0px 0px 20px orange inset;
+		}
+
+		.event.story-night {
+			box-shadow: 0px 0px 20px darkblue inset;
+		}
+
+		.event.start-players, .event.end-good, .event.end-evil {
+			box-shadow: 0px 0px 20px black inset;
+		}
+
+		.event.murder-poll, .event.execution-poll {
+			box-shadow: 0px 0px 20px goldenrod inset;
+		}
+
+		.event.story-murder {
+			box-shadow: 0px 0px 20px darkred inset;
+		}
+
+		.event.story-execution {
+			box-shadow: 0px 0px 20px darkgreen inset;
+		}
+
+		.event.story-dream {
+			box-shadow: 0px 0px 20px purple inset;
+		}

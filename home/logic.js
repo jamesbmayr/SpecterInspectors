@@ -18,8 +18,10 @@
 					victory: false,
 					pause:   false,
 					day:     0,
+					night:   false,
 					dreams:  [],
-					killed:  []
+					killed:  [],
+					ghost:   main.chooseRandom(["Petey McPeterson", "Gregorio the Great", "Archduke Ferdinand", "Princess Pomegranate", "Carol from HR", "Millie Miles", "Sam Pats", "Shmorko Jr.", "Anabel Lee", "Santa Claus", "Dudebro", "Vanessa Vines", "Robotron-9000", "Professor Z", "Dr. Rogers", "Gertrude Glarkenstein", "Li'l Bigs", "Mrs. Brinkley", "Paul"])
 				},
 				players: {},
 				events:  {},
