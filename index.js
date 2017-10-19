@@ -172,24 +172,6 @@
 									catch (error) {_403(error)}
 								break
 
-								case "pauseGame":
-									try {
-										game.pauseGame(request, function (data) {
-											response.end(JSON.stringify(data))
-										})
-									}
-									catch (error) {_403(error)}
-								break
-
-								case "resumeGame":
-									try {
-										game.resumeGame(request, function (data) {
-											response.end(JSON.stringify(data))
-										})
-									}
-									catch (error) {_403(error)}
-								break
-
 								case "submitEvent":
 									try {
 										game.submitEvent(request, function (data) {
@@ -232,7 +214,7 @@
 
 		/* _302 */
 			function _302(data) {
-				main.logStatus("redirecting to " + data)
+				main.logStatus("redirecting to " + (data || "/"))
 				response.writeHead(302, {
 					"Set-Cookie": String( "session=" + request.session.id + "; expires=" + (new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 7)).toUTCString()) + "; path=/; domain=" + main.getEnvironment("domain") ),
 					Location: data || "../../../../"

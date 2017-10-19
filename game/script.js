@@ -157,24 +157,12 @@
 
 			// send
 				if (typeof value !== "undefined" && value !== null) {
-					// disabled old event
-						var array = []
-						if (input)   { array.push(input)  }
-						if (select)  { array.push(select) }
-						if (button)  { array.push(button) }
-						if (buttons) { array = array.concat(buttons) }
-
-						for (var a in array) {
-							array[a].disabled = true
-						}
+					disableEvent(id)
 
 					sendPost({action: "submitEvent", value: value, id: id}, function(data) {
 						if (!data.success) {
 							displayError(data.message || "unable to post event response")
-
-							for (var a in array) { // reenable old event
-								array[a].disabled = false
-							}
+							enableEvent(id)
 						}
 						else {
 							for (var e in data.events) {
@@ -189,9 +177,9 @@
 	/* buildChat */
 		function buildChat(chat) {
 			// data
-				var author  = chat.author || null
-					author  = window.game.players[author].name || "???"
-				var text    = chat.text   || ""
+				var id      = chat.id      || 0
+				var author  = chat.name    || null
+				var text    = chat.text    || ""
 				var created = chat.created ? new Date(chat.created) : new Date()
 					created = created.toLocaleString().split(",")[1]
 
@@ -215,6 +203,7 @@
 
 			// structure
 				var chatBlock = document.createElement("div")
+					chatBlock.id = id
 					chatBlock.className = "chat"
 					chatBlock.appendChild(infoBlock)
 					chatBlock.appendChild(textBlock)
@@ -228,7 +217,7 @@
 	/* buildEvent */
 		function buildEvent(event) {
 			// data
-				var id   = event.id
+				var id   = event.id    || 0
 				var type = event.type  || "story"
 				var text = event.text  || "..."
 				var time = event.time ? new Date(event.time) : new Date()
@@ -315,7 +304,7 @@
 				}
 				else if (event.input == "link") {
 					var linkBlock = document.createElement("a")
-						linkBlock.className = "evnet-link"
+						linkBlock.className = "event-link"
 						linkBlock.href = event.options[0]
 						linkBlock.appendChild(document.createTextNode(event.options[1]))
 
@@ -325,7 +314,9 @@
 			// structure
 				var eventBlock = document.createElement("div")
 					eventBlock.id = event.id
-					eventBlock.className = "event"
+					eventBlock.className = "event " + event.type
+					eventBlock.setAttribute("day", event.day)
+					eventBlock.setAttribute("night", event.night)
 					eventBlock.appendChild(typeBlock)
 					eventBlock.appendChild(timeBlock)
 					eventBlock.appendChild(textBlock)
@@ -339,3 +330,113 @@
 					events.scrollBy(0, 1000000)
 		}
 
+/*** dis/enable ***/
+	/* disableEvent */
+		function disableEvent(id) {
+			var event   = document.getElementById(id)
+			var inputs  = Array.prototype.slice.call(event.querySelectorAll("input[type='text']"))
+			var selects = Array.prototype.slice.call(event.querySelectorAll("select"))
+			var buttons = Array.prototype.slice.call(event.querySelectorAll("button"))
+
+			if (event) {
+				var array = []
+				if (inputs)  { array = array.concat(inputs)  }
+				if (selects) { array = array.concat(selects) }
+				if (buttons) { array = array.concat(buttons) }
+
+				for (var a in array) {
+					array[a].disabled = true
+				}
+			}
+		}
+
+	/* enableEvent */
+		function enableEvent(id) {
+			var event   = document.getElementById(id)
+			var inputs  = Array.prototype.slice.call(event.querySelectorAll("input[type='text']"))
+			var selects = Array.prototype.slice.call(event.querySelectorAll("select"))
+			var buttons = Array.prototype.slice.call(event.querySelectorAll("button"))
+
+			if (event) {
+				var array = []
+				if (inputs)  { array = array.concat(inputs)  }
+				if (selects) { array = array.concat(selects) }
+				if (buttons) { array = array.concat(buttons) }
+
+				for (var a in array) {
+					array[a].disabled = false
+				}
+			}
+		}
+
+/*** fetch ***/
+	window.fetchLoop = setInterval(fetchData, 5000)
+	function fetchData() {
+		// chats
+			var chats = Array.prototype.slice.call(document.getElementsByClassName("chat"))
+
+		// events
+			var events = Array.prototype.slice.call(document.querySelectorAll(".event:not(.decision-waiting)"))
+			if (events.length) {
+				var event = events[events.length - 1].id || null
+			}
+			else {
+				var event = null
+			}
+
+		sendPost({action: "fetchData", event: event}, function(data) {
+			if (!data.success) {
+				displayError(data.message || "unable to fetch data")
+			}
+			else {
+				console.log(data)
+
+				// new chats
+					for (var c in data.chats) {
+						buildChat(data.chats[c])
+					}
+
+				// new events
+					for (var e in data.events) {
+						console.log("--- BUILDING EVENT ---")
+						buildEvent(data.events[e])
+					}
+
+				// activate notes
+					if (data.start) {
+						document.getElementById("notes").className = ""
+					}
+
+				// activate chat
+					if ((data.start) && (["killer", "ghost", "telepath"].indexOf(data.role) !== -1)) {
+						document.getElementById("chats").className = ""
+					}
+
+				// check for game end
+					if (data.end) {
+						clearInterval(fetchLoop)
+						
+						var pastEvents  = Array.prototype.slice.call(document.querySelectorAll(".event[day='" + (data.day - 1) + "']"))
+						var todayEvents = Array.prototype.slice.call(document.querySelectorAll(".event[day='" +  data.day      + "']"))
+						var oldEvents = pastEvents.concat(todayEvents)
+						for (var o in oldEvents) {
+							disableEvent(oldEvents[o])
+						}
+					}
+
+				// disables
+					else {
+						if (!data.night) { // it is day --> get last night's events
+							var oldEvents = Array.prototype.slice.call(document.querySelectorAll(".event[day='" + (data.day - 1) + "'][night='true']" ))
+						}
+						else { // it is night --> get this day's events
+							var oldEvents = Array.prototype.slice.call(document.querySelectorAll(".event[day='" +  data.day      + "'][night='false']"))
+						}
+
+						for (var o in oldEvents) {
+							disableEvent(oldEvents[o])
+						}
+					}
+			}
+		})
+	}

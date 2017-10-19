@@ -7,24 +7,23 @@
 		<link rel="shortcut icon" type="image/png" href="logo.png"/>
 		<link rel="stylesheet" type="text/css" href="stylesheet.css"/>
 		<script type="text/javascript" src="script.js"></script>
-		<script>window.game = <script node>JSON.stringify(request.game)</script>node></script>
 		<script node>var player = request.game.players[request.session.id] || null</script>node>
 	</head>
 	<body>
 		<div id="error" class="hidden"></div>
 		<div id="container">
-			<div id="notes">
+			<div id="notes" class="<script node>if (!request.game.state.start) { 'invisible' }</script>node>">
 				<div class="spacer"></div>
 				<div class="content">
-					<div class="header">notes</div>
+					<div class="header">Notes</div>
 					<textarea id="notes-input" placeholder="add your notes here" rows="5" value=""><script node>player ? player.notes : ""</script>node></textarea>
 				</div>
-				<button class="slideContainer" value="left">&#8594;</button>
-				<button class="slideContainer" value="right">&#8592;<br><br>&#8592;<br><br>&#8592;</button>
+				<button value="left" class="slideContainer">&#8594;</button>
+				<button value="right" class="slideContainer" >&#8592;<br><br>&#8592;<br><br>&#8592;</button>
 			</div>
 			<div id="story">
 				<div class="content">
-					<div class="header">story</div>
+					<div class="header">Specter Inspectors</div>
 					<div id="events-list">
 						<script node>
 							var events = Object.keys(request.game.events).filter(function(e) {
@@ -36,6 +35,7 @@
 
 							for (var e in events) {
 								var event = request.game.events[events[e]]
+
 								try {
 									// get answer
 										var answer = event.answer || ""
@@ -97,7 +97,7 @@
 										}
 
 									// info & structure
-										eventList = eventList + '<div class="event ' + event.type + '" id="' + event.id + '">\
+										eventList = eventList + '<div class="event ' + event.type + '" id="' + event.id + '" day=' + event.day + ' night=' + event.night + '>\
 											<div class="event-type">' + event.type + '</div>\
 											<div class="event-time">' + (new Date(event.created).toLocaleString().split(",")[1]) + '</div>\
 											<div class="event-text">' + event.text + '</div>\
@@ -114,28 +114,29 @@
 					</div>
 				</div>
 			</div>
-			<div id="chats" <script node>if (["killer", "ghost", "telepath"].indexOf(player.status.role) == -1) { 'style="display: none"' } </script>node>>
+			<div id="chats" class="<script node>if (['killer', 'ghost', 'telepath'].indexOf(player.status.role) == -1) { 'hidden' } </script>node>">
 				<button class="slideContainer" value="left">&#8594;<br><br>&#8594;<br><br>&#8594;</button>
 				<button class="slideContainer" value="right">&#8592;</button>
 				<div class="content">
 					<div class="header"><script node>
 						if (["killer", "ghost", "telepath"].indexOf(player.status.role) == -1) {
-							player.status.role + " "
+							player.status.role.slice(0,1).toUpperCase() + player.status.role.slice(1) + " "
 						}
-					</script>node>chat</div>
+					</script>node>Chat</div>
 					<div id="chats-list">
 						<script node>
+							var chatList = ""
+
 							if (["killer", "ghost", "telepath"].indexOf(player.status.role) !== -1) {
 								var chats = request.game.chats[player.status.role].sort(function (x, y) {
 									return x.created > y.created
 								})
-								var chatList = ""
 
 								for (var c in chats) {
 									try {
-										chatList = chatList + '<div class="chat">\
+										chatList = chatList + '<div class="chat" id="' + chats[c].id + '">\
 											<div class="chat-info">\
-												<div class="chat-author">' + request.game.players[chats[c].author].name + '</div>\
+												<div class="chat-author">' + chats[c].name + '</div>\
 												<div class="chat-time">' + (new Date(chats[c].created).toLocaleString().split(",")[1]) + '</div>\
 											</div>\
 											<div class="chat-text">' + chats[c].text + '</div>\

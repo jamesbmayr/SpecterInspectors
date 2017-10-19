@@ -2,6 +2,76 @@
 	var main = require("../main/logic")
 	module.exports = {}
 
+/*** fetches ***/
+	/* fetchData */
+		module.exports.fetchData = fetchData
+		function fetchData(request, callback) {
+			if (!request.post) {
+				callback({success: false, message: "invalid fetch request"})
+			}
+			else {
+				main.retrieveData("games", {$where: "this.id.substring(0,4) === '" + request.path[2].toLowerCase() + "'"}, {$multi: true}, function (games) {
+					if (!games) {
+						main.logError("unable to find game: " + request.path[2].toLowerCase())
+						callback({success: false, message: "game not found"})
+					}
+					else if (!games[0].players[request.session.id]) {
+						callback({success: false, message: "not a player of this game"})
+					}
+					else {
+						request.game  = games[0]
+
+						// events
+							var newEvents = []
+							var eventIDs = Object.keys(request.game.events)
+							var lastEvent = request.game.events[request.post.event] || false
+							console.log("last event is " + lastEvent)
+
+							if (lastEvent) {
+								var eventIDs = eventIDs.filter(function (e) {
+									return ((request.game.events[e].created > lastEvent.created) && (request.game.events[e].viewers.indexOf(request.session.id) !== -1))
+								}).sort(function(x, y) {
+									return request.game.events[x].created > request.game.events[y].created
+								})
+
+								console.log(eventIDs)
+
+								for (var e in eventIDs) {
+									newEvents.push(request.game.events[eventIDs[e]])
+								}
+							}
+
+						// chats
+							var newChats = []
+							var player   = request.game.players[request.session.id]
+							var chats    = request.game.chats[player.status.role] || []
+
+							if (chats.length) {
+								var lastChat = chats.filter(function (c) { return c.id == request.post.chat }) || false
+							}
+							else {
+								var lastChat = false
+							}
+
+							if (lastChat) {
+								var chats = chats.filter(function (e) {
+									return (c.created > lastChat.created)
+								}).sort(function(x, y) {
+									return x.created > y.created
+								})
+
+								for (var c in chats) {
+									newChats.push(chats[c])
+								}
+							}
+
+						// response
+							callback({success: true, start: request.game.state.start, end: request.game.state.end, day: request.game.state.day, night: request.game.state.night, role: player.status.role, events: newEvents, chats: newChats})
+					}
+				})
+			}
+		}
+
 /*** submits ***/
 	/* submitChat */
 		module.exports.submitChat = submitChat
@@ -14,6 +84,9 @@
 					if (!games) {
 						main.logError("unable to find game: " + request.path[2].toLowerCase())
 						callback({success: false, message: "game not found"})
+					}
+					else if (!games[0].state.start) {
+						callback({success: false, message: "game has not started"})
 					}
 					else if (games[0].state.end) {
 						callback({success: false, message: "game already ended"})
@@ -32,10 +105,12 @@
 					}
 					else {
 						request.game = games[0]
+						var player = request.game.players[request.session.id]
 						var chat = {
 							id: main.generateRandom(),
 							created: new Date().getTime(),
 							author: player.id,
+							name: player.name,
 							text: main.sanitizeString(request.post.text) || ""
 						}
 
@@ -63,6 +138,9 @@
 					if (!games) {
 						main.logError("unable to find game: " + request.path[2].toLowerCase())
 						callback({success: false, message: "game not found"})
+					}
+					else if (!games[0].state.start) {
+						callback({success: false, message: "game has not started"})
 					}
 					else if (games[0].state.end) {
 						callback({success: false, message: "game already ended"})
@@ -184,7 +262,8 @@
 					id:      main.generateRandom(),
 					created: new Date().getTime(),
 					updated: new Date().getTime(),
-					day:     request.game.state.day || 0,
+					day:     request.game.state.day   || 0,
+					night:   request.game.state.night || false,
 					type:    data.type    || "error",
 					viewers: data.viewers || Object.keys(request.game.players),
 					doers:   []
@@ -280,11 +359,11 @@
 						break
 
 						case "special-medium":
-							event.text = main.chooseRandom(["And who sent that dream? Why, none other than " + data.name + ".", "That dream definitely comes to you from " + data.name + ".", "These visions are clearly the work of " + data.name + ", may they rest in peace.", "You whisper a solemn thank you to the painter of that particular illusion: " + data.name + ".", "Seems that " + data.name + " is more useful dead than alive, since that's who sent you this dream.", "This information courtesy of a certain ghost named " + data.name + ".", "Excellent dream-making, " + data.name + ", you think to yourself.", "At least you can always count on " + data.name + " to craft some interesting dreams.", "You strongly suspect that it was " + data.name + " making this dream.", "And you're quite certain these hallucionations are coming from " + data.name + "."])
+							event.text = main.chooseRandom(["And who sent that dream? Why, none other than " + data.name + ".", "That dream definitely comes to you from " + data.name + ".", "These visions are clearly the work of " + data.name + ", may they rest in peace.", "You whisper a solemn thank you to the painter of that particular illusion: " + data.name + ".", "Seems that " + data.name + " is more useful dead than alive, since that's who sent you this dream.", "This information courtesy of a certain ghost named " + data.name + ".", "Excellent dream-making, " + data.name + ", you think to yourself.", "At least you can always count on " + data.name + " to craft some interesting dreams.", "You strongly suspect that it was " + data.name + " making this dream.", "And you're quite certain these hallucinations are coming from " + data.name + "."])
 						break
 
 						case "special-psychic":
-							event.text = main.chooseRandom(["With a slight touch on both their shoulders, you conclude that these two are on " + data.match + ".", "Are they on the same team? you wonder. And just like that, you know: " + data.match ".", "Using magic powers you don't fully comprehend, you know these two are on " + data.match + ".", "Using your magical future vision or whatever, you can tell that they're on " + data.match + ".", "It feels like they're on " + data.match + "to you, though you're not really sure why.", "The voices whisper in your mind: " + data.match + ".", "Maybe you can't predict the future, but you can predict the present: they're on " + data.match + ".", "Who knows where ideas come from? But this one is loud and clear: " + data.match + ".", "Using your gift for this sort of thing, you assess that these people are on " + data.match + ".", "Interesting. You can feel that they're on " + data.match + "."])
+							event.text = main.chooseRandom(["With a slight touch on both their shoulders, you conclude that these two are on " + data.match + ".", "Are they on the same team? you wonder. And just like that, you know: " + data.match + ".", "Using magic powers you don't fully comprehend, you know these two are on " + data.match + ".", "Using your magical future vision or whatever, you can tell that they're on " + data.match + ".", "It feels like they're on " + data.match + "to you, though you're not really sure why.", "The voices whisper in your mind: " + data.match + ".", "Maybe you can't predict the future, but you can predict the present: they're on " + data.match + ".", "Who knows where ideas come from? But this one is loud and clear: " + data.match + ".", "Using your gift for this sort of thing, you assess that these people are on " + data.match + ".", "Interesting. You can feel that they're on " + data.match + "."])
 						break
 
 						case "special-insomniac":
@@ -310,7 +389,8 @@
 					id:      main.generateRandom(),
 					created: new Date().getTime(),
 					updated: new Date().getTime(),
-					day:     request.game.state.day || 0,
+					day:     request.game.state.day   || 0,
+					night:   request.game.state.night || false,
 					type:    data.type    || "error",
 					viewers: data.viewers || [request.session.id],
 					doers:   data.doers   || [request.session.id],
@@ -323,6 +403,7 @@
 						case "setup-welcome":
 							event.text = main.chooseRandom(["Welcome to Specter Inspectors: the game of ghosts and guesses!", "The game is afoot!", "Boo!", "Here we go!", "Testing, testing, 1, 2, check.", "Hey! How's it going?", "Are you ready for some Specter Inspectors? I know I am.", "I suspect you're expecting Specter Inspectors to connect... You suspect correctly.", "I don't know about you, but I'm very excited for this game.", "SPECTER INSPECTORS will now commence..."])
 							event.input = "okay"
+							event.options = "Let's go!"
 						break
 
 						case "setup-name":
@@ -462,7 +543,8 @@
 					id:      main.generateRandom(),
 					created: new Date().getTime(),
 					updated: new Date().getTime(),
-					day:     request.game.state.day || 1,
+					day:     request.game.state.day   || 0,
+					night:   request.game.state.night || false,
 					type:    "queue",
 					for:     data.for    || null,
 					author:  data.author || 0,
@@ -665,6 +747,9 @@
 			}
 			else if (Object.keys(request.game.players).length < 5) {
 				callback({success: false, message: "5 or more players required."})
+			}
+			else if (Object.keys(request.game.events).filter(function (e) { return ((request.game.events[e].author == "welcome") && (request.game.events[e].doers.length)) }).length) {
+				callback({success: false, message: "Other players are still setting up."})
 			}
 			else {
 				// get data
@@ -1556,4 +1641,3 @@
 				})
 			}
 		}
-
