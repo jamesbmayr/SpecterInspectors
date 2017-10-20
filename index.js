@@ -215,8 +215,9 @@
 		/* _302 */
 			function _302(data) {
 				main.logStatus("redirecting to " + (data || "/"))
+				var id = request.session ? request.session.id : 0
 				response.writeHead(302, {
-					"Set-Cookie": String( "session=" + request.session.id + "; expires=" + (new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 7)).toUTCString()) + "; path=/; domain=" + main.getEnvironment("domain") ),
+					"Set-Cookie": String( "session=" + id + "; expires=" + (new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 7)).toUTCString()) + "; path=/; domain=" + main.getEnvironment("domain") ),
 					Location: data || "../../../../"
 				})
 				response.end()
@@ -225,8 +226,9 @@
 		/* _403 */
 			function _403(data) {
 				main.logError(data)
+				var id = request.session ? request.session.id : 0
 				response.writeHead(403, {
-					"Set-Cookie": String( "session=" + request.session.id + "; expires=" + (new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 7)).toUTCString()) + "; path=/; domain=" + main.getEnvironment("domain") ),
+					"Set-Cookie": String( "session=" + id + "; expires=" + (new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 7)).toUTCString()) + "; path=/; domain=" + main.getEnvironment("domain") ),
 					"Content-Type": "text/json"
 				})
 				response.end( JSON.stringify({success: false, error: data}) );
@@ -235,8 +237,9 @@
 		/* _404 */
 			function _404(data) {
 				main.logError(data)
+				var id = request.session ? request.session.id : 0
 				response.writeHead(404, {
-					"Set-Cookie": String( "session=" + request.session.id + "; expires=" + (new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 7)).toUTCString()) + "; path=/; domain=" + main.getEnvironment("domain") ),
+					"Set-Cookie": String( "session=" + id + "; expires=" + (new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 7)).toUTCString()) + "; path=/; domain=" + main.getEnvironment("domain") ),
 					"Content-Type": "text/html; charset=utf-8"
 				})
 				response.end(data || main.renderHTML(request, "./main/_404.html"));

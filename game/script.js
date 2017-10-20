@@ -1,12 +1,24 @@
 /*** navigation ***/
 	/* scrollToNewest */
-		scrollToNewest()
-		function scrollToNewest() {
-			var events = document.getElementById("events-list")
-				events.scrollBy(0, 1000000)
-
-			var chats = document.getElementById("chats-list")
-				chats.scrollBy(0, 1000000)
+		scrollToNewest("chats")
+		scrollToNewest("events")
+		function scrollToNewest(index) {
+			if (index == "chats") {
+				try {
+					document.getElementById("chats-list").scrollBy(0, 1000000)
+				}
+				catch (error) {
+					document.getElementById("chats-list").scrollTop = 1000000
+				}
+			}
+			else if (index == "events") {
+				try {
+					document.getElementById("events-list").scrollBy(0, 1000000)
+				}
+				catch (error) {
+					document.getElementById("events-list").scrollTop = 1000000
+				}
+			}
 		}
 
 	/* slideContainer */
@@ -212,7 +224,7 @@
 			// append
 				var chats = document.getElementById("chats-list")
 					chats.appendChild(chatBlock)
-					chats.scrollBy(0, 1000000)
+					scrollToNewest("chats")
 
 			// fade in
 				var chatFadein = setInterval(function() { // fade in
@@ -340,7 +352,9 @@
 			// append
 				var events = document.getElementById("events-list")
 					events.appendChild(eventBlock)
-					events.scrollBy(0, 1000000)
+				if (["start-role", "start-players", "start-notes", "start-inciting"].indexOf(type) == -1) {
+					scrollToNewest("events")
+				}
 
 			// fade in
 				var eventFadein = setInterval(function() { // fade in
@@ -356,7 +370,7 @@
 
 			// animate
 				if (["setup-name", "start-inciting", "story-execution", "story-murder", "end-good", "end-evil"].indexOf(type) !== -1) {
-					buildGhosts(10, false)
+					buildGhosts(5, false)
 				}
 				
 			// clear chats on story-ghost
@@ -406,7 +420,8 @@
 
 /*** fetch ***/
 	/* fetchData */
-		if (typeof window.clearLoop !== "undefined" && window.clearLoop !== null && window.clearLoop) { fetchLoop = setInterval(fetchData, 5000) }
+		fetchLoop = setInterval(fetchData, 5000)
+		if (typeof window.clearLoop !== "undefined" && window.clearLoop !== null && window.clearLoop) { clearInterval(fetchLoop) }
 		function fetchData() {
 			// chats
 				var chats = Array.prototype.slice.call(document.getElementsByClassName("chat"))

@@ -457,7 +457,7 @@
 						break
 
 						case "start-role":
-							event.text = "In this game, your role will be a <span class='special-text'>" + data.role + "</span>. What does that mean? " + getRoleDescription(data.role)
+							event.text = "In this game, your role will be a <span class='special-text'>" + data.role + "</span>. What does that mean? <br>" + getRoleDescription(data.role)
 							event.input = "okay"
 							event.options = "got it"
 						break
@@ -596,7 +596,7 @@
 				break
 
 				case "clairvoyant":
-					return "You are good. And you can sense magic around people - but only once their soul has left their body. That means you can determine if the recently deceased have special abilities - including the telepaths, augur, medium, seer, and psychic."
+					return "You are good. And you can sense magic around people - but only once their souls have left their bodies. That means you can determine if the recently deceased have special abilities - including the telepaths, augur, medium, seer, and psychic."
 				break
 
 				case "medium":
@@ -854,7 +854,7 @@
 					for (var p = 0; p < playerCount; p++) {
 						set["players." + playerList[p] + ".role"] = request.game.players[playerList[p]].role = roles[p]
 
-						var roleEvent = createActionEvent(request, {type: "start-role", viewers: [playerList[p]], role: roles[p], queue: queueEvent.id})
+						var roleEvent = createActionEvent(request, {type: "start-role", viewers: [playerList[p]], doers: [playerList[p]], role: roles[p], queue: queueEvent.id})
 						set["events." + roleEvent.id] = roleEvent
 
 						if (roles[p] == "killer") {

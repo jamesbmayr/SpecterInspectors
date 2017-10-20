@@ -33,6 +33,13 @@
 			cursor: pointer;
 			border: 0px;
 			border-radius: 5px;
+			-webkit-appearance: none;
+			-moz-appearance: none;
+		}
+
+		select:-moz-focusring {
+			color: transparent;
+			text-shadow: 0 0 0 #000;
 		}
 
 	/* conditions */
@@ -109,22 +116,26 @@
 			font-weight: bold;
 			font-family: 'Amatic SC', sans-serif;
 			text-align: center;
+			color: #666666;
 		}
 
 		::-moz-placeholder {
 			font-weight: bold;
 			font-family: 'Amatic SC', sans-serif;
-			text-align: center;  
+			text-align: center;
+			color: #666666;  
 		}
 
 		::-o-input-placeholder {
 			font-weight: bold;
 			font-family: 'Amatic SC', sans-serif;
 			text-align: center;
+			color: #666666;
 		}
 
-		:-ms-input-placeholder {  
+		:-ms-input-placeholder {
 			font-weight: bold;
 			font-family: 'Amatic SC', sans-serif;
-			text-align: center; 
+			text-align: center;
+			color: #666666;
 		}

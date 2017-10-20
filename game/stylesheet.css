@@ -41,6 +41,9 @@
 			-ms-user-select: none;
 			-o-user-select: none;
 			cursor: default;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
 		}
 
 	/* slide controls */
@@ -56,6 +59,7 @@
 			-moz-user-select: none;
 			-ms-user-select: none;
 			-o-user-select: none;
+			cursor: pointer;
 		}
 
 		.slideContainer:hover, .slideContainer:focus {
@@ -95,6 +99,7 @@
 			height: calc(100vh - 80px - 60px);
 			overflow-x: hidden;
 			overflow-y: scroll;
+			overflow: -moz-scrollbars-none;
 			-ms-overflow-style: none;
 		}
 
@@ -182,6 +187,13 @@
 			margin: 0px;
 			overflow-x: hidden;
 			overflow-y: scroll;
+			-ms-overflow-style: none;
+		}
+
+		@-moz-document url-prefix() {
+			#events-list {
+				width: calc(100% + 15px);
+			}
 		}
 
 		.event {
@@ -224,6 +236,7 @@
 			padding: 0px 10px 0px 10px;
 			background-color: #222222;
 			color: #dddddd;
+			font-size: 28px;
 		}
 
 	/* events inputs */
@@ -301,7 +314,7 @@
 			box-shadow: 0px 0px 20px darkblue inset;
 		}
 
-		.event.start-players, .event.end-good, .event.end-evil {
+		.event.start-players, .event.start-role, .event.end-good, .event.end-evil {
 			box-shadow: 0px 0px 20px black inset;
 		}
 

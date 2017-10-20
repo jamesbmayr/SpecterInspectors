@@ -23,19 +23,20 @@
 				error.style.opacity = 0
 			
 			var errorFadein = setInterval(function() { // fade in
+				error.className = ""
 				var opacity = Number(error.style.opacity)
 
 				if (opacity < 1) {
-					error.style.opacity = ((opacity * 100) + 5) / 100
+					error.style.opacity = ((opacity * 1000) + 50) / 1000
 				}
 				else {
 					clearInterval(errorFadein)
 					
 					var errorFadeout = setInterval(function() { // fade out
-						var opacity = Number(error.style.opacity)
+						var opacity = Number(error.style.opacity) * 1000
 
 						if (opacity > 0) {
-							error.style.opacity = ((opacity * 100) - 5) / 100
+							error.style.opacity = ((opacity) - 50) / 1000
 						}
 						else {
 							clearInterval(errorFadeout)

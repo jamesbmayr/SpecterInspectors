@@ -9,7 +9,7 @@
 		<script type="text/javascript" src="script.js"></script>
 		<script node>
 			var player = request.game.players[request.session.id] || null
-			if (request.game.status.end) { "<script>window.clearLoop = true</script>" }
+			if (request.game.state.end) { "<script>window.clearLoop = true</script>" }
 		</script>node>
 	</head>
 	<body>
