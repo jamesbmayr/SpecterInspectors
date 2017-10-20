@@ -47,6 +47,64 @@
 			}, 100)
 		}
 
+	/* buildGhosts */
+		function buildGhosts(count, infinite) {
+			ghostWait     = 0
+			ghostMax      = count || 20
+			ghostContinue = infinite ? 1 : (-1 * count)
+			ghostLoop  = setInterval(animateGhosts, 50)
+		}
+
+	/* animateGhosts */
+		function animateGhosts() {
+			// get ghosts
+				var ghosts = Array.prototype.slice.call( document.getElementsByClassName("ghost") )
+				var graveyard = document.getElementById("graveyard")
+				var ghostCount = ghosts.length
+
+			// reduce ghostWait
+				if (ghostWait) {
+					ghostWait--
+				}
+				else {
+					ghostWait = 5
+				}
+
+			// create ghosts
+				if (!ghostWait && (ghostCount < ghostMax) && ghostContinue) {
+					ghostCount++
+					ghostContinue++
+
+					var ghost = document.createElement("div")
+						ghost.className = "ghost"
+						ghost.style.left = Math.round(Math.random() * (window.innerWidth - 100)) + "px"
+						ghost.style.top = window.innerHeight + 10 + "px"
+						ghost.setAttribute("speed", Math.round(Math.random() * 5) + 10)
+
+					graveyard.appendChild(ghost)
+				}
+
+			// end ?
+				if (!ghostContinue && !ghostCount) {
+					clearInterval(ghostLoop)
+				}
+
+			// move ghosts
+				else {
+					for (var g in ghosts) {
+						var speed = Number(ghosts[g].getAttribute("speed"))
+						var top   = Number(ghosts[g].style.top.replace("px", ""))
+
+						if (top - speed < -100) {
+							graveyard.removeChild(ghosts[g])
+						}
+						else {
+							ghosts[g].style.top = top - speed + "px"
+						}
+					}
+				}
+		}
+
 /*** connections ***/
 	/* sendPost */
 		function sendPost(post, callback) {

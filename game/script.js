@@ -65,12 +65,12 @@
 			else {
 				sendPost({action: "submitNotes", notes: notes}, function(data) {
 					if (!data.success) {
-						displayError(data.message || "unable to submit notes")
+						displayError(data.message || "Unable to submit notes...")
 					}
 					else {
 						savedNotes = data.notes
 						notes.value = data.notes
-						displayError("notes saved")
+						displayError("Notes saved!")
 					}
 				})
 			}
@@ -84,17 +84,17 @@
 			var input = document.getElementById("chats-input")
 
 			if (!input.value || input.value.length == 0) {
-				displayError("enter a chat message")
+				displayError("Enter a chat message to send.")
 			}
 			else if (sanitizeString(input.value).length !== input.value.length) {
-				displayError("use regular characters only")
+				displayError("Use regular characters only.")
 			}
 			else {
 				var text  = sanitizeString(input.value)
 
 				sendPost({action: "submitChat", text: text}, function(data) {
 					if (!data.success) {
-						displayError(data.message || "unable to post message")
+						displayError(data.message || "Unable to post message...")
 					}
 					else {
 						input.value = ""
@@ -120,10 +120,10 @@
 					var button = Array.prototype.slice.call(container.querySelectorAll("button"))[0]
 
 					if (!input.value || input.value.length == 0) {
-						displayError("enter a response")
+						displayError("Enter a response first!")
 					}
 					else if (sanitizeString(input.value).length !== input.value.length) {
-						displayError("use regular characters only")
+						displayError("Use regular characters only.")
 					}
 					else {
 						var value = sanitizeString(input.value)
@@ -134,10 +134,10 @@
 					var button = event.target
 					
 					if (!input.value || input.value.length == 0) {
-						displayError("enter a response")
+						displayError("Enter a response first!")
 					}
 					else if (sanitizeString(input.value).length !== input.value.length) {
-						displayError("use regular characters only")
+						displayError("Use regular characters only.")
 					}
 					else {
 						var value = sanitizeString(input.value)
@@ -161,7 +161,7 @@
 
 					sendPost({action: "submitEvent", value: value, id: id}, function(data) {
 						if (!data.success) {
-							displayError(data.message || "unable to post event response")
+							displayError(data.message || "Unable to submit event response...")
 							enableEvent(id)
 						}
 						else {
@@ -205,6 +205,7 @@
 				var chatBlock = document.createElement("div")
 					chatBlock.id = id
 					chatBlock.className = "chat"
+					chatBlock.style.opacity = 0
 					chatBlock.appendChild(infoBlock)
 					chatBlock.appendChild(textBlock)
 
@@ -212,12 +213,23 @@
 				var chats = document.getElementById("chats-list")
 					chats.appendChild(chatBlock)
 					chats.scrollBy(0, 1000000)
+
+			// fade in
+				var chatFadein = setInterval(function() { // fade in
+					var opacity = Number(chatBlock.style.opacity)
+
+					if (opacity < 1) {
+						chatBlock.style.opacity = ((opacity * 100) + 5) / 100
+					}
+					else {
+						clearInterval(chatFadein)
+					}
+				}, 100)
 		}
 		
 	/* buildEvent */
 		function buildEvent(event) {
 			// data
-				var id   = event.id    || 0
 				var type = event.type  || "story"
 				var text = event.text  || "..."
 				var time = event.time ? new Date(event.time) : new Date()
@@ -234,7 +246,7 @@
 
 				var textBlock = document.createElement("div")
 					textBlock.className = "event-text"
-					textBlock.appendChild(document.createTextNode(text))
+					textBlock.innerHTML = text
 
 			// inputs
 				var inputBlocks = []
@@ -314,7 +326,8 @@
 			// structure
 				var eventBlock = document.createElement("div")
 					eventBlock.id = event.id
-					eventBlock.className = "event " + event.type
+					eventBlock.className = "event " + type
+					eventBlock.style.opacity = 0
 					eventBlock.setAttribute("day", event.day)
 					eventBlock.setAttribute("night", event.night)
 					eventBlock.appendChild(typeBlock)
@@ -328,6 +341,28 @@
 				var events = document.getElementById("events-list")
 					events.appendChild(eventBlock)
 					events.scrollBy(0, 1000000)
+
+			// fade in
+				var eventFadein = setInterval(function() { // fade in
+					var opacity = Number(eventBlock.style.opacity)
+
+					if (opacity < 1) {
+						eventBlock.style.opacity = ((opacity * 100) + 5) / 100
+					}
+					else {
+						clearInterval(eventFadein)
+					}
+				}, 100)
+
+			// animate
+				if (["setup-name", "start-inciting", "story-execution", "story-murder", "end-good", "end-evil"].indexOf(type) !== -1) {
+					buildGhosts(10, false)
+				}
+				
+			// clear chats on story-ghost
+				if (type == "story-ghost") {
+					document.getElementById("chats-list").innerHTML == ""
+				}
 		}
 
 /*** dis/enable ***/
@@ -370,73 +405,71 @@
 		}
 
 /*** fetch ***/
-	window.fetchLoop = setInterval(fetchData, 5000)
-	function fetchData() {
-		// chats
-			var chats = Array.prototype.slice.call(document.getElementsByClassName("chat"))
+	/* fetchData */
+		if (typeof window.clearLoop !== "undefined" && window.clearLoop !== null && window.clearLoop) { fetchLoop = setInterval(fetchData, 5000) }
+		function fetchData() {
+			// chats
+				var chats = Array.prototype.slice.call(document.getElementsByClassName("chat"))
 
-		// events
-			var events = Array.prototype.slice.call(document.querySelectorAll(".event:not(.decision-waiting)"))
-			if (events.length) {
-				var event = events[events.length - 1].id || null
-			}
-			else {
-				var event = null
-			}
+			// events
+				var events = Array.prototype.slice.call(document.querySelectorAll(".event:not(.decision-waiting)"))
+				if (events.length) {
+					var event = events[events.length - 1].id || null
+				}
+				else {
+					var event = null
+				}
 
-		sendPost({action: "fetchData", event: event}, function(data) {
-			if (!data.success) {
-				displayError(data.message || "unable to fetch data")
-			}
-			else {
-				console.log(data)
-
-				// new chats
-					for (var c in data.chats) {
-						buildChat(data.chats[c])
-					}
-
-				// new events
-					for (var e in data.events) {
-						console.log("--- BUILDING EVENT ---")
-						buildEvent(data.events[e])
-					}
-
-				// activate notes
-					if (data.start) {
-						document.getElementById("notes").className = ""
-					}
-
-				// activate chat
-					if ((data.start) && (["killer", "ghost", "telepath"].indexOf(data.role) !== -1)) {
-						document.getElementById("chats").className = ""
-					}
-
-				// check for game end
-					if (data.end) {
-						clearInterval(fetchLoop)
-						
-						var pastEvents  = Array.prototype.slice.call(document.querySelectorAll(".event[day='" + (data.day - 1) + "']"))
-						var todayEvents = Array.prototype.slice.call(document.querySelectorAll(".event[day='" +  data.day      + "']"))
-						var oldEvents = pastEvents.concat(todayEvents)
-						for (var o in oldEvents) {
-							disableEvent(oldEvents[o])
-						}
-					}
-
-				// disables
-					else {
-						if (!data.night) { // it is day --> get last night's events
-							var oldEvents = Array.prototype.slice.call(document.querySelectorAll(".event[day='" + (data.day - 1) + "'][night='true']" ))
-						}
-						else { // it is night --> get this day's events
-							var oldEvents = Array.prototype.slice.call(document.querySelectorAll(".event[day='" +  data.day      + "'][night='false']"))
+			sendPost({action: "fetchData", event: event}, function(data) {
+				if (!data.success) {
+					displayError(data.message || "Unable to fetch data...")
+				}
+				else {
+					// new events
+						for (var e in data.events) {
+							buildEvent(data.events[e])
 						}
 
-						for (var o in oldEvents) {
-							disableEvent(oldEvents[o])
+					// activate notes
+						if (data.start) {
+							document.getElementById("notes").className = ""
 						}
-					}
-			}
-		})
-	}
+
+					// activate chat
+						if ((data.start) && (["killer", "ghost", "telepath"].indexOf(data.role) !== -1)) {
+							document.getElementById("chats").className = ""
+						}
+
+					// new chats
+						for (var c in data.chats) {
+							buildChat(data.chats[c])
+						}
+
+					// check for game end
+						if (data.end) {
+							clearInterval(fetchLoop)
+							
+							var pastEvents  = Array.prototype.slice.call(document.querySelectorAll(".event[day='" + (data.day - 1) + "']"))
+							var todayEvents = Array.prototype.slice.call(document.querySelectorAll(".event[day='" +  data.day      + "']"))
+							var oldEvents = pastEvents.concat(todayEvents)
+							for (var o in oldEvents) {
+								disableEvent(oldEvents[o])
+							}
+						}
+
+					// disables
+						else {
+							if (!data.night) { // it is day --> get last night's events
+								var oldEvents = Array.prototype.slice.call(document.querySelectorAll(".event[day='" + (data.day - 1) + "'][night='true']" ))
+							}
+							else { // it is night --> get this day's events
+								var oldEvents = Array.prototype.slice.call(document.querySelectorAll(".event[day='" +  data.day      + "'][night='false']"))
+							}
+
+							for (var o in oldEvents) {
+								disableEvent(oldEvents[o])
+							}
+						}
+				}
+			})
+		}

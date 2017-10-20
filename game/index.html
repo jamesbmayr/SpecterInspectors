@@ -7,9 +7,13 @@
 		<link rel="shortcut icon" type="image/png" href="logo.png"/>
 		<link rel="stylesheet" type="text/css" href="stylesheet.css"/>
 		<script type="text/javascript" src="script.js"></script>
-		<script node>var player = request.game.players[request.session.id] || null</script>node>
+		<script node>
+			var player = request.game.players[request.session.id] || null
+			if (request.game.status.end) { "<script>window.clearLoop = true</script>" }
+		</script>node>
 	</head>
 	<body>
+		<div id="graveyard"></div>
 		<div id="error" class="hidden"></div>
 		<div id="container">
 			<div id="notes" class="<script node>if (!request.game.state.start) { 'invisible' }</script>node>">

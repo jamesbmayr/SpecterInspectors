@@ -38,8 +38,8 @@
 			var welcomeEvent = game.createActionEvent(request, {type: "setup-welcome", queue: queueEvent.id})
 				request.game.events[welcomeEvent.id] = welcomeEvent
 
-			main.storeData("games", null, request.game, {}, function (results) {
-				callback({success: true, message: "created game", location: "../../game/" + request.game.id.substring(0,4)})
+			main.storeData("games", null, request.game, {}, function (data) {
+				callback({success: true, message: "Created the game!", location: "../../game/" + request.game.id.substring(0,4)})
 			})
 		}
 
@@ -72,27 +72,27 @@
 			var gameCode = request.post.gameCode.replace(" ", "").trim().toLowerCase() || false
 
 			if (!gameCode) {
-				callback({success: false, message: "missing game code"})
+				callback({success: false, message: "You're missing a game code!"})
 			}
 			else if (gameCode.length !== 4) {
-				callback({success: false, message: "game code must be 4 characters"})
+				callback({success: false, message: "The game code must be 4 characters."})
 			}
 			else if (!main.isNumLet(gameCode)) {
-				callback({success: false, message: "game code must be letters and numbers only"})
+				callback({success: false, message: "The game code must be letters and numbers only."})
 			}
 			else {
 				main.retrieveData("games", {$where: "this.id.substring(0,4) === '" + gameCode + "'"}, {$multi: true}, function (games) {
 					if (!games) {
-						callback({success: false, message: "game code not found"})
+						callback({success: false, message: "The game code not found..."})
 					}
-					else if (Object.keys(games[0].players).length >= 16) {
-						callback({success: false, message: "game already contains 16 players"})
+					else if (Object.keys(games[0].players).length >= 25) {
+						callback({success: false, message: "This game is maxed out!"})
 					}
 					else if (games[0].players[request.session.id]) {
-						callback({success: false, message: "player has already joined this game"})
+						callback({success: false, message: "You've already joined this game."})
 					}
 					else if (games[0].state.start) {
-						callback({success: false, message: "game already started"})
+						callback({success: false, message: "This game has already started."})
 					}
 					else {
 						request.game = games[0]
@@ -109,7 +109,12 @@
 							set["events." + welcomeEvent.id] = welcomeEvent
 
 						main.storeData("games", {id: request.game.id}, {$set: set}, {}, function (data) {
-							callback({success: true, message: "joined game", location: "../../game/" + request.game.id.substring(0,4)})
+							if (!data) {
+								callback({success: false, message: "Unable to join this game."})
+							}
+							else {
+								callback({success: true, message: "You joined the game!", location: "../../game/" + request.game.id.substring(0,4)})
+							}
 						})
 					}
 				})
