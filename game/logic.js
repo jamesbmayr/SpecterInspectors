@@ -1329,9 +1329,9 @@
 						}
 
 					// update data
-						main.storeData("games", {id: request.game.id, "events.id": request.event.id}, {$set: set}, {}, function (data) {
+						main.storeData("games", {id: request.game.id}, {$set: set}, {}, function (data) {
 							if (!data) {
-								callback({success: false, message: "Unable to create an execution nomination..."})
+								callback({success: false, message: "Unable to create an execution poll..."})
 							}
 							else {
 								callback({success: true, events: myEvents})
@@ -1524,7 +1524,7 @@
 					// update data
 						main.storeData("games", {id: request.game.id}, {$set: set}, {}, function (data) {
 							if (!data) {
-								callback({success: false, message: "Unable to create a murder nomination..."})
+								callback({success: false, message: "Unable to create a murder poll..."})
 							}
 							else {
 								callback({success: true, events: myEvents})
