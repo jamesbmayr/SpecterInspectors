@@ -852,13 +852,13 @@
 
 				// assign roles & role events
 					for (var p = 0; p < playerCount; p++) {
-						set["players." + playerList[p] + ".role"] = request.game.players[playerList[p]].role = roles[p]
+						set["players." + playerList[p] + ".status.role"] = request.game.players[playerList[p]].status.role = roles[p]
 
 						var roleEvent = createActionEvent(request, {type: "start-role", viewers: [playerList[p]], doers: [playerList[p]], role: roles[p], queue: queueEvent.id})
 						set["events." + roleEvent.id] = roleEvent
 
 						if (roles[p] == "killer") {
-							set["players." + playerList[p] + ".good"] = request.game.players[playerList[p]].good = false
+							set["players." + playerList[p] + ".status.good"] = request.game.players[playerList[p]].status.good = false
 						}
 
 						if (playerList[p] == request.session.id) {
@@ -1064,16 +1064,16 @@
 						var evilAlive = Object.keys(request.game.players).filter(function(p) { return (request.game.players[p].status.alive && !request.game.players[p].status.good) })
 
 						if (evilAlive.length == 0) {
-							set["state.end"]     = request.state.end     = new Date().getTime()
-							set["state.victory"] = request.state.victory = "good"
+							set["state.end"]     = request.game.state.end     = new Date().getTime()
+							set["state.victory"] = request.game.state.victory = "good"
 							
 							var goodEvent = createStaticEvent(request, {type: "end-good"})
 							set["events." + goodEvent.id] = goodEvent
 							myEvents.push(goodEvent)
 						}
 						else if (goodAlive.length < evilAlive.length) {
-							set["state.end"]     = request.state.end     = new Date().getTime()
-							set["state.victory"] = request.state.victory = "evil"
+							set["state.end"]     = request.game.state.end     = new Date().getTime()
+							set["state.victory"] = request.game.state.victory = "evil"
 							
 							var evilEvent = createStaticEvent(request, {type: "end-evil"})
 							set["events." + evilEvent.id] = evilEvent
@@ -1438,16 +1438,16 @@
 						var evilAlive = Object.keys(request.game.players).filter(function(p) { return (request.game.players[p].status.alive && !request.game.players[p].good) })
 
 						if (evilAlive == 0) {
-							set["state.end"]     = request.state.end     = new Date().getTime()
-							set["state.victory"] = request.state.victory = "good"
+							set["state.end"]     = request.game.state.end     = new Date().getTime()
+							set["state.victory"] = request.game.state.victory = "good"
 
 							var goodEvent = createStaticEvent(request, {type: "end-good"})
 							set["events." + goodEvent.id] = goodEvent
 							myEvents.push(goodEvent)
 						}
 						else if (goodAlive.length < evilAlive.length) {
-							set["state.end"]     = request.state.end     = new Date().getTime()
-							set["state.victory"] = request.state.victory = "evil"
+							set["state.end"]     = request.game.state.end     = new Date().getTime()
+							set["state.victory"] = request.game.state.victory = "evil"
 							
 							var evilEvent = createStaticEvent(request, {type: "end-evil"})
 							set["events." + evilEvent.id] = evilEvent
