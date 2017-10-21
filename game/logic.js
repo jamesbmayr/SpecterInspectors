@@ -93,7 +93,7 @@
 					else if (!games[0].players[request.session.id]) {
 						callback({success: false, message: "You're not a player of this game!"})
 					}
-					else if (["killer", "ghost", "telepath"].indexOf(!games[0].players[request.session.id].status.role) == -1) {
+					else if (["killer", "ghost", "telepath"].indexOf(games[0].players[request.session.id].status.role) == -1) {
 						callback({success: false, message: "You're not a member of any chats!"})
 					}
 					else if (games[0].players[request.session.id].status.role == "killer" && !games[0].state.night) {
