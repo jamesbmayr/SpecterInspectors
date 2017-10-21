@@ -123,7 +123,7 @@
 				<button class="slideContainer" value="right">&#8592;</button>
 				<div class="content">
 					<div class="header"><script node>
-						if (["killer", "ghost", "telepath"].indexOf(player.status.role) == -1) {
+						if (["killer", "ghost", "telepath"].indexOf(player.status.role) !== -1) {
 							player.status.role.slice(0,1).toUpperCase() + player.status.role.slice(1) + " "
 						}
 					</script>node>Chat</div>
