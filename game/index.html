@@ -30,6 +30,7 @@
 					<div class="header">Specter Inspectors</div>
 					<div id="events-list">
 						<script node>
+							var playerIDs = Object.keys(request.game.players)
 							var events = Object.keys(request.game.events).filter(function(e) {
 								return request.game.events[e].viewers.indexOf(request.session.id) !== -1
 							}).sort(function(x, y) {
@@ -63,9 +64,8 @@
 												var value = event.options[o]
 												
 												// replace ids with names
-													var p = request.game.players[value] || false
-													if (p) {
-														var name = p.name
+													if (playerIDs.indexOf(value) !== -1) {
+														var name = request.game.players[value].name
 													}
 													else {
 														var name = event.options[o]
