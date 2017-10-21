@@ -899,8 +899,8 @@
 					callback(results)
 				}, function (queue) { // success
 					// get data
-						var dreams = Object.keys(request.game.dreams) || []
-						var killed = request.game.killed || []
+						var dreams = Object.keys(request.game.state.dreams) || []
+						var killed = request.game.state.killed || []
 
 					// set data
 						var myEvents = []
@@ -976,7 +976,7 @@
 						for (var d in dreams) {
 							sleepers = sleepers.filter(function (p) { return p !== dream.target })
 							
-							var dream = request.game.dreams[dreams[d]]
+							var dream = request.game.state.dreams[dreams[d]]
 
 							if (request.game.players[dream.target].status.alive && (killed.indexOf(dream.target) == -1) && (dream.target !== insomniac)) { // special-insomniac
 								var dreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [dream.target, seer], color: dream.color, item: (dream.item + "s").replace("ss", "s")}) // special-seer
