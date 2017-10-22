@@ -33,9 +33,16 @@
 							var playerIDs = Object.keys(request.game.players)
 							var events = Object.keys(request.game.events).filter(function(e) {
 								return request.game.events[e].viewers.indexOf(request.session.id) !== -1
-							}).sort(function(x, y) {
-								return request.game.events[x].created > request.game.events[y].created
 							})
+
+							events = events.sort(function(x, y) {
+								return Number(request.game.events[x].created) > Number(request.game.events[y].created)
+							}).sort(function(x, y) {
+								return Number(request.game.events[x].created) > Number(request.game.events[y].created)
+							}).sort(function(x, y) {
+								return Number(request.game.events[x].created) > Number(request.game.events[y].created)
+							})
+							
 							var eventList = ""
 
 							for (var e in events) {
@@ -56,30 +63,20 @@
 
 										if (event.input == "text") {
 											inputBlock = '<input class="event-input" type="text" placeholder="your response" value="' + answer + '"' + disabled + '/>\
-												<button class="event-button" value="submit-text"' + disabled + '>&#8682;</button>'
+												<button class="event-button" value="submit-text"' + disabled + '>&#10515;</button>'
 										}
 										else if (event.input == "select") {
 											var options = []
-											for (var o in event.options) {
-												var value = event.options[o]
-												
-												// replace ids with names
-													if (playerIDs.indexOf(value) !== -1) {
-														var name = request.game.players[value].name
-													}
-													else {
-														var name = event.options[o]
-													}
-
+											for (var o = 0; o < event.options.length; o++) {
 												// get selected
-													if (answer === value) {
+													if (answer == event.options[o]) {
 														var selected = " selected "
 													}
 													else {
 														var selected = ""
 													}
 
-												options.push('<option value="' + value + '"' + selected + '>' + name + '</option>')
+												options.push('<option value="' + event.options[o] + '"' + selected + '>' + (event.names ? event.names[o] : event.options[o]) + '</option>')
 											}
 
 											// structure
@@ -87,14 +84,14 @@
 													<optgroup label="select..."></optgroup>\
 													' + options.join("") + '\
 												</select>\
-												<button class="event-button" value="submit-select"' + disabled + '>&#8682;</button>'
+												<button class="event-button" value="submit-select"' + disabled + '>&#10515;</button>'
 										}
 										else if (event.input == "okay") {
 											inputBlock = '<button class="event-button" value="okay"' + disabled + '>' + event.options + '</button>'
 										}
 										else if (event.input == "buttons") {
-											inputBlock = '<button class="event-button" value=false' + disabled + '>' + event.options[0] + '</button>\
-													<button class="event-button" value=true' + disabled + '>' + event.options[1] + '</button>'
+											inputBlock = '<button class="event-button" value=0' + disabled + '>' + event.options[0] + '</button>\
+													<button class="event-button" value=1' + disabled + '>' + event.options[1] + '</button>'
 										}
 										else if (event.input == "link") {
 											inputBlock = '<a class="event-link" href="' + event.options[0] + '">' + event.options[1] + '</a>'
@@ -109,7 +106,7 @@
 										</div>'
 								}
 								catch (error) {
-									main.logError("unable to display event: " + JSON.stringify(event))
+									logError("unable to display event: " + JSON.stringify(event) + "\n" + error)
 								}
 							}
 
@@ -118,23 +115,44 @@
 					</div>
 				</div>
 			</div>
-			<div id="chats" class="<script node>if (['killer', 'ghost', 'telepath'].indexOf(player.status.role) == -1) { 'hidden' } </script>node>">
+			<div id="chats" class="<script node>if (player.status.alive && player.status.good && (player.status.role !== 'telepath')) { 'hidden' }</script>node>">
 				<button class="slideContainer" value="left">&#8594;<br><br>&#8594;<br><br>&#8594;</button>
 				<button class="slideContainer" value="right">&#8592;</button>
 				<div class="content">
 					<div class="header"><script node>
-						if (["killer", "ghost", "telepath"].indexOf(player.status.role) !== -1) {
-							player.status.role.slice(0,1).toUpperCase() + player.status.role.slice(1) + " "
+						if (!player.status.alive) {
+							"Ghost "
+						}
+						else if (!player.status.good) {
+							"Killer "
+						}
+						else if (player.status.role == "telepath") {
+							"Telepath "
 						}
 					</script>node>Chat</div>
 					<div id="chats-list">
 						<script node>
-							var chatList = ""
-
-							if (["killer", "ghost", "telepath"].indexOf(player.status.role) !== -1) {
-								var chats = request.game.chats[player.status.role].sort(function (x, y) {
+							if (!player.status.alive) {
+								var chats = request.game.chats["ghost"].sort(function (x, y) {
 									return x.created > y.created
 								})
+							}
+							else if (!player.status.good) {
+								var chats = request.game.chats["killer"].sort(function (x, y) {
+									return x.created > y.created
+								})
+							}
+							else if (player.status.role == "telepath") {
+								var chats = request.game.chats["telepath"].sort(function (x, y) {
+									return x.created > y.created
+								})
+							}
+							else {
+								var chats = false
+							}
+
+							if (chats) {
+								var chatList = ""
 
 								for (var c in chats) {
 									try {
@@ -150,12 +168,12 @@
 										main.logError("unable to display chat: " + JSON.stringify(chats[c]))
 									}
 								}
-							}
 
-							chatList || ""
+								chatList || ""
+							}
 						</script>node>
 					</div>
-					<input id="chats-input" type="text" placeholder="type your message here"/><button id="chats-button">&#8682;</button>
+					<input id="chats-input" type="text" placeholder="type your message here"/><button id="chats-button">&#10515;</button>
 				</div>
 				<div class="spacer"></div>
 			</div>

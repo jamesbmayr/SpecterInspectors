@@ -179,6 +179,10 @@
 			padding: 0px;
 		}
 
+		#story .header {
+			box-shadow: 0px 0px 20px #000000;
+		}
+
 	/* events */
 		#events-list {
 			width: 100%;
@@ -201,6 +205,7 @@
 			border: 1px solid #222222;
 			border-width: 1px 0px 0px 0px;
 			padding: 10px;
+			padding-bottom: 30px;
 			float: left;
 		}
 
@@ -290,14 +295,14 @@
 			margin-left: 5px;
 		}
 
-		.event-button[value=true] {
-			width: calc(50% - 5px);
-			margin-right: 5px;
-		}
-
-		.event-button[value=false] {
+		.event-button[value="1"] {
 			width: calc(50% - 5px);
 			margin-left: 5px;
+		}
+
+		.event-button[value="0"] {
+			width: calc(50% - 5px);
+			margin-right: 5px;
 		}
 
 		.event-button:hover:not([disabled]), .event-button:focus:not([disabled]), .event-input:focus:not([disabled]), .event-select:focus:not([disabled]) {
@@ -314,7 +319,7 @@
 			box-shadow: 0px 0px 20px darkblue inset;
 		}
 
-		.event.start-players, .event.start-role, .event.end-good, .event.end-evil {
+		.event.start-players, .event.end-good, .event.end-evil {
 			box-shadow: 0px 0px 20px black inset;
 		}
 
@@ -322,7 +327,7 @@
 			box-shadow: 0px 0px 20px goldenrod inset;
 		}
 
-		.event.story-murder {
+		.event.story-murder, .event.start-story {
 			box-shadow: 0px 0px 20px darkred inset;
 		}
 
@@ -332,4 +337,8 @@
 
 		.event.story-dream {
 			box-shadow: 0px 0px 20px purple inset;
+		}
+
+		.event.start-role {
+			box-shadow: 0px 0px 30px skyblue inset;
 		}

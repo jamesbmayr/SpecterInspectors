@@ -24,19 +24,21 @@
 			
 			var errorFadein = setInterval(function() { // fade in
 				error.className = ""
-				var opacity = Number(error.style.opacity)
+				var opacity = Number(error.style.opacity) * 100
 
-				if (opacity < 1) {
-					error.style.opacity = ((opacity * 1000) + 50) / 1000
+				if (opacity < 100) {
+					error.style.opacity = Math.ceil( opacity + ((100 - opacity) / 10) ) / 100
+					console.log("up: " + error.style.opacity)
 				}
 				else {
 					clearInterval(errorFadein)
 					
 					var errorFadeout = setInterval(function() { // fade out
-						var opacity = Number(error.style.opacity) * 1000
+						var opacity = Number(error.style.opacity) * 100
 
 						if (opacity > 0) {
-							error.style.opacity = ((opacity) - 50) / 1000
+							error.style.opacity = Math.floor(opacity - ((101 - opacity) / 10) ) / 100
+							console.log("down: " + error.style.opacity)
 						}
 						else {
 							clearInterval(errorFadeout)
@@ -58,52 +60,61 @@
 
 	/* animateGhosts */
 		function animateGhosts() {
-			// get ghosts
-				var ghosts = Array.prototype.slice.call( document.getElementsByClassName("ghost") )
-				var graveyard = document.getElementById("graveyard")
-				var ghostCount = ghosts.length
+			window.requestAnimationFrame(function() {
+				// get ghosts
+					var ghosts = Array.prototype.slice.call( document.getElementsByClassName("ghost") )
+					var graveyard = document.getElementById("graveyard")
+					var ghostCount = ghosts.length
 
-			// reduce ghostWait
-				if (ghostWait) {
-					ghostWait--
-				}
-				else {
-					ghostWait = 5
-				}
+				// reduce ghostWait
+					if (ghostWait) {
+						ghostWait--
+					}
+					else {
+						ghostWait = 5
+					}
 
-			// create ghosts
-				if (!ghostWait && (ghostCount < ghostMax) && ghostContinue) {
-					ghostCount++
-					ghostContinue++
+				// create ghosts
+					if (!ghostWait && (ghostCount < ghostMax) && ghostContinue) {
+						ghostCount++
+						ghostContinue++
 
-					var ghost = document.createElement("div")
-						ghost.className = "ghost"
-						ghost.style.left = Math.round(Math.random() * (window.innerWidth - 100)) + "px"
-						ghost.style.top = window.innerHeight + 10 + "px"
-						ghost.setAttribute("speed", Math.round(Math.random() * 5) + 10)
+						var ghost = document.createElement("div")
+							ghost.className = "ghost"
+							ghost.style.left = Math.round(Math.random() * (window.innerWidth - 100)) + "px"
+							ghost.style.top = window.innerHeight + 10 + "px"
+							ghost.setAttribute("speed", Math.round(Math.random() * 5) + 10)
 
-					graveyard.appendChild(ghost)
-				}
+						graveyard.appendChild(ghost)
+					}
 
-			// end ?
-				if (!ghostContinue && !ghostCount) {
-					clearInterval(ghostLoop)
-				}
+				// end ?
+					if (!ghostContinue && !ghostCount) {
+						clearInterval(ghostLoop)
+					}
 
-			// move ghosts
-				else {
-					for (var g in ghosts) {
-						var speed = Number(ghosts[g].getAttribute("speed"))
-						var top   = Number(ghosts[g].style.top.replace("px", ""))
+				// move ghosts
+					else {
+						for (var g in ghosts) {
+							var speed = Number(ghosts[g].getAttribute("speed"))
+							var top   = Number(ghosts[g].style.top.replace("px", ""))
 
-						if (top - speed < -100) {
-							graveyard.removeChild(ghosts[g])
-						}
-						else {
-							ghosts[g].style.top = top - speed + "px"
+							if (top - speed < -100) {
+								graveyard.removeChild(ghosts[g])
+							}
+							else {
+								ghosts[g].style.top = top - speed + "px"
+
+								// safari hack
+									ghosts[g].style.display = "none"
+									ghosts[g].offsetHeight
+									ghosts[g].style.display = "block"
+							}
 						}
 					}
-				}
+
+
+			})
 		}
 
 /*** connections ***/

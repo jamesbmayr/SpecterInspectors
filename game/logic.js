@@ -93,14 +93,17 @@
 					else if (!games[0].players[request.session.id]) {
 						callback({success: false, message: "You're not a player of this game!"})
 					}
-					else if (["killer", "ghost", "telepath"].indexOf(games[0].players[request.session.id].status.role) == -1) {
+					else if (games[0].players[request.session.id].status.alive && games[0].players[request.session.id].status.good && (games[0].players[request.session.id].status.role !== "telepath")) {
 						callback({success: false, message: "You're not a member of any chats!"})
 					}
-					else if (games[0].players[request.session.id].status.role == "killer" && !games[0].state.night) {
+					else if (games[0].players[request.session.id].status.alive && !games[0].players[request.session.id].status.good && !games[0].state.night) {
 						callback({success: false, message: "Killers can only communicate at night."})
 					}
-					else if (games[0].players[request.session.id].status.role == "telepath" && games[0].state.night) {
+					else if (games[0].players[request.session.id].status.alive && (games[0].players[request.session.id].status.role == "telepath") && games[0].state.night) {
 						callback({success: false, message: "Telepaths can only communicate during the day."})
+					}
+					else if (games[0].players[request.session.id].status.alive && (games[0].players[request.session.id].status.role == "telepath") && Object.keys(games[0].players).filter(function(p) { return (games[0].players[p].status.role == "spellcaster" && games[0].players[p].status.alive) }).length) {
+						callback({success: false, message: "A spellcaster is interrupting your telepathy."})
 					}
 					else {
 						request.game = games[0]
@@ -113,8 +116,18 @@
 							text: main.sanitizeString(request.post.text) || ""
 						}
 
+						if (!player.status.alive) {
+							var type = "ghost"
+						}
+						else if (!player.status.good) {
+							var type = "killer"
+						}
+						else if (player.status.role == "telepath") {
+							var type = "telepath"
+						}
+
 						var push = {}
-							push["chats." + player.status.role] = chat
+							push["chats." + type] = chat
 						var set = {}
 							set.updated = new Date().getTime()
 
@@ -237,11 +250,13 @@
 								break
 
 								default:
+									main.logError("cannot trigger event: " + request.post.id)
 									callback({success: false, message: "Unable to trigger the next event..."})
 								break
 							}
 						}
 						catch (error) {
+							main.logError("cannot trigger event: " + request.post.id + "\n" + error)
 							callback({success: false, message: "Unable to trigger the next event..."})
 						}
 					}
@@ -276,12 +291,12 @@
 						break
 
 					// start
-						case "start-inciting":
-							event.text = "Our story begins... You and your friends have gathered together, but as it turns out, some of you are murderers. That's right - your good friend <span class='special-text'>" + request.game.state.ghost + "</span> is dead. Now you have to figure out who the killers are... before they get you too!"
+						case "start-story":
+							event.text = "Our story begins... You and your friends have gathered together " + request.game.flavor.rationale + " " + request.game.flavor.locale + ", but as it turns out, some of you are murderers. That's right - your good friend <span class='special-text'>" + request.game.flavor.ghost + "</span> is dead. Now you have to figure out who the killers are... before they get you too!"
 						break
 
 						case "start-players":
-							event.text = "Here are all the suspects: <br>" + data.players.join("<br>")
+							event.text = "Here are all the suspects: <br>" + data.players.join("<br>") + "<br><br>And here are all the roles: <br><span class='special-text'>" + data.roles.join("</span> <span class='special-text'>") + "</span>"
 						break
 
 						case "start-notes":
@@ -297,12 +312,12 @@
 							event.text = main.chooseRandom(["You had the strangest dream last night - something about " + data.color + " " + data.item + "?", "That was definitely a bizarre dream - " + data.color + " " + data.item + "...", "Well, dreams don't get more interesting than " + data.color + " " + data.item + ", right?", "What a dream! You can still see it clearly: " + data.color + " " + data.item + ".", "No, no! Not the " + data.color + " " + data.item + "! Oh... it was only a dream.", "Are these dreams, or visions? All you know is you can't get " + data.color + " " + data.item + " out of your head.", "What a nightmare! Just " + data.color + " " + data.item + " everywhere!", "And that dream about " + data.color + " " + data.item + " was pretty interesting, to say the least.", "You begin to wonder if anyone else dreams about " + data.color + " " + data.item + ".", "Wow, what a restless night, constantly interrupted by visions of " + data.color + " " + data.item + "!", "You suspect there's something up with " + data.color + " " + data.item + " after those thoughts dancing in your mind all of last night."])
 						break
 
-						case "story-fakedream":
+						case "story-sleep":
 							event.text = main.chooseRandom(["BEES! BEES EVERYWHERE! Oh... oh, it was only a dream.", "Between the astronauts, the jazz trombone, and the flying zebras, that was an awesome dream last night.", "You hate that dream - you know, the one about the pigeons and the celery. Ugh. Terrible.", "Why is it that your dreams about attractive models are always after the zombie apocalypse?", "In your dream last night, the sun and moon decided to swap places. Few people noticed.", "Crazy dream last night - everyone was speaking in barcodes.", "!!! Oh, you were sleeping. But what a nightmare! Kindergarten - again!", "You had a dream about pancakes, but they were stale.", "Your favorite dreams are always the ones about scuba diving on the moon. Someone should make that a thing.", "They say it's in dreams that our best ideas are born. So I guess your best idea is a pantsuit for hamsters. Huh.", "You dreamed mostly about the number 31, but you're not sure if that's significant. Probably not.", "Whoa - you just had that recurring nightmare again - the one with the octopus telemarketer. You should talk to someone about that.", "You dreamt that you had been a better child to your parents. Alas.", "Last night, you had a dream about unicorns, but they were all on strike for workplace safety violations.", "Is it normal to dream about throwing your friends in a volcano? No, probably not.", "Your latest dream was a revolutionary new tech gadget, but... sigh... the specifics have faded from your memory.", "You had a dream last night that you crawled into your bed.", "Your dream last night was one for the history books... in that it was literally about you reading a history book.", "Strange visions in your sleep - visions of smells. Bad ones.", "You dreamt that you had wet the bed, but you awoke to find you hadn't. Nice.", "Last night, you had a dream that you and your friends were playing a sort of board game on your phone... ghosts and guesswork, was it?", "It's probably best if you forget your latest dreams altogether.", "Honestly, that was the best dream you will ever have - you had a steady job, a family that cared about you, and attainable ambitions... oh well...", "Huh, that was a first. Never had a dream about a rabbit wielding katanas before.", "At this point, most of your dreams are just pop-up ads for more expensive dreams.", "Can't remember the last time you had a dream that all of America's former governors had invited you to tea.", "Terrible, terrible nightmares last night - all of the birds were singing cartoon theme songs! In harmony!", "Your dream last night included Beethoven's Moonlight Sonata, as performed by a box of crayons distraught over the state of the economy.", "Worst. Dream. Ever. 0 out of 5 stars. You literally can't even."])
 						break
 
 						case "story-murder":
-							event.text = main.chooseRandom(["It's a murder! <span class='special-text'>" + data.name + "</span> is dead!", "You awake to find <span class='special-text'>" + data.name + "</span> is no longer with us.", "It seems that <span class='special-text'>" + data.name + "</span> was killed in the middle of the night.", "Oh no! <span class='special-text'>" + data.name + "</span> is dead!", "Sadly, <span class='special-text'>" + data.name + "</span> has passed on from this world.", "And the next ghost is: <span class='special-text'>" + data.name + "</span>.", "Well, can't say we didn't see this coming. <span class='special-text'>" + data.name + "</span> is dead.", "They got another one! <span class='special-text'>" + data.name + "</span> has been murdered!"])
+							event.text = main.chooseRandom(["It's a murder! <span class='special-text'>" + data.name + "</span> is dead!", "You awake to find <span class='special-text'>" + data.name + "</span> is no longer with us.", "It seems that <span class='special-text'>" + data.name + "</span> was killed in the middle of the night.", "Oh no! <span class='special-text'>" + data.name + "</span> is dead!", "Sadly, <span class='special-text'>" + data.name + "</span> has passed on from this world.", "And the next ghost is: <span class='special-text'>" + data.name + "</span>.", "Well, can't say we didn't see this coming. <span class='special-text'>" + data.name + "</span> is dead.", "They got another one! <span class='special-text'>" + data.name + "</span> has been murdered!"]) + main.chooseRandom(["Nearby, you find ", "The weapon of choice? ...", "It appears it was ", "How!? Well, it was ", "Strangely enough, the murder weapon was ", "All due to ", "How did this happen? ...", "No one suspected ", "Turns out the killer used "]) + main.chooseRandom(["a chalice of cyanide", "a chalice of hemlock", "a chalice of arsenic", "a chalice of nightshade", "a large orange container reeking of gasoline", "a 50-year-old rusty cylinder of propane", "a rusty knife stained with the blood of a hundred murders", "an ancient battle axe", "a glimmering replica prop sword", "a 3D-printed carbon filament katana", "some embarassing childhood photographs", "a mechanical pencil sharpener", "frayed piano wire", "a skein of multicolored acrlyic yarn", "a plastic grocery bag with a smiley face on the front", "a cast-iron frying pan", "some origami throwing stars", "a broken stapler", "half a pound of pink chewing gum", "two and a half wool socks", "a syringe dripping with some sort of poison", "a handful of matches and three-quarters of a pack of playing cards", "a cucumber sandwich cut into triangles", "some terrible puns scribbled on post-it notes", "a crude dagger composed of hardened cheese", "some paperclips and rubberbands, mostly", "a map of the nearest children's museum", "twenty live tarantulas in glass jars", "a now-deceased canary", "rocks, paper, and scissors", "a civil war-era musket", "three semi-automatic rifles", "C4", "a standard police pistol", "plastic cling wrap", "kitchen utensils", "ink cartridges", "a water gun converted into a flamethrower", "truly awful top-40 music on shuffle", "a cell phone battery"]) + "."
 						break
 
 						case "story-safe":
@@ -312,6 +327,10 @@
 					// day
 						case "special-telepath":
 							event.text = "During the day, telepaths can read each others thoughts. Use the chat tab on the right to send out a mental message!"
+						break
+
+						case "story-accusation":
+							event.text = "An accusation has been made against you! " + main.chooseRandom(["It appears <span class='special-text'>" + data.author + "</span> thinks it's all your fault.", "Everyone will cast a vote on <span class='special-text'>" + data.author + "</span>'s motion... to kill you.", "Now that <span class='special-text'>" + data.author + "</span> has suggested it, everyone will vote... except you.", "Let's see if everyone else agrees with <span class='special-text'>" + data.author + "</span>.", "Will <span class='special-text'>" + data.author + "</span> get their way, or will you live to fight another day?", "First, <span class='special-text'>" + data.author + "</span> points the finger. Then everyone else decides.", "Time to find out if <span class='special-text'>" + data.author + "</span> has convinced the others."])
 						break
 
 						case "story-execution":
@@ -340,7 +359,7 @@
 						break
 
 						case "murder-complete":
-							event.text = main.chooseRandom(["And just like that, <span class='special-text'>" + data.target + "</span> is dead.", "Poor <span class='special-text'>" + data.target + "</span> - never saw it coming.", "You almost feel bad killing <span class='special-text'>" + data.target + "</span>. Almost.", "See ya never, <span class='special-text'>" + data.target + "</span>!", "Whelp, that's it for <span class='special-text'>" + data.target + "</span>! Dead.", "Looks like <span class='special-text'>" + data.target + "</span> has breathed that final breath.", "Oh, the blood! Blood everywhere! Who knew <span class='special-text'>" + data.target + "</span> had so much blood?", "You quickly and quietly commit the murder of <span class='special-text'>" + data.target + "</span>.", "Wait till they wake up to find good ol' <span class='special-text'>" + data.target + "</span> lying there, dead!", "Bye bye forever, <span class='special-text'>" + data.target + "</span>!", "Raise that death count - <span class='special-text'>" + data.target + "</span> is a goner."])
+							event.text = main.chooseRandom(["And just like that, <span class='special-text'>" + data.target + "</span> will become the next victim.", "Poor <span class='special-text'>" + data.target + "</span> - never saw it coming.", "You almost feel bad killing <span class='special-text'>" + data.target + "</span>. Almost.", "See ya never, <span class='special-text'>" + data.target + "</span>!", "Whelp, that's just about it for <span class='special-text'>" + data.target + "</span>!", "Looks like <span class='special-text'>" + data.target + "</span> will breathe that final breath tonight.", "You begin to wonder just how much blood <span class='special-text'>" + data.target + "</span> has", "You quickly and quietly sketch out the murder of <span class='special-text'>" + data.target + "</span>.", "Wait till they wake up to find good ol' <span class='special-text'>" + data.target + "</span> lying there, dead! Time to get to work.", "Bye bye forever, <span class='special-text'>" + data.target + "</span>! It's murderin' time.", "Raise that death count - <span class='special-text'>" + data.target + "</span> has seconds to live."])
 						break
 
 						case "dream-complete":
@@ -366,7 +385,7 @@
 						break
 
 						case "decision-complete":
-							event.text = main.chooseRandom(["The decision is " + data.pro + " for, " + data.anti + " against.", "Yea: " + data.pro + ". Nay: " + data.anti + ".", data.pro + " said yes, " + data.anti + " said no.", "The results: " + data.pro + " think yes, " + data.anti + " think no.", "How many for? " + data.pro + ". How many against? " + data.anti + ".", "All those in favor: " + data.pro + ". All those opposed: " + data.anti + "."])
+							event.text = main.chooseRandom(["The decision is " + data.pro.length + " for, " + data.anti.length + " against.", "Yea: " + data.pro.length + ". Nay: " + data.anti.length + ".", data.pro.length + " said yes, " + data.anti.length + " said no.", "The results: " + data.pro.length + " think yes, " + data.anti.length + " think no.", "How many for? " + data.pro.length + ". How many against? " + data.anti.length + ".", "All those in favor: " + data.pro.length + ". All those opposed: " + data.anti.length + "."]) + "<br>yes: " + data.pro.join(" ") + "<br>no: " + data.anti.join(" ")
 						break
 
 					// special
@@ -389,6 +408,33 @@
 						case "special-insomniac":
 							event.text = main.chooseRandom(["Who are they thinking about killing now? <span class='special-text'>" + data.name + "</span>?", "Sounds like the murderers want to kill <span class='special-text'>" + data.name + "</span>!", "As you try desperately to fall asleep, you hear the murmur of murderers planning their next kill: <span class='special-text'>" + data.name + "</span>.", "Lying awake in your bed, you hear them plotting: <span class='special-text'>" + data.name + "</span> might be the next target.", "You can't sleep, and here's why: somebody's talking about killing <span class='special-text'>" + data.name + "</span>!", "So many restless nights! So little time left for <span class='special-text'>" + data.name + "</span>, if the killers go through with it.", "You were almost drifting off to sleep when you heard the voices talking - and the name they kept mentioning? <span class='special-text'>" + data.name + "</span>.", "They're there. You don't know who, but you can hear them casually chatting about who to kill next... <span class='special-text'>" + data.name + "</span>.", "Oh no! Not <span class='special-text'>" + data.name + "</span>! Oh no! The killers are gonna strike!", "You long for the calm respite of sleep, but instead, you hear someone discussing the impending death of <span class='special-text'>" + data.name + "</span>!", "What's that? Who's there? What are they planning to do to <span class='special-text'>" + data.name + "</span>!?"])
 						break
+
+						case "special-immortal":
+							event.text = main.chooseRandom(["LOL. They tried to murder you last night. You even pretended to be dead. Kinda feel bad about that now.", "The latest murder victim? You! Just kidding, of course. You can't die. But they still tried.", "It's good to be invincible, especially when people keep trying to murder you.", "They tried to murder you last night - but they of course did not succeed.", "Stellar performance, you think to yourself, reflecting on last night's attempted murder - and your dedication to playing the part.", "You have sustained literally no damage from the killing last night - too bad, killers!"])
+						break
+
+						case "special-illusionist":
+							event.text = main.chooseRandom(["Using a mannequin, you managed to trick the killers into thinking they killed you. But they did not.", "They thought they killed you, but you managed to get out of there just in time.", "The murderers really thought they had you, but you snuck out the back way.", "Those villainous evildoers nearly did you in, but you disappeared in a cloud of smoke at the right moment.", "Using your training from the magician academy, you pull off the impossible: not getting killed. But they did try."])
+						break
+
+						case "special-watchkeeper":
+							event.text = main.chooseRandom(["Without seeing the killers' faces, <span class='special-text'>" + data.watchkeeeper + "</span>, the <span class='special-text'>watchkeeper</span>, rescues <span class='special-text'>" + data.target + "</span> from certain doom.", "Not so fast! The <span class='special-text'>watchkeeper</span>, <span class='special-text'>" + data.watchkeeper + "</span>, is here to protect <span class='special-text'>" + data.target + "</span>.", "The killers are going in after <span class='special-text'>" + data.target + "</span>, but all of a sudden, <span class='special-text'>" + data.watchkeeper + "</span>, the <span class='special-text'>watchkeeper</span>, intervenes!", "They were about to slaughter <span class='special-text'>" + data.name + "</span> when the <span class='special-text'>watchkeeper</span> - none other than <span class='special-text'>" + data.watchkeeper + "</span> - got involved (without getting a good look at the killers).", "The <span class='special-text'>watchkeeper</span> was too fast! Though the killers remain anonymous for now, <span class='special-text'>" + data.watchkeeper + "</span> has protected <span class='special-text'>" + data.name + "</span> from murder."])
+						break
+
+						case "special-detective":
+							event.text = main.chooseRandom(["You did some digging, and came up with this: <span class='special-text'>" + data.name + "</span> is <span class='special-text'>" + data.team + "</span>.", "Excellent detective work, you think to yourself. Yeah - <span class='special-text'>" + data.name + "</span> is definitely <span class='special-text'>" + data.team + "</span>.", "Based on what you've observed - and your years of police training - you've figured out that <span class='special-text'>" + data.name + "</span> is most certainly on the <span class='special-text'>" + data.team + "</span> team.", "The skills you picked up at the academy have served you well: <span class='special-text'>" + data.name + "</span> is one of the <span class='special-text'>" + data.team + "</span> folks.", "How do you know <span class='special-text'>" + data.name + "</span> is <span class='special-text'>" + data.team + "</span>? Simple. You're good at what you do.", "Piecing the clues together, you conclude that <span class='special-text'>" + data.name + "</span> is <span class='special-text'>" + data.team + "</span> - for sure.", "Is <span class='special-text'>" + data.name + "</span> with the <span class='special-text'>" + data.team + "</span>team? Are you a fantastic detective who stops at nothing to uncover the truth? ...Yes. The answer is yes.", "Pretty opened and closed this time around: <span class='special-text'>" + data.name + "</span> is definitely <span class='special-text'>" + data.team + "</span>."])
+						break
+
+						case "special-necromancer":
+							event.text = main.chooseRandom(["Chanting the mystical, ancient words, you bring to life those who have died this night.", "You sense that someone was slain in the darkness - but through the power of the spirits, you bring air back into their lungs that they may breathe again.", "Nope. Not another murder. Not this time. Not as long as you can bring people back to life.", "When the spell is complete, the dead will walk again - without any knowledge of their passing into the other side and back.", "You are a powerful sorcerer, using magic beyond all human understanding to resurrect all those who have died in the last few hours.", "Hey, it worked! The dead person isn't dead anymore! Yay!", "With all sorts of whooshing sounds and flickery candles and stuff, you pull off a cool party trick - bringing a dead person back to life."])
+						break
+
+						case "special-obscurer":
+							event.text = main.chooseRandom(["Some strange magic is obscuring the names - you can't tell who voted how!", "Evil magic blinds you to the identities of the voters.", "Until the obscurer is dead, you won't know which people are voting yes and no.", "Mystery surrounds these votes - the work of the magical obscurer!", "The names cannot be known - they are... obscured."])
+						break
+
+						case "special-spellcaster":
+							event.text = "The spellcaster is blocking any magical abilities."
 
 					// other
 						case "error":
@@ -457,7 +503,7 @@
 						break
 
 						case "start-role":
-							event.text = "In this game, your role will be a <span class='special-text'>" + data.role + "</span>. What does that mean? <br>" + getRoleDescription(data.role)
+							event.text = "In this game, your role will be the <span class='special-text'>" + data.role + "</span>. What does that mean? <br>" + getRoleDescription(data.role)
 							event.input = "okay"
 							event.options = "got it"
 						break
@@ -466,7 +512,7 @@
 						case "trigger-sleep":
 							event.text = ""
 							event.input = "okay"
-							event.options = "go to sleep"
+							event.options = "end the day"
 						break
 
 						case "trigger-wake":
@@ -480,6 +526,9 @@
 							event.text = main.chooseRandom(["Who do you want to point the finger at?", "Who dunnit?", "Who is the killer?", "Who do you blame?", "Somebody's gotta pay for this. But who?", "Who is responsible for this atrocity?", "Someone did it - but who?", "Who should we execute?", "One of us is the killer... but which one of us?", "Who deserves to be executed?"])
 							event.input = "select"
 							event.options = data.options
+								var names = []
+								data.options.forEach(function (o) { names.push(request.game.players[o].name) })
+							event.names = names
 						break
 
 						case "execution-poll":
@@ -493,10 +542,13 @@
 							event.text = main.chooseRandom(["Who do you want to kill tonight?", "Whose turn is it to die?", "Who should we murder?", "Who do you want to off tonight?", "Somebody's gonna die... but who?", "Who is the next victim?", "Someone has seconds to live - but who?", "Who should we do away with?", "One of these people is a murder victim... but which?", "Who deserves to be executed?"])
 							event.input = "select"
 							event.options = data.options
+								var names = []
+								data.options.forEach(function (o) { names.push(request.game.players[o].name) })
+							event.names = names
 						break
 
 						case "murder-poll":
-							event.text = main.chooseRandom([data.author + " has nominated <span class='special-text'>" + data.target + "</span> to die - what's your take?", "It would appear " + data.author + " is ready to murder <span class='special-text'>" + data.target + "</span>... are you?", "Now " + data.author + " wants to kill <span class='special-text'>" + data.target + "</span>. Do you?", "Do you agree with " + data.author + " in murdering <span class='special-text'>" + data.target + "</span>?", "Should we listen to " + data.author + " and kill off <span class='special-text'>" + data.target + "</span>?"])
+							event.text = main.chooseRandom(["It seems <span class='special-text'>" + data.author + "</span> has nominated <span class='special-text'>" + data.target + "</span> to die - what's your take?", "It would appear <span class='special-text'>" + data.author + "</span> is ready to murder <span class='special-text'>" + data.target + "</span>... are you?", "Now <span class='special-text'>" + data.author + "</span> wants to kill <span class='special-text'>" + data.target + "</span>. Do you?", "Do you agree with <span class='special-text'>" + data.author + "</span> in murdering <span class='special-text'>" + data.target + "</span>?", "Should we listen to <span class='special-text'>" + data.author + "</span> and kill off <span class='special-text'>" + data.target + "</span>?"])
 							event.input = "buttons"
 							event.options = ["don't murder", "murder"]
 						break
@@ -524,7 +576,7 @@
 						case "random-select":
 							event.text = main.chooseRandom(["While you're waiting, what's your favorite?", "What's the best?", "Also, we're doing a survey:", "If you had to choose one (and you do), what would you choose?", "So...", "Take your time deciding:", "Which of these is the good one?", "So many options, so little significance:", "What's the worst?"])
 							event.input = "select"
-							event.options = main.chooseRandom([["red","orange","yellow","green","blue","purple","brown","white","gray","black"], ["shirt", "pants", "shoes"], options, ["earth", "wind", "fire", "water"], ["spring", "summer", "autumn", "winter"], ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"], [0,1,2,3,4,5,6,7,8,9], ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"], ["north", "east", "west", "south"], ["up", "right", "left", "down"], ["rock", "paper", "scissors"], ["africa", "antarctica", "asia", "australia", "europe", "north america", "south america"]])
+							event.options = main.chooseRandom([["red","orange","yellow","green","blue","purple","brown","white","gray","black"], ["shirt", "pants", "shoes"], ["earth", "wind", "fire", "water"], ["spring", "summer", "autumn", "winter"], ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"], [0,1,2,3,4,5,6,7,8,9], ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"], ["north", "east", "west", "south"], ["up", "right", "left", "down"], ["rock", "paper", "scissors"], ["africa", "antarctica", "asia", "australia", "europe", "north america", "south america"]])
 						break
 
 						case "random-text":
@@ -583,42 +635,86 @@
 		module.exports.getRoleDescription = getRoleDescription
 		function getRoleDescription(role) {
 			switch (role) {
-				case "killer":
-					return "You are evil. Your goal is to kill off enough good people that your team matches theirs in size. You and your fellow killers can coordinate at night in the chat tab."
-				break
+				// evil magic
+					case "spellcaster":
+						return "You are <span class='special-text'>evil</span>. You are <span class='special-text'>magic</span>. <br>As long as you're alive, no one's magic abilities will work! Mwuahahahahaha!"
+					break
 
-				case "telepath":
-					return "You are good. You want to get out of here alive, just like everyone else - and that means figuring out who the killers are. Luckily, you and the other telepath can read each others' minds during the day... in the chat tab."
-				break
+					case "obscurer":
+						return "You are <span class='special-text'>evil</span>. You are <span class='special-text'>magic</span>. <br>As long as you're alive, no one will know how people vote in execution polls - all the names will disappear from their minds!"
+					break
 
-				case "augur":
-					return "You are good. And you don't want to be murdered! To help you survive, you can read others' auras. Specifically, when someone is executed during the day, you can tell if they were good or evil - in the moment they pass from this world."
-				break
+					case "dreamsnatcher":
+						return "You are <span class='special-text'>evil</span>. You are <span class='special-text'>magic</span>. <br>Every night, all the ghost-crafted dreams will be absorbed into your mind - as well as floating off to their intended recipients."
+					break
 
-				case "clairvoyant":
-					return "You are good. And you can sense magic around people - but only once their souls have left their bodies. That means you can determine if the recently deceased have special abilities - including the telepaths, augur, medium, seer, and psychic."
-				break
+					case "cheater":
+						return "You are <span class='special-text'>evil</span>. You are <span class='special-text'>not magic</span>. <br>Every time there's an execution poll, you'll change one random vote to match your own. Nobody will suspect a thing! Except, you know... that person."
+					break
 
-				case "medium":
-					return "You are good. You'd prefer not to be killed and turned into a ghost. But you have a pretty good understanding of ghosts - in fact, when ghosts communicate with you through dreams, you know who's talking!"
-				break
+				// evil normal
+					case "killer":
+						return "You are <span class='special-text'>evil</span>. You are <span class='special-text'>not magic</span>. <br>Your goal is to kill off all the good people, at least until your team is just as big as theirs. You and any fellow killers can coordinate at night in the chat tab."
+					break
 
-				case "psychic":
-					return "You are good. And as it happens, you have an extrasensory ability to judge people's morals. Whenever another player proposes an execution, you can sense if the accused and accuser are on the same team - even if they can't."
-				break
+				// good magic
+					case "telepath":
+						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>You want to get out of here alive, just like everyone else - and that means figuring out who the killers are. Luckily, you and the other telepath can read each others' minds during the day... in the chat tab."
+					break
 
-				case "seer":
-					return "You are good. For you, dreams are plentiful and powerful, and they come to you every night. In fact, you receive every dream sent by every ghost, no matter who that dream was intended for."
-				break
+					case "augur":
+						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>And you don't want to be murdered! To help you survive, you can read others' auras. Specifically, when someone is executed during the day, you can tell if they were good or evil - in the moment they pass from this world."
+					break
 
-				case "insomniac":
-					return "You are good. You can't sleep - too scared of all these murderers! But that means you can hear what the killers are up to each night - specifically, who they're thinking about killing."
-				break
+					case "clairvoyant":
+						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>And you can sense magic around people - but only once their souls have left their bodies. That means you can determine if the recently deceased have special abilities - including the telepaths, augur, medium, seer, and psychic."
+					break
 
-				case "person":
-				default:
-					return "You are good. And you just want to live! There are some other people on your side with some special abilities, but you're not sure who's who."
-				break
+					case "medium":
+						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>You'd prefer not to be killed and turned into a ghost. But you have a pretty good understanding of ghosts - in fact, when ghosts communicate with you through dreams, you know who's talking!"
+					break
+
+					case "psychic":
+						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>And as it happens, you have an extrasensory ability to judge people's morals. Whenever another player proposes an execution, you can sense if the accused and accuser are on the same team - even if they can't."
+					break
+
+					case "seer":
+						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>For you, dreams are plentiful and powerful, and they come to you every night. In fact, you receive every dream sent by every ghost, no matter who that dream was intended for."
+					break
+
+					case "empath":
+						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>You can make other people feel whatever emotions you want - and that means every time there's a poll, one random player will vote the way you feel."
+					break
+
+					case "immortal":
+						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>You cannot die... well... mostly. Your power protects you from being murdered in the nighttime. In fact, you'll sleep right through it."
+					break
+
+					case "necromancer":
+						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>As long as you're alive, you can bring back the dead - and that means anyone who's murdered at night will wake up all the same the next morning."
+					break
+
+				// good normal
+					case "detective":
+						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>not magic</span>. <br>Each night, you'll do a bit of investigative work and ascertain the allegiance - good or evil - of some random person."
+					break
+
+					case "illusionist":
+						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>not magic</span>. <br>The first time someone tries to murder you, you'll almost certainly find a way to disappear and escape - though you probably won't get much sleep that night. But the second time? Yeah, they'll definitely get you the second time."
+					break
+
+					case "watchkeeper":
+						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>not magic</span>. <br>As long as you're alive, you can protect people - you can fight off the killers, every time, if they go after anyone else. Unfortunately, the murderers will see who you are and will probably go after you next!"
+					break
+
+					case "insomniac":
+						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>not magic</span>. <br>You can't sleep - too scared of all these murderers! But that means you can hear what the killers are up to each night - specifically, who they're thinking about killing."
+					break
+
+					case "person":
+					default:
+						return "<span class='special-text'>You are good</span>. You are <span class='special-text'>not magic</span>. <br>And you just want to live! There are some other people on your side with some special abilities, but you're not sure who's who."
+					break
 			}
 		}
 	
@@ -780,34 +876,86 @@
 					var playerList = Object.keys(request.game.players)
 					var playerCount = playerList.length
 					var evilCount = Math.floor(playerCount / 3)
+					var evilSpecialCount = Math.floor(evilCount / 2)
 					var goodCount = playerCount - evilCount
-					var specialCount = Math.floor(goodCount / 2)
-
-				// generate evil team
+					var goodSpecialCount = Math.floor(goodCount / 2)
 					var roles = []
-					while (roles.length < evilCount) {
-						roles.push("killer")
-					}
 
-				// generate specials
-					while (roles.length < (evilCount + specialCount)) {
-						do {
-							var next = main.chooseRandom(["telepath", "augur", "clairvoyant", "medium", "psychic", "seer", "insomniac"])
-						} while (roles.indexOf(next) !== -1)
+				// evil
+					// get list
+						var availableEvil = []
+						if (playerCount >= 5) {
+							availableEvil.push("dreamsnatcher")
+						}
+						if (playerCount >= 7) {
+							availableEvil.push("obscurer")
+						}
+						if (playerCount >= 9) {
+							availableEvil.push("cheater")
+						}
+						if (playerCount >= 11) {
+							availableEvil.push("spellcaster")
+						}
 
-						if ((next == "telepath") && ((roles.length + 2) < (evilCount + specialCount))) {
-							roles.push(next)
+					// generate specials
+						while (roles.length < evilSpecialCount) {
+							do {
+								var next = main.chooseRandom(availableEvil)
+							} while (roles.indexOf(next) !== -1)
 							roles.push(next)
 						}
-						else if (next !== "telepath") {
-							roles.push(next)
-						}
-					}
 
-				// generate normals
-					while (roles.length < playerCount) {
-						roles.push("person")
-					}
+					// generate normals
+						while (roles.length < evilCount) {
+							roles.push("killer")
+						}
+
+				// good
+					// get list
+						var availableGood = []
+						if (playerCount >= 5) {
+							availableGood.push("immortal")
+							availableGood.push("illusionist")
+							availableGood.push("necromancer")
+							availableGood.push("augur")
+							availableGood.push("clairvoyant")
+							availableGood.push("medium")
+							availableGood.push("seer")
+						}
+						if (playerCount >= 7) {
+							availableGood.push("insomniac")
+							availableGood.push("psychic")
+						}
+						if (playerCount >= 9) {
+							availableGood.push("empath")
+							availableGood.push("telepath")
+							availableGood.push("telepath")
+							availableGood.push("watchkeeper")
+							availableGood = availableGood.filter(function (a) { return a !== "necromancer" })
+						}
+						if (playerCount >= 11) {
+							availableGood.push("detective")
+						}
+
+					// generate specials
+						while (roles.length < (evilCount + goodSpecialCount)) {
+							do {
+								var next = main.chooseRandom(availableGood)
+							} while (roles.indexOf(next) !== -1)
+
+							if ((next == "telepath") && ((roles.length + 2) < (evilCount + goodSpecialCount))) {
+								roles.push(next)
+								roles.push(next)
+							}
+							else if (next !== "telepath") {
+								roles.push(next)
+							}
+						}
+
+					// generate normals
+						while (roles.length < playerCount) {
+							roles.push("person")
+						}
 
 				// shuffle roles
 					roles = roles.sort(function(x, y) {
@@ -831,7 +979,7 @@
 					set["events." + queueEvent.id] = queueEvent
 
 				// create inciting event
-					var incitingEvent = createStaticEvent(request, {type: "start-inciting"})
+					var incitingEvent = createStaticEvent(request, {type: "start-story"})
 					set["events." + incitingEvent.id] = incitingEvent
 					myEvents.push(incitingEvent)
 
@@ -841,7 +989,8 @@
 						var player = request.game.players[playerList[p]]
 						infoArray.push("<span class='special-text'>" + player.name + "</span> " + player.colors.shirt + " shirt, " + player.colors.pants + " pants, " + player.colors.shoes + " shoes... ")
 					}
-					var playersEvent = createStaticEvent(request, {type: "start-players", players: infoArray})
+
+					var playersEvent = createStaticEvent(request, {type: "start-players", players: infoArray, roles: roles})
 					set["events." + playersEvent.id] = playersEvent
 					myEvents.push(playersEvent)
 
@@ -850,6 +999,17 @@
 					set["events." + notesEvent.id] = notesEvent
 					myEvents.push(notesEvent)
 
+				// shuffle some more
+					roles = roles.sort(function(x, y) {
+						return Math.floor(Math.random() * 2)
+					})
+					roles = roles.sort(function(x, y) {
+						return Math.floor(Math.random() * 2)
+					})
+					roles = roles.sort(function(x, y) {
+						return Math.floor(Math.random() * 2)
+					})
+
 				// assign roles & role events
 					for (var p = 0; p < playerCount; p++) {
 						set["players." + playerList[p] + ".status.role"] = request.game.players[playerList[p]].status.role = roles[p]
@@ -857,8 +1017,12 @@
 						var roleEvent = createActionEvent(request, {type: "start-role", viewers: [playerList[p]], doers: [playerList[p]], role: roles[p], queue: queueEvent.id})
 						set["events." + roleEvent.id] = roleEvent
 
-						if (roles[p] == "killer") {
+						if (["killer", "spellcaster", "obscurer", "dreamsnatcher", "cheater"].indexOf(roles[p]) !== -1) {
 							set["players." + playerList[p] + ".status.good"] = request.game.players[playerList[p]].status.good = false
+						}
+
+						if (["telepath", "augur", "clairvoyant", "medium", "psychic", "seer", "necromancer", "empath", "immortal", "spellcaster", "obscurer", "dreamcatcher"].indexOf(roles[p]) !== -1) {
+							set["players." + playerList[p] + ".status.magic"] = request.game.players[playerList[p]].status.magic = true
 						}
 
 						if (playerList[p] == request.session.id) {
@@ -899,16 +1063,16 @@
 					callback(results)
 				}, function (queue) { // success
 					// get data
-						var dreams = Object.keys(request.game.state.dreams) || []
-						var killed = request.game.state.killed || []
+						var dreams = Object.keys(request.game.temporary.dreams) || []
+						var killed = request.game.temporary.killed || []
 
 					// set data
 						var myEvents = []
 						var set = {}
-							set["state.day"]    = request.game.state.day    = Number(request.game.state.day) + 1
-							set["state.killed"] = request.game.state.killed = []
-							set["state.dreams"] = request.game.state.dreams = []
-							set["state.night"]  = request.game.state.night  = false
+							set["state.day"]        = request.game.state.day        = Number(request.game.state.day) + 1
+							set["state.night"]      = request.game.state.night      = false
+							set["temporary.killed"] = request.game.temporary.killed = []
+							set["temporary.dreams"] = request.game.temporary.dreams = []
 							set.updated         = new Date().getTime()
 
 					// disable old events
@@ -919,88 +1083,190 @@
 							set["events." + oldEvents[o] + ".doers"] = []
 						}
 
+					// preventing death
+						// specials
+							var spellcaster = Object.keys(request.game.players).find(function (p) { // special-spellcaster
+								return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "spellcaster"))
+							}) || null
+
+							var necromancer = Object.keys(request.game.players).find(function (p) { // special-necromancer
+								return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "necromancer"))
+							}) || null
+
+							var watchkeeper = Object.keys(request.game.players).find(function (p) { // special-watchkeeper
+								return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "watchkeeper"))
+							}) || null
+
+							var illusionist = Object.keys(request.game.players).find(function (p) { // special-illusionist
+								return (request.game.players[p].status.alive && (request.game.players[p].status.role == "illusionist"))
+							}) || null
+
+							var immortal = Object.keys(request.game.players).find(function (p) { // special-immortal
+								return (request.game.players[p].status.alive && !spellcaster && (request.game.players[p].status.role == "immortal"))
+							}) || null
+
+							var killers = Object.keys(request.game.players).filter(function (p) {
+								return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && !request.game.players[p].status.good)
+							}) || []
+
+						// special-immortal
+							if (immortal && (killed.indexOf(immortal) !== -1)) {
+								var immortalEvent = createStaticEvent(request, {type: "special-immortal", viewers: [immortal]})
+								set["events." + immortalEvent.id] = immortalEvent
+
+								if (immortal == request.session.id) {
+									myEvents.push(immortalEvent)
+								}
+
+								killed = killed.filter(function (k) { return k !== immortal })
+							}
+
+						// special-illusionist
+							if (illusionist && (killed.indexOf(illusionist) !== -1) && (request.game.players[illusionist].status.unsafe == undefined || !request.game.players[illusionist].status.unsafe)) {
+								var illusionistEvent = createStaticEvent(request, {type: "special-illusionist", viewers: [illusionist]})
+								set["events." + illusionistEvent.id] = illusionistEvent
+								set["players." + illusionist + ".status.unsafe"] = true
+
+								if (illusionist == request.session.id) {
+									myEvents.push(illusionistEvent)
+								}
+
+								killed = killed.filter(function (k) { return k !== illusionist })
+							}
+
+						// special-necromancer
+							if (necromancer && killed.length) {
+								var necromancerEvent = createStaticEvent(request, {type: "special-necromancer", viewers: [necromancer]})
+								set["events." + necromancerEvent.id] = necromancerEvent
+
+								if (necromancer == request.session.id) {
+									myEvents.push(necromancerEvent)
+								}
+
+								killed = []				
+							}
+
+						// special-watchkeeper
+							if (watchkeeper && killed.length) {
+								var killedNames = []
+								for (var k in killed) {
+									killedNames.push(request.game.players[killed[k]].name)
+								}
+								
+								var watchkeeperEvent = createStaticEvent(request, {type: "special-watchkeeper", viewers: killers.concat([watchkeeper]), watchkeeper: request.game.players[watchkeeper].name, targets: killedNames})
+								set["events." + watchkeeperEvent.id] = watchkeeperEvent
+
+								if ((watchkeeper == request.session.id) || (killers.indexOf(request.session.id) !== -1)) {
+									myEvents.push(watchkeeperEvent)
+								}
+
+								killed = []
+							}
+
+					// more specials
+						var seer = Object.keys(request.game.players).find(function (p) { // special-seer
+							return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "seer"))
+						}) || null
+
+						var insomniac = Object.keys(request.game.players).find(function (p) { // special-insomniac
+							return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "insomniac"))
+						}) || null
+
+						var medium = Object.keys(request.game.players).find(function (p) { // special-medium
+							return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "medium"))
+						}) || null
+
+						var clairvoyant = Object.keys(request.game.players).find(function (p) { // special-clairvoyant
+							return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "clairvoyant"))
+						}) || null
+
+						var detective = Object.keys(request.game.players).find(function (p) { // special-detective
+							return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "detective"))
+						}) || null
+
+						var dreamsnatcher = Object.keys(request.game.players).find(function (p) { // special-dreamsnatcher
+							return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "dreamsnatcher"))
+						}) || null
+
+						var telepaths = Object.keys(request.game.players).filter(function (p) { // special-telepath
+							return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "telepath"))
+						}) || []
+
+					// special-detective
+						if (detective) {
+							var alive = Object.keys(request.game.players).filter(function (p) { return (request.game.players[p].status.alive && (p !== detective)) })
+							var suspect = main.chooseRandom(alive)
+							var detectiveEvent = createStaticEvent(request, {type: "special-detective", viewers: [detective], name: request.game.players[suspect].name, team: (request.game.players[suspect].good ? "good" : "evil") })
+							set["events." + detectiveEvent.id] = detectiveEvent
+
+							if (request.session.id == detective) {
+								myEvents.psuh(detectiveEvent)
+							}
+						}
+
 					// day
 						var dayEvent = createStaticEvent(request, {type: "story-day"})
 						set["events." + dayEvent.id] = dayEvent
 						myEvents.push(dayEvent)
 
-					// specials
-						var seer = Object.keys(request.game.players).filter(function (p) { // special-seer
-							return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "seer"))
-						}) || null
-
-						var insomniac = Object.keys(request.game.players).filter(function (p) { // special-insomniac
-							return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "insomniac"))
-						}) || null
-
-						var medium = Object.keys(request.game.players).filter(function (p) { // special-medium
-							return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "medium"))
-						}) || null
-
-						var clairvoyant = Object.keys(request.game.players).filter(function (p) { // special-clairvoyant
-							return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "clairvoyant"))
-						}) || null
-						var telepaths = Object.keys(request.game.players).filter(function (p) { // special-telepath
-							return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "telepath"))
-						}) || []
-
-					// ai dream
-						var sleepers = Object.keys(request.game.players).filter(function(s) {
-							return (request.game.players[s].status.alive && (killed.indexOf(s) == -1) && (s !== insomniac)) // special-insomniac
-						})
-
-						var suspect   = main.chooseRandom(sleepers)
-						var slumberer = main.chooseRandom(sleepers)
-						var item      = main.chooseRandom(["shirt", "pants", "shoes"])
-
-						var aiDreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [slumberer, seer], color: request.game.players[suspect].colors[item], item: (item + "s").replace("ss", "s")}) // special-seer
-						set["events." + aiDreamEvent.id] = aiDreamEvent
-
-						if ((slumberer == request.session.id) || (request.session.id == seer)) { // special-seer
-							myEvents.push(aiDreamEvent)
-						}
-
-						// special-medium
-							if (slumberer == medium) {
-								var mediumEvent = createStaticEvent(request, {type: "special-medium", viewers: [medium], name: request.game.state.ghost})
-								set["events." + mediumEvent.id] = mediumEvent
-
-								if (slumberer == request.session.id) {
-									myEvents.push(mediumEvent)
-								}
-							}
-
-						sleepers = sleepers.filter(function (p) { return p !== slumberer })
-
 					// dreams
-						for (var d in dreams) {
-							sleepers = sleepers.filter(function (p) { return p !== dream.target })
-							
-							var dream = request.game.state.dreams[dreams[d]]
+						// ai dream
+							var sleepers = Object.keys(request.game.players).filter(function(s) {
+								return (request.game.players[s].status.alive && (killed.indexOf(s) == -1) && (s !== insomniac)) // special-insomniac
+							})
 
-							if (request.game.players[dream.target].status.alive && (killed.indexOf(dream.target) == -1) && (dream.target !== insomniac)) { // special-insomniac
-								var dreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [dream.target, seer], color: dream.color, item: (dream.item + "s").replace("ss", "s")}) // special-seer
-								set["events." + dreamEvent.id] = dreamEvent
+							var suspect   = main.chooseRandom(sleepers)
+							var slumberer = main.chooseRandom(sleepers)
+							var item      = main.chooseRandom(["shirt", "pants", "shoes"])
 
-								if ((dream.target == request.session.id) || request.session.id == seer) { // special-seer
-									myEvents.push(dreamEvent)
+							var aiDreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [slumberer, seer, dreamsnatcher], color: request.game.players[suspect].colors[item], item: (item + "s").replace("ss", "s")}) // special-seer
+							set["events." + aiDreamEvent.id] = aiDreamEvent
+
+							if ((slumberer == request.session.id) || (request.session.id == seer)) { // special-seer
+								myEvents.push(aiDreamEvent)
+							}
+
+							// special-medium
+								if (slumberer !== medium) {
+									var mediumEvent = createStaticEvent(request, {type: "special-medium", viewers: [medium], name: request.game.flavor.ghost})
+									set["events." + mediumEvent.id] = mediumEvent
+
+									if (slumberer == request.session.id) {
+										myEvents.push(mediumEvent)
+									}
 								}
 
-								// special-medium
-									if (dream.target == medium) {
-										var mediumEvent = createStaticEvent(request, {type: "special-medium", viewers: [medium], name: request.game.players[dream.author].name})
-										set["events." + mediumEvent.id] = mediumEvent
+							sleepers = sleepers.filter(function (p) { return p !== slumberer })
 
-										if (dream.target == request.session.id) {
-											myEvents.push(mediumEvent)
-										}
+						// ghost dreams
+							for (var d in dreams) {
+								sleepers = sleepers.filter(function (p) { return p !== dream.target })
+								
+								var dream = request.game.temporary.dreams[dreams[d]]
+
+								if (request.game.players[dream.target].status.alive && (killed.indexOf(dream.target) == -1) && (dream.target !== insomniac)) { // special-insomniac
+									var dreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [dream.target, seer, dreamsnatcher], color: dream.color, item: (dream.item + "s").replace("ss", "s")}) // special-seer
+									set["events." + dreamEvent.id] = dreamEvent
+
+									if ((dream.target == request.session.id) || request.session.id == seer) { // special-seer
+										myEvents.push(dreamEvent)
 									}
-							}
-						}
 
-					// fake dreams
+									// special-medium
+										if (dream.target == medium) {
+											var mediumEvent = createStaticEvent(request, {type: "special-medium", viewers: [medium], name: request.game.players[dream.author].name})
+											set["events." + mediumEvent.id] = mediumEvent
+
+											if (dream.target == request.session.id) {
+												myEvents.push(mediumEvent)
+											}
+										}
+								}
+							}
+
+						// fake dreams
 						for (var s in sleepers) {
-							var fakeDreamEvent = createStaticEvent(request, {type: "story-fakedream", viewers: [sleepers[s]]})
+							var fakeDreamEvent = createStaticEvent(request, {type: "story-sleep", viewers: [sleepers[s]]})
 							set["events." + fakeDreamEvent.id] = fakeDreamEvent
 
 							if (sleepers[s] == request.session.id) {
@@ -1008,15 +1274,23 @@
 							}
 						}
 
-					// special-telepath
-						if ((request.game.state.day == 1) && telepaths && telepaths.length) {
-							var telepathEvent = createStaticEvent(request, {type: "special-telepath", viewers: telepaths})
-							set["events." + telepathEvent.id] = telepathEvent
-
-							if (telepaths.indexOf(request.session.id) !== -1) {
-								myEvents.push(telepathEvent)
+					// first day only
+						// special-spellcaster
+							if (spellcaster && request.game.state.day == 1) {
+								var spellcasterEvent = createStaticEvent(request, {type: "special-spellcaster"})
+								set["events." + spellcasterEvent.id] = spellcasterEvent
+								myEvents.push(spellcasterEvent)
 							}
-						}
+
+						// special-telepath
+							if ((request.game.state.day == 1) && telepaths && telepaths.length) {
+								var telepathEvent = createStaticEvent(request, {type: "special-telepath", viewers: telepaths})
+								set["events." + telepathEvent.id] = telepathEvent
+
+								if (telepaths.indexOf(request.session.id) !== -1) {
+									myEvents.push(telepathEvent)
+								}
+							}
 
 					// murders
 						if ((!killed || killed.length == 0) && (request.game.state.day > 1)) {
@@ -1026,9 +1300,7 @@
 						}
 						else {
 							for (var k in killed) {
-								var roleBefore = request.game.players[killed[k].id].status.role
-								set["players." + killed[k].id + ".status.role"]  = request.game.players[killed[k].id].status.role  = "ghost"
-								set["players." + killed[k].id + ".status.alive"] = request.game.players[killed[k].id].status.alive = false
+								set["players." + killed[k] + ".status.alive"] = request.game.players[killed[k]].status.alive = false
 
 								var murderEvent = createStaticEvent(request, {type: "story-murder", name: request.game.players[killed[k]].name})
 								set["events." + murderEvent.id] = murderEvent
@@ -1036,18 +1308,13 @@
 
 								var ghostEvent = createStaticEvent(request, {type: "story-ghost", viewers: [killed[k]]})
 								set["events." + ghostEvent.id] = ghostEvent
-								if (killed[k].id == request.session.id) {
+								if (killed[k] == request.session.id) {
 									myEvents.push(ghostEvent)
 								}
 
 								// special-clairvoyant
 									if (clairvoyant) {
-										if (["telepath", "augur", "medium", "psychic", "seer"].indexOf(roleBefore) !== -1) {
-											var magic = "magic"
-										}
-										else {
-											var magic = "not magic"
-										}
+										var magic = request.game.players[killed[k]].status.magic ? "magic" : "not magic"
 
 										var clairvoyantEvent = createStaticEvent(request, {type: "special-clairvoyant", viewers: [clairvoyant], magic: magic})
 										set["events." + clairvoyantEvent.id] = clairvoyantEvent
@@ -1135,10 +1402,10 @@
 						var persons    = []
 						
 						for (var p in playerList) {
-							if (request.game.players[playerList[p]].status.alive == false) {
+							if (!request.game.players[playerList[p]].status.alive) {
 								ghosts.push(playerList[p])
 							}
-							else if (request.game.players[playerList[p]].role == "killer") {
+							else if (!request.game.players[playerList[p]].status.good) {
 								killers.push(playerList[p])
 							}
 							else {
@@ -1149,9 +1416,9 @@
 					// set data
 						var myEvents = []
 						var set = {}
-							set["state.night"]  = request.game.state.night  = true
-							set["state.killed"] = request.game.state.killed = []
-							set["state.dreams"] = request.game.state.dreams = []
+							set["state.night"]      = request.game.state.night      = true
+							set["temporary.killed"] = request.game.temporary.killed = []
+							set["temporary.dreams"] = request.game.temporary.dreams = []
 							set.updated         = new Date().getTime()
 
 					// disable old events
@@ -1283,8 +1550,12 @@
 				}
 				else {
 					// specials
-						var psychic = Object.keys(request.game.players).filter(function (p) { // special-psychic
-							return (request.game.players[p].status.alive && (request.game.players[p].status.role == "psychic"))
+						var spellcaster = Object.keys(request.game.players).find(function (p) { // special-spellcaster
+							return (request.game.players[p].status.alive && (request.game.players[p].status.role == "spellcaster"))
+						}) || null
+
+						var psychic = Object.keys(request.game.players).find(function (p) { // special-psychic
+							return (request.game.players[p].status.alive && !spellcaster && (request.game.players[p].status.role == "psychic"))
 						}) || null
 
 					// set data
@@ -1301,7 +1572,7 @@
 
 					// create poll event
 						for (var p in playerList) {
-							if (request.game.players[playerList[p]].status.alive) {
+							if (request.game.players[playerList[p]].status.alive && (playerList[p] !== request.post.value)) {
 								var pollEvent = createActionEvent(request, {type: "execution-poll", author: request.game.players[request.session.id].name, target: request.game.players[request.post.value].name, viewers: [playerList[p]], doers: [playerList[p]], queue: queueEvent.id})
 								set["events." + pollEvent.id] = pollEvent
 
@@ -1310,6 +1581,10 @@
 								}
 							}
 						}
+
+					// accused event
+						var accusedEvent = createActionEvent(request, {type: "story-accusation", author: request.game.players[request.session.id].name, viewers: [request.post.value]})
+						set["events." + accusedEvent.id] = accusedEvent
 
 					// special-psychic
 						if (psychic) {
@@ -1351,21 +1626,73 @@
 						var anti   = []
 
 					// specials
-						var clairvoyant = Object.keys(request.game.players).filter(function (p) { // special-clairvoyant
-							return (request.game.players[p].status.alive && (p !== target) && (request.game.players[p].status.role == "clairvoyant"))
+						var spellcaster = Object.keys(request.game.players).find(function (p) { // special-spellcaster
+							return (request.game.players[p].status.alive && (request.game.players[p].status.role == "spellcaster"))
 						}) || null
 
-						var augur = Object.keys(request.game.players).filter(function (p) { // special-augur
-							return (request.game.players[p].status.alive && (p !== target) && (request.game.players[p].status.role == "augur"))
+						var clairvoyant = Object.keys(request.game.players).find(function (p) { // special-clairvoyant
+							return (request.game.players[p].status.alive && !spellcaster && (p !== target) && (request.game.players[p].status.role == "clairvoyant"))
+						}) || null
+
+						var augur = Object.keys(request.game.players).find(function (p) { // special-augur
+							return (request.game.players[p].status.alive && !spellcaster && (p !== target) && (request.game.players[p].status.role == "augur"))
+						}) || null
+
+						var empath = Object.keys(request.game.players).find(function (p) { // special-empath
+							return (request.game.players[p].status.alive && !spellcaster && (p !== target) && (request.game.players[p].status.role == "empath"))
+						}) || null
+
+						var obscurer = Object.keys(request.game.players).find(function (p) { // special-obscurer
+							return (request.game.players[p].status.alive && !spellcaster && (request.game.players[p].status.role == "obscurer"))
 						}) || null
 
 					// determine pro and anti
-						for (var v in voters) {
-							if (queue.results[voters[v]] === true) {
-								pro.push(voters[v])
+						if (obscurer) { // special-obscurer
+							for (var v in voters) {
+								if (Number(queue.results[voters[v]]) == 1) {
+									pro.push("<span class='special-text'>?</span>")
+								}
+								else {
+									anti.push("<span class='special-text'>?</span>")
+								}
 							}
-							else {
-								anti.push(voters[v])
+						}
+						else {
+							for (var v in voters) {
+								if (Number(queue.results[voters[v]]) == 1) {
+									pro.push("<span class='special-text'>" + request.game.players[voters[v]].name + "</span>")
+								}
+								else {
+									anti.push("<span class='special-text'>" + request.game.players[voters[v]].name + "</span>")
+								}
+							}
+						}
+
+					// special-empath
+						if (empath) {
+							if ((pro.indexOf(empath) !== -1) && anti.length) {
+								var switchID = main.chooseRandom(anti)
+								anti = anti.filter(function (p) { return p !== switchID })
+								pro.push(switchID)
+							}
+							else if ((anti.indexOf(empath) !== -1) && pro.length) {
+								var switchID = main.chooseRandom(pro)
+								pro = pro.filter(function (p) { return p !== switchID })
+								anti.push(switchID)
+							}
+						}
+
+					// special-cheater
+						if (cheater) {
+							if ((pro.indexOf(cheater) !== -1) && anti.length) {
+								var switchID = main.chooseRandom(anti)
+								anti = anti.filter(function (p) { return p !== switchID })
+								pro.push(switchID)
+							}
+							else if ((anti.indexOf(cheater) !== -1) && pro.length) {
+								var switchID = main.chooseRandom(pro)
+								pro = pro.filter(function (p) { return p !== switchID })
+								anti.push(switchID)
 							}
 						}
 
@@ -1375,14 +1702,19 @@
 							set.updated = new Date().getTime()
 
 					// decision
-						var decisionEvent = createStaticEvent(request, {type: "decision-complete", pro: pro.length, anti: anti.length})
+						var decisionEvent = createStaticEvent(request, {type: "decision-complete", pro: pro, anti: anti})
 						set["events." + decisionEvent.id] = decisionEvent
 						myEvents.push(decisionEvent)
 
+					// special-obscurer
+						if (obscurer && !Object.keys(request.game.events).filter(function (e) { return request.game.events[e].type == "special-obscurer" }).length) {
+							var obscurerEvent = createStaticEvent(request, {type: "special-obscurer"})
+							set["events." + obscurerEvent.id] = obscurerEvent
+							myEvents.push(obscurerEvent)
+						}
+
 					// accepted?
 						if (pro.length > anti.length) {
-							var roleBefore = request.players[target].status.role
-							set["players." + target + ".status.role"]  = request.players[target].status.role  = "ghost"
 							set["players." + target + ".status.alive"] = request.players[target].status.alive = false
 
 							var executionEvent = createStaticEvent(request, {type: "story-execution", name: request.game.players[target].name})
@@ -1402,12 +1734,7 @@
 
 							// special-clairvoyant
 								if (clairvoyant) {
-									if (["telepath", "augur", "medium", "psychic", "seer"].indexOf(roleBefore) !== -1) {
-										var magic = "magic"
-									}
-									else {
-										var magic = "not magic"
-									}
+									var magic = request.game.players[killed[k]].status.magic ? "magic" : "not magic"
 
 									var clairvoyantEvent = createStaticEvent(request, {type: "special-clairvoyant", viewers: [clairvoyant], magic: magic})
 									set["events." + clairvoyantEvent.id] = clairvoyantEvent
@@ -1545,11 +1872,11 @@
 
 					// determine pro and anti
 						for (var v in voters) {
-							if (queue.results[voters[v]] === true) {
-								pro.push(voters[v])
+							if (Number(queue.results[voters[v]]) == 1) {
+								pro.push("<span class='special-text'>" + request.game.players[voters[v]].name + "</span>")
 							}
 							else {
-								anti.push(voters[v])
+								anti.push("<span class='special-text'>" + request.game.players[voters[v]].name + "</span>")
 							}
 						}
 
@@ -1559,13 +1886,13 @@
 							set.updated = new Date().getTime()
 
 					// decision
-						var decisionEvent = createStaticEvent(request, {type: "decision-complete", pro: pro.length, anti: anti.length})
+						var decisionEvent = createStaticEvent(request, {type: "decision-complete", pro: pro, anti: anti})
 						set["events." + decisionEvent.id] = decisionEvent
 						myEvents.push(decisionEvent)
 
 					// accepted?
-						if (pro.length > anti.length) {
-							set["state.killed"] = [target]
+						if (anti.length == 0) { // must be unanimous
+							set["temporary.killed"] = [target]
 
 							var nominationEvents = Object.keys(request.game.events).filter(function (e) { return ((request.game.events[e].day == request.game.state.day) && (request.game.events[e].type == "murder-nomination")) })
 							for (var n in nominationEvents) {

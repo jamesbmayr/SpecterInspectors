@@ -18,10 +18,16 @@
 					victory: false,
 					pause:   false,
 					day:     0,
-					night:   false,
-					dreams:  [],
-					killed:  [],
-					ghost:   main.chooseRandom(["Petey McPeterson", "Gregorio the Great", "Archduke Ferdinand", "Princess Pomegranate", "Carol from HR", "Millie Miles", "Sam Pats", "Shmorko Jr.", "Anabel Lee", "Santa Claus", "Dudebro", "Vanessa Vines", "Robotron-9000", "Professor Z", "Dr. Rogers", "Gertrude Glarkenstein", "Li'l Bigs", "Mrs. Brinkley", "Paul"])
+					night:   false
+				},
+				temporary: {
+					dreams: [],
+					killed: []
+				},
+				flavor: {
+					ghost:     main.chooseRandom(["Petey McPeterson", "Gregorio the Great", "Archduke Ferdinand", "Princess Pomegranate", "Carol from HR", "Millie Miles", "Sam Pats", "Shmorko Jr.", "Anabel Lee", "Santa Claus", "Dudebro", "Vanessa Vines", "Robotron-9000", "Professor Z", "Dr. Rogers", "Gertrude Glarkenstein", "Li'l Bigs", "Mrs. Brinkley", "Paul"]),
+					locale:    main.chooseRandom(["in a sunny California beach house", "on the great Canadian ski slopes", "deep in the uncharted jungles of Southeast Asia", "at a hotel on the floor of the Pacific Ocean", "aboard the International Space Station", "at an piano factory in Brooklyn", "at a world-famous amusement park in Floria", "on a Caribbean cruise", "at an cabin in the woods", "at someone's apartment", "in a secret underground bunker dating back to the Cold War", "at a boarded-up church on the outskirts of a small town in rural France", "at a multi-day technology expo in Las Vegas", "on a cross-continental train leaving from Beijing", "on a hippie commune in the mid-west", "at a seedy motel that somebody should have looked up online first", "on a broken-down ferry in the middle of Lake Erie"]),
+					rationale: main.chooseRandom(["for a business conference", "to stage an intervention", "for an intense study session", "for the solar eclipse", "to celebrate a birthday", "for an obscure, probably made-up holiday", "to discuss the elephant in the room", "for no particular reason", "to plan the overthrow of capitalism", "for a good time", "to record some original music", "for an arts and crafts marathon", "for the annual bird-watching festival", "to file your taxes", "to celebrate the end of the semester", "for a bizarre bachelor(ette) party", "out of scientific curiosity", "for a movie marathon", "in honor of your late great-grandmother", "at the suggestion of your overbearing parents", "because of The Ritual"])
 				},
 				players: {},
 				events:  {},
@@ -57,6 +63,7 @@
 				status: {
 					alive: true,
 					good:  true,
+					magic: false,
 					role:  "person"
 				},
 				notes: ""

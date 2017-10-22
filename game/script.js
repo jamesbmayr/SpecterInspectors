@@ -123,6 +123,7 @@
 		for (var i in inputs)  {  inputs[i].addEventListener("keyup", function (event) { if (event.which == 13) { submitEvent(event) } }) }
 		
 		function submitEvent(event) {
+			console.log("submitting")
 			var container = event.target.closest(".event")
 			var id = container.id
 
@@ -161,13 +162,14 @@
 
 					var value = select.value
 				}
-				else if (event.target.className == "event-button" && (event.target.value == "okay" || event.target.value === true || event.target.value === false)) {
+				else if (event.target.className == "event-button" && (event.target.value == "okay" || Number(event.target.value) == 1 || Number(event.target.value) == 0)) {
 					var buttons = Array.prototype.slice.call(container.querySelectorAll("button"))
 
 					var value = event.target.value
 				}	
 
 			// send
+			console.log(value)
 				if (typeof value !== "undefined" && value !== null) {
 					disableEvent(id)
 
@@ -243,7 +245,7 @@
 		function buildEvent(event) {
 			// data
 				var type = event.type  || "story"
-				var text = event.text  || "..."
+				var text = event.text  || ""
 				var time = event.time ? new Date(event.time) : new Date()
 					time = time.toLocaleString().split(",")[1]
 
@@ -273,7 +275,7 @@
 					var submitBlock = document.createElement("button")
 						submitBlock.className = "event-button"
 						submitBlock.value = "submit-text"
-						submitBlock.innerHTML = "&#8682;"
+						submitBlock.innerHTML = "&#10515;"
 						submitBlock.addEventListener("click", submitEvent)
 
 					inputBlocks = [inputBlock, submitBlock]
@@ -286,10 +288,10 @@
 						selectBlock.className = "event-select"
 						selectBlock.appendChild(labelBlock)
 
-					for (var o in event.options) {
+					for (var o = 0; o < event.options.length; o++) {
 						var optionBlock = document.createElement("option")
 							optionBlock.value = event.options[o]
-							optionBlock.appendChild(document.createTextNode(event.options[o]))
+							optionBlock.appendChild(document.createTextNode(event.names ? event.names[o] : event.options[o]))
 
 						selectBlock.appendChild(optionBlock)
 					}
@@ -297,7 +299,7 @@
 					var submitBlock = document.createElement("button")
 						submitBlock.className = "event-button"
 						submitBlock.value = "submit-select"
-						submitBlock.innerHTML = "&#8682;"
+						submitBlock.innerHTML = "&#10515;"
 						submitBlock.addEventListener("click", submitEvent)
 
 					inputBlocks = [selectBlock, submitBlock]
@@ -314,13 +316,13 @@
 				else if (event.input == "buttons") {
 					var falseBlock = document.createElement("button")
 						falseBlock.className = "event-button"
-						falseBlock.value = false
+						falseBlock.value = 0
 						falseBlock.appendChild(document.createTextNode(event.options[0]))
 						falseBlock.addEventListener("click", submitEvent)
 
 					var trueBlock = document.createElement("button")
 						trueBlock.className = "event-button"
-						trueBlock.value = true
+						trueBlock.value = 1
 						trueBlock.appendChild(document.createTextNode(event.options[1]))
 						trueBlock.addEventListener("click", submitEvent)
 
@@ -352,7 +354,7 @@
 			// append
 				var events = document.getElementById("events-list")
 					events.appendChild(eventBlock)
-				if (["start-role", "start-players", "start-notes", "start-inciting"].indexOf(type) == -1) {
+				if (["start-role", "start-players", "start-notes"].indexOf(type) == -1) {
 					scrollToNewest("events")
 				}
 
@@ -369,13 +371,18 @@
 				}, 100)
 
 			// animate
-				if (["setup-name", "start-inciting", "story-execution", "story-murder", "end-good", "end-evil"].indexOf(type) !== -1) {
+				if (["setup-name", "start-story", "story-execution", "story-murder", "end-good", "end-evil"].indexOf(type) !== -1) {
 					buildGhosts(5, false)
 				}
 				
 			// clear chats on story-ghost
 				if (type == "story-ghost") {
 					document.getElementById("chats-list").innerHTML == ""
+				}
+
+			// disable launch on launch
+				if (type == "start-story") {
+					disableEvent(Array.prototype.slice.call(document.getElementsByClassName("start-launch"))[0].id)
 				}
 		}
 
