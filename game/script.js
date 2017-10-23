@@ -21,6 +21,56 @@
 			}
 		}
 
+	/* swipe */
+		var touchX = null
+		var touchY = null
+		document.addEventListener("touchstart", startTouch, false);        
+		document.addEventListener("touchmove", moveTouch, false);
+		function startTouch(event) {
+			touchX = Number(event.touches[0].clientX)
+			touchY = Number(event.touches[0].clientY)
+		}
+
+		function moveTouch(event) {
+			var notes = event.target.closest("#notes") || false
+			var story = event.target.closest("#story") || false
+			var chats = event.target.closest("#chats") || false
+			var parent = notes ? notes : story ? story : chats ? chats : false
+
+			if (touchX !== null && touchY !== null && parent) {
+				var liftX = Number(event.touches[0].clientX)
+				var liftY = Number(event.touches[0].clientY)
+
+				var deltaX = touchX - liftX
+				var deltaY = touchY - liftY
+
+				if (Math.abs(deltaX) > Math.abs(deltaY)) { // left right
+					if (deltaX < -20) { // swipe left-to-right
+						if (parent.id == "story" || parent.id == "notes") {
+							var button = Array.prototype.slice.call(document.querySelectorAll("#notes:not(.invisible) .slideContainer[value='right']"))[0]
+							if (button) { button.click() }
+						}
+						else if (parent.id == "chats") {
+							var button = Array.prototype.slice.call(document.querySelectorAll("#chats:not(.hidden) .slideContainer[value='right']"))[0]
+							if (button) { button.click() }
+						}
+					}
+					else if (deltaX > 20) { // swipe right-to-left
+						if (parent.id == "story" || parent.id == "chats") {
+							var button = Array.prototype.slice.call(document.querySelectorAll("#chats:not(.hidden) .slideContainer[value='left']"))[0]
+							if (button) { button.click() }
+						}
+						else if (parent.id == "notes") {
+							var button = Array.prototype.slice.call(document.querySelectorAll("#notes:not(.invisible) .slideContainer[value='left']"))[0]
+							if (button) { button.click() }
+						}
+					}
+				}
+			
+				touchX = touchY = null
+			}
+		}
+
 	/* slideContainer */
 		var buttons = Array.prototype.slice.call(document.getElementsByClassName("slideContainer"))
 		for (var b in buttons) { buttons[b].addEventListener("click", slideContainer) }

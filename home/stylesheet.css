@@ -7,10 +7,10 @@
 	/* container */
 		#container {
 			position: absolute;
-			height: 220px;
-			width: 400px;
-			top: calc(50% - 110px);
-			left: calc(50% - 200px);
+			height: 180px;
+			width: 350px;
+			top: calc(50% - 90px);
+			left: calc(50% - 175px);
 			text-align: center;
 			z-index: 2;
 			border-radius: 30px;
@@ -20,11 +20,11 @@
 	/* title */
 		#title {
 			width: 100%;
-			height: 80px;
-			font-size: 70px;
+			height: 70px;
+			font-size: 60px;
 			text-shadow: 0px 0px 10px #000000;
 			color: #dddddd;
-			margin: 0px 0px 20px 0px;
+			margin: 0px 0px 10px 0px;
 			cursor: default;
 			user-select: none;
 		}
@@ -33,8 +33,8 @@
 		#createGame, #joinGame, #gameCode {
 			border: 0px;
 			color: #dddddd;
-			height: 120px;
-			width: 120px;
+			height: 100px;
+			width: 100px;
 			background-color: #111111;
 			box-shadow: 0px 0px 10px #000000;
 		}
@@ -54,8 +54,8 @@
 		}
 
 		#gameCode {
-			height: 110px;
-			width: 110px;
+			height: 90px;
+			width: 90px;
 			padding: 5px;
 			border-radius: 30px 0px 0px 30px;
 			margin-left: 20px;
