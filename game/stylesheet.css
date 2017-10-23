@@ -96,7 +96,7 @@
 		#chats-list {
 			float: left;
 			width: 80vw;
-			height: calc(100vh - 80px - 60px);
+			height: calc(100vh - 80px - 120px);
 			overflow-x: hidden;
 			overflow-y: scroll;
 			overflow: -moz-scrollbars-none;
@@ -139,7 +139,7 @@
 			padding: 10px;
 			height: 30px;
 			width: calc(80vw - 20px);
-			margin-bottom: 10px;
+			margin-bottom: 70px;
 			background-color: rgba(0,0,0,0);
 			color: #dddddd;
 		}
@@ -152,7 +152,7 @@
 			width: 50px;
 			padding: 0px;
 			vertical-align: bottom;
-			margin-bottom: 10px;
+			margin-bottom: 70px;
 			background-color: rgba(0,0,0,0);
 			color: #dddddd;
 			text-shadow: 0px 0px 10px #aaaaaa;

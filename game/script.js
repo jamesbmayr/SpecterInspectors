@@ -428,6 +428,7 @@
 			// clear chats on story-ghost
 				if (type == "story-ghost") {
 					document.getElementById("chats-list").innerHTML == ""
+					document.getElementById("chats").className = ""
 				}
 
 			// disable launch on launch
@@ -440,11 +441,12 @@
 	/* disableEvent */
 		function disableEvent(id) {
 			var event   = document.getElementById(id)
-			var inputs  = Array.prototype.slice.call(event.querySelectorAll("input[type='text']"))
-			var selects = Array.prototype.slice.call(event.querySelectorAll("select"))
-			var buttons = Array.prototype.slice.call(event.querySelectorAll("button"))
 
 			if (event) {
+				var inputs  = Array.prototype.slice.call(event.querySelectorAll("input[type='text']"))
+				var selects = Array.prototype.slice.call(event.querySelectorAll("select"))
+				var buttons = Array.prototype.slice.call(event.querySelectorAll("button"))
+
 				var array = []
 				if (inputs)  { array = array.concat(inputs)  }
 				if (selects) { array = array.concat(selects) }
@@ -459,11 +461,12 @@
 	/* enableEvent */
 		function enableEvent(id) {
 			var event   = document.getElementById(id)
-			var inputs  = Array.prototype.slice.call(event.querySelectorAll("input[type='text']"))
-			var selects = Array.prototype.slice.call(event.querySelectorAll("select"))
-			var buttons = Array.prototype.slice.call(event.querySelectorAll("button"))
 
 			if (event) {
+				var inputs  = Array.prototype.slice.call(event.querySelectorAll("input[type='text']"))
+				var selects = Array.prototype.slice.call(event.querySelectorAll("select"))
+				var buttons = Array.prototype.slice.call(event.querySelectorAll("button"))
+
 				var array = []
 				if (inputs)  { array = array.concat(inputs)  }
 				if (selects) { array = array.concat(selects) }
@@ -525,7 +528,7 @@
 							var todayEvents = Array.prototype.slice.call(document.querySelectorAll(".event[day='" +  data.day      + "']"))
 							var oldEvents = pastEvents.concat(todayEvents)
 							for (var o in oldEvents) {
-								disableEvent(oldEvents[o])
+								disableEvent(oldEvents[o].id)
 							}
 						}
 
@@ -539,7 +542,7 @@
 							}
 
 							for (var o in oldEvents) {
-								disableEvent(oldEvents[o])
+								disableEvent(oldEvents[o].id)
 							}
 						}
 				}
