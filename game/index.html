@@ -63,7 +63,7 @@
 
 										if (event.input == "text") {
 											inputBlock = '<input class="event-input" type="text" placeholder="your response" value="' + answer + '"' + disabled + '/>\
-												<button class="event-button" value="submit-text"' + disabled + '>&#10515;</button>'
+												<button class="event-button" value="submit-text"' + disabled + '>&#8595;</button>'
 										}
 										else if (event.input == "select") {
 											var options = []
@@ -84,7 +84,7 @@
 													<optgroup label="select..."></optgroup>\
 													' + options.join("") + '\
 												</select>\
-												<button class="event-button" value="submit-select"' + disabled + '>&#10515;</button>'
+												<button class="event-button" value="submit-select"' + disabled + '>&#8595;</button>'
 										}
 										else if (event.input == "okay") {
 											inputBlock = '<button class="event-button" value="okay"' + disabled + '>' + event.options + '</button>'
@@ -173,7 +173,7 @@
 							}
 						</script>node>
 					</div>
-					<input id="chats-input" type="text" placeholder="type your message here"/><button id="chats-button">&#10515;</button>
+					<input id="chats-input" type="text" placeholder="type your message here"/><button id="chats-button">&#8595;</button>
 				</div>
 				<div class="spacer"></div>
 			</div>

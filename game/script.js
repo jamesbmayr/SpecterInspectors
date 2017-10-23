@@ -325,7 +325,7 @@
 					var submitBlock = document.createElement("button")
 						submitBlock.className = "event-button"
 						submitBlock.value = "submit-text"
-						submitBlock.innerHTML = "&#10515;"
+						submitBlock.innerHTML = "&#8595;"
 						submitBlock.addEventListener("click", submitEvent)
 
 					inputBlocks = [inputBlock, submitBlock]
@@ -349,7 +349,7 @@
 					var submitBlock = document.createElement("button")
 						submitBlock.className = "event-button"
 						submitBlock.value = "submit-select"
-						submitBlock.innerHTML = "&#10515;"
+						submitBlock.innerHTML = "&#8595;"
 						submitBlock.addEventListener("click", submitEvent)
 
 					inputBlocks = [selectBlock, submitBlock]
