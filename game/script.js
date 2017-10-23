@@ -216,6 +216,12 @@
 					var buttons = Array.prototype.slice.call(container.querySelectorAll("button"))
 
 					var value = event.target.value
+
+					for (var b in buttons) {
+						if (buttons[b].value == value) {
+							buttons[b].className = buttons[b].className.replace("incomplete", "").trim()
+						}
+					}
 				}	
 
 			// send
@@ -365,13 +371,13 @@
 				}
 				else if (event.input == "buttons") {
 					var falseBlock = document.createElement("button")
-						falseBlock.className = "event-button"
+						falseBlock.className = "event-button incomplete"
 						falseBlock.value = 0
 						falseBlock.appendChild(document.createTextNode(event.options[0]))
 						falseBlock.addEventListener("click", submitEvent)
 
 					var trueBlock = document.createElement("button")
-						trueBlock.className = "event-button"
+						trueBlock.className = "event-button incomplete"
 						trueBlock.value = 1
 						trueBlock.appendChild(document.createTextNode(event.options[1]))
 						trueBlock.addEventListener("click", submitEvent)
@@ -474,6 +480,7 @@
 
 				for (var a in array) {
 					array[a].disabled = false
+					array[a].className = array[a].className.replace("incomplete", "").trim() + " incomplete"
 				}
 			}
 		}

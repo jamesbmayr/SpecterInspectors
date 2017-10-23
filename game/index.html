@@ -90,8 +90,23 @@
 											inputBlock = '<button class="event-button" value="okay"' + disabled + '>' + event.options + '</button>'
 										}
 										else if (event.input == "buttons") {
-											inputBlock = '<button class="event-button" value=0' + disabled + '>' + event.options[0] + '</button>\
-													<button class="event-button" value=1' + disabled + '>' + event.options[1] + '</button>'
+											if (answer == event.options[0]) {
+												var selected_0 = ""
+											}
+											else {
+												var selected_0 = " incomplete"
+											}
+
+											if (answer == event.options[1]) {
+												var selected_1 = ""
+											}
+											else {
+												var selected_1 = " incomplete"
+											}
+
+
+											inputBlock = '<button class="event-button' + selected_0 + '" value=0' + disabled + '>' + event.options[0] + '</button>\
+													<button class="event-button' + selected_1 + '" value=1' + disabled + '>' + event.options[1] + '</button>'
 										}
 										else if (event.input == "link") {
 											inputBlock = '<a class="event-link" href="' + event.options[0] + '">' + event.options[1] + '</a>'
