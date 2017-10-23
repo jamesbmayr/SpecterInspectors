@@ -90,14 +90,14 @@
 											inputBlock = '<button class="event-button" value="okay"' + disabled + '>' + event.options + '</button>'
 										}
 										else if (event.input == "buttons") {
-											if (answer == event.options[0]) {
+											if ((answer == event.options[0]) || (Number(answer) == Number(event.options[0]))) {
 												var selected_0 = ""
 											}
 											else {
 												var selected_0 = " incomplete"
 											}
 
-											if (answer == event.options[1]) {
+											if ((answer == event.options[1]) || (Number(answer) == Number(event.options[0]))) {
 												var selected_1 = ""
 											}
 											else {

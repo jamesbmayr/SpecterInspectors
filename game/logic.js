@@ -439,6 +439,7 @@
 
 						case "special-spellcaster":
 							event.text = "The spellcaster is blocking any magical abilities."
+						break
 
 					// other
 						case "error":
@@ -1595,7 +1596,7 @@
 						}
 
 					// accused event
-						var accusedEvent = createActionEvent(request, {type: "story-accusation", author: request.game.players[request.session.id].name, viewers: [request.post.value]})
+						var accusedEvent = createStaticEvent(request, {type: "story-accusation", author: request.game.players[request.session.id].name, viewers: [request.post.value]})
 						set["events." + accusedEvent.id] = accusedEvent
 
 					// special-psychic

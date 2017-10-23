@@ -218,7 +218,7 @@
 					var value = event.target.value
 
 					for (var b in buttons) {
-						if (buttons[b].value == value) {
+						if ((buttons[b].value == value) || (Number(buttons[b].value) == Number(value))) {
 							buttons[b].className = buttons[b].className.replace("incomplete", "").trim()
 						}
 					}
