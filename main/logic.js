@@ -75,7 +75,7 @@
 							<meta property="og:url" content="https://www.specterinspectors.com"/>\
 							<meta property="og:description" content="Specter Inspectors is a game of ghosts and guesses."/>\
 							<meta property="og:image" content="https://www.specterinspectors.com/banner.png"/>\
-							<!--<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>-->'
+							<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>'
 				break
 
 				default:
