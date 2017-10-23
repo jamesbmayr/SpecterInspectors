@@ -178,7 +178,7 @@
 			var id = container.id
 
 			// inputs
-				if (event.target.className == "event-input") {
+				if (event.target.className.indexOf("event-input") !== -1) {
 					var input = event.target
 					var button = Array.prototype.slice.call(container.querySelectorAll("button"))[0]
 
@@ -192,7 +192,7 @@
 						var value = sanitizeString(input.value)
 					}
 				}
-				else if (event.target.className == "event-button" && event.target.value == "submit-text") {
+				else if ((event.target.className.indexOf("event-button") !== -1) && (event.target.value == "submit-text")) {
 					var input = Array.prototype.slice.call(container.querySelectorAll("input[type='text']"))[0]
 					var button = event.target
 					
@@ -206,13 +206,13 @@
 						var value = sanitizeString(input.value)
 					}
 				}
-				else if (event.target.className == "event-button" && event.target.value == "submit-select") {
+				else if ((event.target.className.indexOf("event-button") !== -1) && (event.target.value == "submit-select")) {
 					var button = event.target
 					var select = Array.prototype.slice.call(container.querySelectorAll("select"))[0]
 
 					var value = select.value
 				}
-				else if (event.target.className == "event-button" && (event.target.value == "okay" || Number(event.target.value) == 1 || Number(event.target.value) == 0)) {
+				else if ((event.target.className.indexOf("event-button") !== -1) && (event.target.value == "okay" || Number(event.target.value) == 1 || Number(event.target.value) == 0)) {
 					var buttons = Array.prototype.slice.call(container.querySelectorAll("button"))
 
 					var value = event.target.value
