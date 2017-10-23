@@ -443,7 +443,7 @@
 					// other
 						case "error":
 						default:
-							event.text = main.chooseRandom(["Uh-oh!", "Hm... something went wrong...", "That's an error:", "Wait a second...", "Nope, that's not gonna work."]) + " " + info.data
+							event.text = main.chooseRandom(["Uh-oh!", "Hm... something went wrong...", "That's an error:", "Wait a second...", "Nope, that's not gonna work."])
 						break
 				}
 
@@ -598,7 +598,7 @@
 					// other
 						case "error":
 						default:
-							event.text = main.chooseRandom(["Uh-oh!", "Hm... something went wrong...", "That's an error:", "Wait a second...", "Nope, that's not gonna work."]) + " " + info.data
+							event.text = main.chooseRandom(["Uh-oh!", "Hm... something went wrong...", "That's an error:", "Wait a second...", "Nope, that's not gonna work."])
 						break
 				}
 
