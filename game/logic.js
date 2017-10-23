@@ -671,7 +671,7 @@
 					break
 
 					case "clairvoyant":
-						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>And you can sense magic around people - but only once their souls have left their bodies. That means you can determine if the recently deceased have special abilities - including the telepaths, augur, medium, seer, and psychic."
+						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>And you can sense magic around people - but only once their souls have left their bodies. That means you can determine if the recently deceased have special magical abilities. <br>(telepath, augur, medium, seer, psychic, empath, immortal, necromancer, spellcaster, obscurer, dreamsnatcher)"
 					break
 
 					case "medium":
