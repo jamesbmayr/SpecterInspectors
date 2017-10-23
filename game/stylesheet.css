@@ -205,8 +205,12 @@
 			border: 1px solid #222222;
 			border-width: 1px 0px 0px 0px;
 			padding: 10px;
-			padding-bottom: 50px;
+			padding-bottom: 20px;
 			float: left;
+		}
+
+		.event:last-child {
+			padding-bottom: 70px;
 		}
 
 		.event-type {
@@ -242,6 +246,7 @@
 			background-color: #222222;
 			color: #dddddd;
 			font-size: 28px;
+			white-space: nowrap;
 		}
 
 	/* events inputs */

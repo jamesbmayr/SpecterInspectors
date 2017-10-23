@@ -1905,7 +1905,7 @@
 							set.updated = new Date().getTime()
 
 					// decision
-						var decisionEvent = createStaticEvent(request, {type: "decision-complete", pro: pro, anti: anti})
+						var decisionEvent = createStaticEvent(request, {type: "decision-complete", pro: pro, anti: anti, viewers: voters})
 						set["events." + decisionEvent.id] = decisionEvent
 						myEvents.push(decisionEvent)
 
@@ -2035,7 +2035,7 @@
 						set["events." + request.event.id + ".answer"] = request.event.answer = request.post.value
 						set["events." + request.event.id + ".doers"]  = request.event.doers = []
 
-						var sampleWake = Object.keys(request.game.events).find(function (e) { return ((request.game.events[e].day == request.session.state.day) && (request.game.events[e].type == "trigger-wake"))})
+						var sampleWake = Object.keys(request.game.events).find(function (e) { return ((request.game.events[e].day == request.game.state.day) && (request.game.events[e].type == "trigger-wake"))})
 						var queueID = request.game.events[sampleWake].queue
 						
 						var wakeEvent = createActionEvent(request, {type: "trigger-wake", viewers: [request.session.id], doers: [request.session.id], queue: queueID})
