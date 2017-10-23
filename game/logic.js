@@ -354,6 +354,10 @@
 							event.text = "As a ghost, you can't talk to the living, but you can still communicate! Every night, you can send someone a dream to give them clues about who the killers might be!"
 						break
 
+						case "murder-ghost":
+							event.text = main.chooseRandom(["Using your ethereal hearing, you learn the murderers are considering killing <span class='special-text'>" + data.target + "</span>.", "As a ghost, you can listen in on all kinds of conversations. Like the one about possibly murdering <span class='special-text'>" + data.target + "</span>.", "Your ghostly senses suggest that <span class='special-text'>" + data.target + "</span> might be the next victim.", "One perk of being dead? You know what the living are up to - like discussing the murder of <span class='special-text'>" + data.target + "</span>.", "The spectral plane reveals the murderers' next possible victim: <span class='special-text'>" + data.target + "</span>.", "Floating between the walls, you see that the killers are plotting the murder of <span class='special-text'>" + data.target + "</span> next.", "As you hover in eternal purgatory, you pick up on a fun fact: the killers want to go after <span class='special-text'>" + data.target + "</span> now.", "Looks like <span class='special-text'>" + data.target + "</span> might be joining you in the afterlife if the murderers all agree.", "Things are looking dire for <span class='special-text'>" + data.target + "</span>, at least as far as those ghostly vibes are going.", "You begin to wonder what it would be like for <span class='special-text'>" + data.target + "</span> to join you as a spirit - you know, if the killers go through with it."])
+						break
+
 						case "random-why":
 							event.text = main.chooseRandom(["To ensure other players don't know who you are, we ask you pointless questions.", "This is just so no one knows your role.", "To make it so no one know's who's who, we have to make you click random buttons.", "This next part is so nobody can figure out your role.", "This data's not going anywhere - it's just so other players don't know what your role is.", "It's important that you look like you're doing something, even if you're not.", "Gotta make sure nobody knows your role.", "We have to keep up the ruse that you could be any player.", "Just to make sure nobody knows what role you have..."])
 						break
@@ -833,6 +837,14 @@
 							callback(results)
 						}, function(queue) { // success
 							var players = Object.keys(request.game.players)
+							
+							// don't add launch event for players who already have one
+								var existingLaunchEvents = Object.keys(request.game.events).filter(function (e) { return request.game.events[e].type == "start-launch" })
+								for (var e in existingLaunchEvents) {
+									players = players.filter(function (p) { 
+										return request.game.events[existingLaunchEvents[e]].viewers.indexOf(p) == -1
+									})
+								}
 
 							var myEvents = []
 							var set = {}
@@ -914,7 +926,6 @@
 					// get list
 						var availableGood = []
 						if (playerCount >= 5) {
-							availableGood.push("immortal")
 							availableGood.push("illusionist")
 							availableGood.push("necromancer")
 							availableGood.push("augur")
@@ -923,6 +934,7 @@
 							availableGood.push("seer")
 						}
 						if (playerCount >= 7) {
+							availableGood.push("immortal")
 							availableGood.push("insomniac")
 							availableGood.push("psychic")
 						}
@@ -1840,6 +1852,13 @@
 							if (killerList[k] == request.session.id) {
 								myEvents.push(pollEvent)
 							}
+						}
+
+					// create ghost event
+						var ghosts = Object.keys(request.game.players).filter(function (p) { return !request.game.players[p].status.alive }) || []
+						if (ghosts.length) {
+							var ghostEvent = createStaticEvent(request, {type: "murder-ghost", target: request.game.players[request.post.value].name, viewers: ghosts})
+							set["events." + ghostEvent.id] = ghostEvent
 						}
 
 					// special-insomniac
