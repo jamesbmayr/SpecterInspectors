@@ -57,7 +57,7 @@
 								case (/\/logo[.]png$/).test(request.url):
 									try {
 										response.writeHead(200, {"Content-Type": "image/png"});
-										response.end(fs.readFileSync("./main/logo_1000.png"), "binary");
+										response.end(fs.readFileSync("./main/logo.png"), "binary");
 									}
 									catch (error) {_404(error)}
 								break
@@ -108,6 +108,14 @@
 								case (/^\/$/).test(request.url):
 									try {
 										response.end(main.renderHTML(request, "./home/index.html"))
+									}
+									catch (error) {_404(error)}
+								break
+
+							// about
+								case (/^\/about\/?$/).test(request.url):
+									try {
+										response.end(main.renderHTML(request, "./about/index.html"))
 									}
 									catch (error) {_404(error)}
 								break

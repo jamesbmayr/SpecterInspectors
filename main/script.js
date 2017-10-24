@@ -4,6 +4,11 @@
 			return (/^[a-z0-9A-Z_\s]+$/).test(string)
 		}
 
+	/* isEmail */
+		function isEmail(string) {
+			return (/[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/).test(string)
+		}
+
 	/* sanitizeString */
 		function sanitizeString(string) {
 			if (string.length > 0) {

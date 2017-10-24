@@ -151,6 +151,11 @@ a game of ghosts and guesses: https://specterinspectors.herokuapp.com
 |   |- stylesheet.css
 |   |- script.js (createGame, joinGame)
 |
+|- /about/
+|   |- index.html
+|   |- stylesheet.css
+|   |- script.js (submitFeedback)
+|
 |- /game/
     |- logic.js (fetchData, submitChat, submitNotes, submitEvent, createStaticEvent, createActionEvent, createQueueEvent, getRoleDescription, checkQueue, setupPlayer, launchGame, createDay, createNight, executePlayer, murderPlayer, setupDream, setupRandom)
     |- index.html

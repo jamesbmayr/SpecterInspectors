@@ -81,6 +81,7 @@
 			-ms-user-select: none;
 			-o-user-select: none;
 			pointer-events: none;
+			z-index: 0;
 		}
 
 		.ghost {

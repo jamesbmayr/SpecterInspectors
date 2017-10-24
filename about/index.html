@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Specter Inspectors</title>
+		<script node> getAsset("meta") </script>node>
+		<script node> getAsset("google fonts") </script>node>
+		<link rel="shortcut icon" type="image/png" href="logo.png"/>
+		<link rel="stylesheet" type="text/css" href="./about/stylesheet.css"/>
+		<script type="text/javascript" src="./about/script.js"></script>
+	</head>
+	<body>
+		<div id="graveyard"></div>
+		<div id="error" class="hidden"></div>
+		<div id="container">
+			<div id="container-inner">
+				<div id="top" class="section">
+					<a id="title" href="../../">Specter Inspectors</a>
+					<div class="subheader">the game of ghosts and guesses</div>
+				</div>
+				<div id="overview" class="section">
+					<div class="header">Overview</div><hr>
+					<div class="content">
+						In this deception and deduction game for 5-25 friends, players use their smart devices to power an in-person gameplay experience.
+						<br><br>
+						Each player is assigned a random role - <span class="green">good</span> or <span class="red">evil</span>; <span class="purple">magic</span> or not.
+						<br><br>
+						The <span class="green">good</span> team need to use their abilities each <span class="orange">day</span> to figure out who's on their side... before the <span class="red">evil</span> team murders everyone in the <span class="blue">night</span>! 
+					</div>
+				</div>
+				<div id="rules" class="section">
+					<div class="header">Rules</div><hr>
+					<div class="content">
+						<div class="subheader">Requirements</div>
+						<ul>
+							<li>5-25 players</li>
+							<li>1 smartphone/computer each</li>
+							<li>30-60 minutes</li>
+						</ul>
+						
+						<div class="subheader">Setup</div>
+						<ul>
+							<li>One player creates a game using the <span class="blue">new</span> button.</li>
+							<li>All other players join using the 4-letter gamecode and the <span class="blue">join</span> button.</li>
+							<li>Each player inputs a name and some clothing color info.</li>
+							<li>On launch, each player will be given a secret special role. (2/3 <span class="green">good</span>, 1/3 <span class="red">evil</span>) (1/2 of the <span class="green">good</span> and 1/2 of the <span class="red">evil</span> get special abilities</li>
+						</ul>
+
+						<div class="subheader">Sections</div>
+						<ul>
+							<li><span class="orange">Story</span>: This is where the story takes place, including all narrative and interactive events.</li>
+							<li><span class="blue">Notes</span>: Players can type personal notes throughout the game to keep track of everything that happens.</li>
+							<li><span class="purple">Chats</span>: Certain roles, like killers and ghosts, are able to communicate in secret with others using this tab.</li>
+						</ul>
+
+						<div class="subheader">Events</div>
+						<ul>
+							<li><span class="orange">day</span>: Each day, players learn if anyone was murdered the night before, and they see what dreams they had. All living players can talk openly at this time.</li>
+							<li><span class="orange">execution</span>: Living players can accuse one another of being a murderer - this prompts a poll, and if a majority approve, the accused is put to death.</li>
+							<li><span class="blue">night</span>: At night, players "go to sleep" and are not allowed to speak out loud.</li>
+							<li><span class="red">murder</span>: Killers can select any living player to be murdered - they must unanimously agree on a target.</li>
+							<li><span class="purple">dream</span>: Dead players come back as ghosts, who cannot talk, but can send "dreams" - clues about the killers based on their clothing colors.</li>
+							<li><span class="green">random</span>: All other players must respond to a few random prompts before progressing - this ensures that player roles remain secret.</li>
+						</ul>					
+
+						<div class="subheader">Ending</div>
+						<ul>
+							<li><span class="green">good</span>: all evil players are dead</li>
+							<li><span class="red">evil</span>: # evil players alive >= # good players alive</li>
+						</ul>
+					</div>
+				</div>
+				<div id="roles" class="section">
+					<div class="header">Roles</div><hr>
+					<div class="content">
+						<ul>
+							<li><span class="green">person</span>: good, not magic; no special ability (5+ players)</li>
+							<li><span class="green">illusionist</span>: good, not magic; escapes from murder on first attempt (5+ players)</li>
+							<li><span class="green">necromancer</span>: good, magic; immediately resurrects murdered players every night (5-8 players)</li>
+							<li><span class="green">augur</span>: good, magic; learns allegiance of each executed player (5+ players)</li>
+							<li><span class="green">clairvoyant</span>: good, magic; learns magic-ness of each executed or murdered player (5+ players)</li>
+							<li><span class="green">medium</span>: good, magic; sees name of ghost sending each dream received (5+ players)</li>
+							<li><span class="green">seer</span>: good, magic; sees all ghost dreams every night (5+ players)</li>
+							<li><span class="green">immortal</span>: good, magic; cannot be murdered at night (7+ players)</li>
+							<li><span class="green">insomniac</span>: good, not magic; sees names of murder nomination targets, but cannot receive dreams (7+ players)</li>
+							<li><span class="green">psychic</span>: good, magic; learns if allegiance of accused and accuser matches during each execution nomination (7+ players.</li>
+
+							<li><span class="green">empath</span>: good, magic; one random vote is switched to match this player's during each poll (9+ players)</li>
+							<li><span class="green">telepath</span>: good, magic; can chat with the other telepath during the day (9+ players)</li>
+							<li><span class="green">watchkeeper</span>: good, not magic; prevents murder of others each night, but reveals identity (9+ players)</li>
+							<li><span class="green">detective</span>: good, not magic; learns allegiance of one random player every night (11+ players)</li>
+							<li><span class="red">killer</span>: evil, not magic; can chat with other evil players at night (5+ players)</li>
+							<li><span class="red">dreamsnatcher</span>: evil, magic; sees all ghost dreams every night (6+ players)</li>
+							<li><span class="red">obscurer</span>: evil, magic; when poll results are revealed, names will be hidden (7+ players)</li>
+							<li><span class="red">cheater</span>: evil, not magic; one random vote is switched to match this player's during each poll (9+ players)</li>
+							<li><span class="red">spellcaster</span>: evil, magic; prevents all other magic abilities from working (11+ players)</li>
+						</ul>
+					</div>
+				</div>
+				<div id="code" class="section">
+					<div class="header">Code</div><hr>
+					<div class="content">
+						This application is powered by <span class="white">nodeJS</span> and <span class="white">mongoDB</span>, written in 100% raw <span class="white">javascript</span>.
+						<br><br>
+						See the latest updates on <a href="https://github.com/jamesbmayr/specterinspectors" target="_blank" class="blue">Github</a>.
+					</div>
+				</div>
+				<div id="feedback" class="section">
+					<div class="header">Feedback</div><hr>
+					<div class="content">
+						<textarea id="feedback-text" rows="4" placeholder="please share your feedback here"></textarea>
+						<input type="email" id="feedback-email" placeholder="your email"/><button id="feedback-submit" value="submit">&#8595;</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

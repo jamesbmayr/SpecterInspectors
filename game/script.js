@@ -169,8 +169,10 @@
 	/* submitEvent */
 		var buttons = Array.prototype.slice.call(document.getElementsByClassName("event-button"))
 		for (var b in buttons) { buttons[b].addEventListener("click", submitEvent) }
-		var inputs = Array.prototype.slice.call(document.getElementsByClassName("event-input"))
+		var inputs  = Array.prototype.slice.call(document.getElementsByClassName("event-input"))
 		for (var i in inputs)  {  inputs[i].addEventListener("keyup", function (event) { if (event.which == 13) { submitEvent(event) } }) }
+		var selects = Array.prototype.slice.call(document.getElementsByClassName("event-select"))
+		for (var s in selects) { selects[s].addEventListener("keyup", function (event) { if (event.which == 13) { submitEvent(event) } }) }
 		
 		function submitEvent(event) {
 			console.log("submitting")
@@ -205,6 +207,12 @@
 					else {
 						var value = sanitizeString(input.value)
 					}
+				}
+				else if (event.target.className.indexOf("event-select") !== -1) {
+					var select = event.target
+					var button = Array.prototype.slice.call(container.querySelectorAll("button"))[0]
+
+					var value = select.value
 				}
 				else if ((event.target.className.indexOf("event-button") !== -1) && (event.target.value == "submit-select")) {
 					var button = event.target
@@ -343,6 +351,7 @@
 					var selectBlock = document.createElement("select")
 						selectBlock.className = "event-select"
 						selectBlock.appendChild(labelBlock)
+						selectBlock.addEventListener("keyup", function (event) { if (event.which == 13) { submitEvent(event) } })
 
 					for (var o = 0; o < event.options.length; o++) {
 						var optionBlock = document.createElement("option")
