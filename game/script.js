@@ -175,7 +175,6 @@
 		for (var s in selects) { selects[s].addEventListener("keyup", function (event) { if (event.which == 13) { submitEvent(event) } }) }
 		
 		function submitEvent(event) {
-			console.log("submitting")
 			var container = event.target.closest(".event")
 			var id = container.id
 
@@ -233,7 +232,6 @@
 				}	
 
 			// send
-			console.log(value)
 				if (typeof value !== "undefined" && value !== null) {
 					disableEvent(id)
 
@@ -435,21 +433,31 @@
 					}
 				}, 100)
 
-			// animate
-				if (["setup-name", "start-story", "story-execution", "story-murder", "end-good", "end-evil"].indexOf(type) !== -1) {
-					buildGhosts(5, false)
-				}
-				
-			// clear chats on story-ghost
-				if (type == "story-ghost") {
-					document.getElementById("chats-list").innerHTML == ""
-					document.getElementById("chats").className = ""
-				}
+			// special events
+				// animate on setup, start, execution & murder, end
+					if (["setup-name", "start-story", "story-execution", "story-murder", "end-good", "end-evil"].indexOf(type) !== -1) {
+						buildGhosts(5, false)
+					}
+					
+				// clear chats on story-ghost
+					if (type == "story-ghost") {
+						document.getElementById("chats-list").innerHTML == ""
+						document.getElementById("chats").className = ""
+					}
 
-			// disable launch on launch
-				if (type == "start-story") {
-					disableEvent(Array.prototype.slice.call(document.getElementsByClassName("start-launch"))[0].id)
-				}
+				// disable launch on launch
+					if (type == "start-story") {
+						disableEvent(Array.prototype.slice.call(document.getElementsByClassName("start-launch"))[0].id)
+					}
+
+				// disable nominations on murder
+					if (type == "story-execution") {
+						disableEvent(Array.prototype.slice.call(document.getElementsByClassName("execution-nomination"))[0].id)
+						var polls =  Array.prototype.slice.call(document.getElementsByClassName("execution-poll"))
+						for (var p in polls) {
+							disableEvent(polls[p].id)
+						}
+					}
 		}
 
 /*** dis/enable ***/
@@ -501,6 +509,12 @@
 		function fetchData() {
 			// chats
 				var chats = Array.prototype.slice.call(document.getElementsByClassName("chat"))
+				if (chats.length) {
+					var chat = chats[chats.length - 1].id || null
+				}
+				else {
+					var chat = null
+				}
 
 			// events
 				var events = Array.prototype.slice.call(document.querySelectorAll(".event:not(.decision-waiting)"))
@@ -511,7 +525,7 @@
 					var event = null
 				}
 
-			sendPost({action: "fetchData", event: event}, function(data) {
+			sendPost({action: "fetchData", event: event, chat: chat}, function(data) {
 				if (!data.success) {
 					displayError(data.message || "Unable to fetch data...")
 				}

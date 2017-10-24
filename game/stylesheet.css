@@ -96,10 +96,9 @@
 		#chats-list {
 			float: left;
 			width: 80vw;
-			height: calc(100vh - 80px - 120px);
+			height: calc(100vh - 80px - 130px);
 			overflow-x: hidden;
 			overflow-y: scroll;
-			overflow: -moz-scrollbars-none;
 			-ms-overflow-style: none;
 		}
 
@@ -109,6 +108,17 @@
 			border-width: 1px 0px 0px 0px;
 			margin: 10px 0px 10px 0px;
 			float: left;
+		}
+
+		@-moz-document url-prefix() {
+			#chats-list {
+				width: calc(100% + 1000px);
+				padding-right: 1000px;
+			}
+
+			.chat {
+				border: 0px;
+			}
 		}
 
 		.chat-info {
@@ -139,7 +149,7 @@
 			padding: 10px;
 			height: 30px;
 			width: calc(80vw - 20px);
-			margin-bottom: 70px;
+			margin-bottom: 80px;
 			background-color: rgba(0,0,0,0);
 			color: #dddddd;
 		}
@@ -152,7 +162,7 @@
 			width: 50px;
 			padding: 0px;
 			vertical-align: bottom;
-			margin-bottom: 70px;
+			margin-bottom: 80px;
 			background-color: rgba(0,0,0,0);
 			color: #dddddd;
 			text-shadow: 0px 0px 10px #aaaaaa;
@@ -279,6 +289,18 @@
 			background-color: rgba(0,0,0,0.2);
 		}
 
+		.event-link {
+			float: left;
+			height: 40px;
+			padding: 0px;
+			background-color: rgba(0,0,0,0.2);
+			text-shadow: 0px 0px 10px #aaaaaa;
+			width: 100%;
+			border-radius: 5px;
+			padding: 0px;
+			color: #111111;
+		}
+
 	/* events buttons */
 		.event-button {
 			float: left;
@@ -310,7 +332,7 @@
 			margin-right: 5px;
 		}
 
-		.event-button:hover:not([disabled]), .event-button:focus:not([disabled]), .event-input:focus:not([disabled]), .event-select:focus:not([disabled]) {
+		.event-link:hover, .event-link:focus, .event-button:hover:not([disabled]), .event-button:focus:not([disabled]), .event-input:focus:not([disabled]), .event-select:focus:not([disabled]) {
 			background-color: rgba(0,0,0,0.2);
 			box-shadow: 0px 0px 10px #111111;
 		}

@@ -91,14 +91,14 @@
 											inputBlock = '<button class="event-button" value="okay"' + disabled + '>' + event.options + '</button>'
 										}
 										else if (event.input == "buttons") {
-											if ((answer == event.options[0]) || (Number(answer) == Number(event.options[0]))) {
+											if (Number(answer) == 0) {
 												var selected_0 = ""
 											}
 											else {
 												var selected_0 = " incomplete"
 											}
 
-											if ((answer == event.options[1]) || (Number(answer) == Number(event.options[0]))) {
+											if (Number(answer) == 1) {
 												var selected_1 = ""
 											}
 											else {
@@ -135,17 +135,7 @@
 				<button class="slideContainer" value="left">&#8594;<br><br>&#8594;<br><br>&#8594;</button>
 				<button class="slideContainer" value="right">&#8592;</button>
 				<div class="content">
-					<div class="header"><script node>
-						if (!player.status.alive) {
-							"Ghost "
-						}
-						else if (!player.status.good) {
-							"Killer "
-						}
-						else if (player.status.role == "telepath") {
-							"Telepath "
-						}
-					</script>node>Chat</div>
+					<div class="header">Chat</div>
 					<div id="chats-list">
 						<script node>
 							if (!player.status.alive) {

@@ -33,7 +33,6 @@
 
 				if (opacity < 100) {
 					error.style.opacity = Math.ceil( opacity + ((100 - opacity) / 10) ) / 100
-					console.log("up: " + error.style.opacity)
 				}
 				else {
 					clearInterval(errorFadein)
@@ -43,7 +42,6 @@
 
 						if (opacity > 0) {
 							error.style.opacity = Math.floor(opacity - ((101 - opacity) / 10) ) / 100
-							console.log("down: " + error.style.opacity)
 						}
 						else {
 							clearInterval(errorFadeout)
