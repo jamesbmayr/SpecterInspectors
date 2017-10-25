@@ -105,9 +105,11 @@
 										}
 
 									// info & structure
+										event.time = new Date(event.created).toLocaleString().split(" at ")[1] ? new Date(event.created).toLocaleString().split(" at ")[1].split(" ")[0] : new Date(event.created).toLocaleString().split(" ")[1]
+										
 										eventList = eventList + '<div class="event ' + event.type + '" id="' + event.id + '" day="' + event.day + '" night="' + event.night + '"' + disabled + '>\
 											<div class="event-type">' + event.type + '</div>\
-											<div class="event-time">' + (new Date(event.created).toTimeString().split(" ")[0]) + '</div>\
+											<div class="event-time">' + event.time + '</div>\
 											<div class="event-text">' + event.text + '</div>\
 											' + inputBlock + '\
 										</div>'
@@ -153,10 +155,11 @@
 
 								for (var c in chats) {
 									try {
+										chats[c].time = new Date(chats[c].created).toLocaleString().split(" at ")[1] ? new Date(chats[c].created).toLocaleString().split(" at ")[1].split(" ")[0]  new Date(chats[c].created).toLocaleString().split(" ")[1]
 										chatList = chatList + '<div class="chat" id="' + chats[c].id + '">\
 											<div class="chat-info">\
 												<div class="chat-author">' + chats[c].name + '</div>\
-												<div class="chat-time">' + (new Date(chats[c].created).toTimeString().split(" ")[0]) + '</div>\
+												<div class="chat-time">' + chats[c].time + '</div>\
 											</div>\
 											<div class="chat-text">' + chats[c].text + '</div>\
 										</div>'
