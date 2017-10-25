@@ -991,9 +991,7 @@
 						}
 
 				// shuffle roles
-					roles = roles.sort(function(x, y) {
-						return (Math.floor(Math.random() * 2) ? 1 : -1)
-					})
+					roles = main.sortRandom(roles)
 
 				// start game
 					var myEvents = []
@@ -1027,9 +1025,7 @@
 					myEvents.push(notesEvent)
 
 				// shuffle some more
-					roles = roles.sort(function(x, y) {
-						return (Math.floor(Math.random() * 2) ? 1 : -1)
-					})
+					roles = main.sortRandom(roles)
 
 				// assign roles & role events
 					for (var p = 0; p < players.length; p++) {
