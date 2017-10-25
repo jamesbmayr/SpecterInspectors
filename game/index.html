@@ -155,7 +155,7 @@
 
 								for (var c in chats) {
 									try {
-										chats[c].time = new Date(chats[c].created).toLocaleString().split(" at ")[1] ? new Date(chats[c].created).toLocaleString().split(" at ")[1].split(" ")[0]  new Date(chats[c].created).toLocaleString().split(" ")[1]
+										chats[c].time = new Date(chats[c].created).toLocaleString().split(" at ")[1] ? new Date(chats[c].created).toLocaleString().split(" at ")[1].split(" ")[0] : new Date(chats[c].created).toLocaleString().split(" ")[1]
 										chatList = chatList + '<div class="chat" id="' + chats[c].id + '">\
 											<div class="chat-info">\
 												<div class="chat-author">' + chats[c].name + '</div>\
