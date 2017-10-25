@@ -518,6 +518,9 @@
 			var event   = document.getElementById(id)
 
 			if (event) {
+				event.setAttribute("disabled",false)
+				event.disabled = false
+				
 				var inputs  = Array.prototype.slice.call(event.querySelectorAll("input[type='text']"))
 				var selects = Array.prototype.slice.call(event.querySelectorAll("select"))
 				var buttons = Array.prototype.slice.call(event.querySelectorAll("button"))
@@ -530,6 +533,8 @@
 				for (var a in array) {
 					array[a].setAttribute("disabled",false)
 					array[a].setAttribute("selected",false)
+					array[a].disabled = false
+					array[a].selected = false
 				}
 			}
 		}
