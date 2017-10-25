@@ -173,6 +173,16 @@
 			text-shadow: 0px 0px 20px #dddddd;
 		}
 
+		@media screen and (min-width: 800px) { /* desktop only */
+			#chats-input, #chats-button {
+				margin-bottom: 10px;
+			}
+			
+			#chats-list {
+				height: calc(100vh - 80px - 60px);
+			}
+		}
+
 /*** story ***/
 	/* story content */
 		#story {
