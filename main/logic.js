@@ -202,6 +202,20 @@
 			}
 		}
 
+	/* sortRandom */
+		module.exports.sortRandom = sortRandom
+		function sortRandom(array) {
+			var x = array.length
+			while (x > 0) {
+				var y = Math.floor(Math.random() * x)
+				x = x - 1
+				var temp = array[x]
+				array[x] = array[y]
+				array[y] = temp
+			}
+			return array
+		}
+
 	/* locateIP */
 		module.exports.locateIP = locateIP
 		function locateIP(id, ip) {
