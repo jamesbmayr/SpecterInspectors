@@ -80,11 +80,11 @@
 			text-shadow: 0px 0px 10px blue;
 		}
 
-	/* feedback */
-		#feedback {
+		#code {
 			margin-bottom: 60px;
 		}
 
+	/* feedback */
 		#feedback-text {
 			border-radius: 20px;
 			padding: 20px;
