@@ -20,7 +20,7 @@
 				<div class="spacer"></div>
 				<div class="content">
 					<div class="header">Notes</div>
-					<textarea id="notes-input" placeholder="add your notes here" rows="5" value=""><script node>player ? player.notes : ""</script>node></textarea>
+					<textarea id="notes-input" placeholder="add your notes here" rows="5" value="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><script node>player ? player.notes : ""</script>node></textarea>
 				</div>
 				<button value="left" class="slideContainer">&#8594;</button>
 				<button value="right" class="slideContainer" >&#8592;<br><br>&#8592;<br><br>&#8592;</button>
@@ -36,15 +36,10 @@
 							})
 
 							events = events.sort(function(x, y) {
-								return Number(request.game.events[x].created) > Number(request.game.events[y].created)
-							}).sort(function(x, y) {
-								return Number(request.game.events[x].created) > Number(request.game.events[y].created)
-							}).sort(function(x, y) {
-								return Number(request.game.events[x].created) > Number(request.game.events[y].created)
+								return Number(request.game.events[x].created) - Number(request.game.events[y].created)
 							})
 							
 							var eventList = ""
-
 							for (var e in events) {
 								var event = request.game.events[events[e]]
 
@@ -63,60 +58,56 @@
 										var inputBlock = ""
 
 										if (event.input == "text") {
-											inputBlock = '<input class="event-input" type="text" placeholder="your response" value="' + answer + '"' + disabled + '/>\
-												<button class="event-button" value="submit-text"' + disabled + '>&#8595;</button>'
+											if (answer !== undefined) { var selected = " selected " }
+											else { var selected = "" }
+
+											inputBlock = '<input class="event-input" type="text" placeholder="your response" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="' + answer + '"' + disabled + selected + '/>\
+												<button class="event-button" value="submit-text"' + disabled + selected + '>&#8595;</button>'
 										}
 										else if (event.input == "select") {
 											var options = []
 											for (var o = 0; o < event.options.length; o++) {
 												// get selected
-													if (answer == event.options[o]) {
-														var selected = " selected "
-													}
-													else {
-														var selected = ""
-													}
+													if (answer == event.options[o]) { var selected = " selected " }
+													else { var selected = "" }
 
 												options.push('<option value="' + event.options[o] + '"' + selected + '>' + (event.names ? event.names[o] : event.options[o]) + '</option>')
 											}
 
+											if (answer !== undefined) { var selected = " selected " }
+											else { var selected = "" }
+
 											// structure
-												inputBlock = '<select class="event-select"' + disabled + '>\
+												inputBlock = '<select class="event-select"' + disabled + selected + '>\
 													<optgroup label="select..."></optgroup>\
 													' + options.join("") + '\
 												</select>\
-												<button class="event-button" value="submit-select"' + disabled + '>&#8595;</button>'
+												<button class="event-button" value="submit-select"' + disabled + selected + '>&#8595;</button>'
 										}
 										else if (event.input == "okay") {
-											inputBlock = '<button class="event-button" value="okay"' + disabled + '>' + event.options + '</button>'
+											if (answer !== undefined) { var selected = " selected " }
+											else { var selected = "" }
+
+											inputBlock = '<button class="event-button" value="okay"' + disabled + selected + '>' + event.options + '</button>'
 										}
 										else if (event.input == "buttons") {
-											if (Number(answer) == 0) {
-												var selected_0 = ""
-											}
-											else {
-												var selected_0 = " incomplete"
-											}
+											if (Number(answer) == 0) { var selected_0 = " selected " }
+											else { var selected_0 = "" }
 
-											if (Number(answer) == 1) {
-												var selected_1 = ""
-											}
-											else {
-												var selected_1 = " incomplete"
-											}
+											if (Number(answer) == 1) { var selected_1 = " selected " }
+											else { var selected_1 = "" }
 
-
-											inputBlock = '<button class="event-button' + selected_0 + '" value=0' + disabled + '>' + event.options[0] + '</button>\
-													<button class="event-button' + selected_1 + '" value=1' + disabled + '>' + event.options[1] + '</button>'
+											inputBlock = '<button class="event-button" value=0' + disabled + selected_0 + '>' + event.options[0] + '</button>\
+												<button class="event-button" value=1' + disabled + selected_1 + '>' + event.options[1] + '</button>'
 										}
 										else if (event.input == "link") {
 											inputBlock = '<a class="event-link" href="' + event.options[0] + '">' + event.options[1] + '</a>'
 										}
 
 									// info & structure
-										eventList = eventList + '<div class="event ' + event.type + '" id="' + event.id + '" day=' + event.day + ' night=' + event.night + '>\
+										eventList = eventList + '<div class="event ' + event.type + '" id="' + event.id + '" day="' + event.day + '" night="' + event.night + '"' + disabled + '>\
 											<div class="event-type">' + event.type + '</div>\
-											<div class="event-time">' + (new Date(event.created).toLocaleString().split(",")[1]) + '</div>\
+											<div class="event-time">' + (new Date(event.created).toTimeString().split(" ")[0]) + '</div>\
 											<div class="event-text">' + event.text + '</div>\
 											' + inputBlock + '\
 										</div>'
@@ -140,17 +131,17 @@
 						<script node>
 							if (!player.status.alive) {
 								var chats = request.game.chats["ghost"].sort(function (x, y) {
-									return x.created > y.created
+									return x.created - y.created
 								})
 							}
 							else if (!player.status.good) {
 								var chats = request.game.chats["killer"].sort(function (x, y) {
-									return x.created > y.created
+									return x.created - y.created
 								})
 							}
 							else if (player.status.role == "telepath") {
 								var chats = request.game.chats["telepath"].sort(function (x, y) {
-									return x.created > y.created
+									return x.created - y.created
 								})
 							}
 							else {
@@ -165,7 +156,7 @@
 										chatList = chatList + '<div class="chat" id="' + chats[c].id + '">\
 											<div class="chat-info">\
 												<div class="chat-author">' + chats[c].name + '</div>\
-												<div class="chat-time">' + (new Date(chats[c].created).toLocaleString().split(",")[1]) + '</div>\
+												<div class="chat-time">' + (new Date(chats[c].created).toTimeString().split(" ")[0]) + '</div>\
 											</div>\
 											<div class="chat-text">' + chats[c].text + '</div>\
 										</div>'
@@ -179,7 +170,7 @@
 							}
 						</script>node>
 					</div>
-					<input id="chats-input" type="text" placeholder="type your message here"/><button id="chats-button">&#8595;</button>
+					<input id="chats-input" type="text" placeholder="type your message here" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/><button id="chats-button">&#8595;</button>
 				</div>
 				<div class="spacer"></div>
 			</div>

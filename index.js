@@ -29,21 +29,30 @@
 
 		/* parseRequest */
 			function parseRequest() {
-				request.get    = qs.parse(request.url.split("?")[1]) || {}
-				request.path   = request.url.split("?")[0].split("/") || []
-				request.url    = request.url.split("?")[0] || "/"
-				request.post   = data ? JSON.parse(data) : {}
-				request.cookie = request.headers.cookie ? qs.parse(request.headers.cookie.replace(/; /g, "&")) : {}
-				request.ip     = request.headers["x-forwarded-for"] || request.connection.remoteAddress || request.socket.remoteAddress || request.connection.socket.remoteAddress
+				// get request info
+					request.get    = qs.parse(request.url.split("?")[1]) || {}
+					request.path   = request.url.split("?")[0].split("/") || []
+					request.url    = request.url.split("?")[0] || "/"
+					request.post   = data ? JSON.parse(data) : {}
+					request.cookie = request.headers.cookie ? qs.parse(request.headers.cookie.replace(/; /g, "&")) : {}
+					request.ip     = request.headers["x-forwarded-for"] || request.connection.remoteAddress || request.socket.remoteAddress || request.connection.socket.remoteAddress
 
-				main.logStatus((request.cookie.session || "new") + " @ " + request.ip + "\n[" + request.method + "] " + request.path.join("/") + "\n" + JSON.stringify(request.method == "GET" ? request.get : request.post))
+				// log it
+					if (!request.post || request.post.action !== "fetchData") { // don't log fetchData requests
+						main.logStatus((request.cookie.session || "new") + " @ " + request.ip + "\n[" + request.method + "] " + request.path.join("/") + "\n" + JSON.stringify(request.method == "GET" ? request.get : request.post))
+					}
 
-				if ((/[.](ico|png|jpg|jpeg|gif|svg|pdf|txt|css|js)$/).test(request.url)) {
-					routeRequest()
-				}
-				else {
-					main.determineSession(request, routeRequest)
-				}
+				// where next ?
+					if (request.headers["host"] === "specterinspectors.herokuapp.com") { // redirect to custom domain
+						response.writeHead(302, {Location: "http://www.specterinspectors.com"})
+						response.end()
+					}
+					else if ((/[.](ico|png|jpg|jpeg|gif|svg|pdf|txt|css|js)$/).test(request.url)) { // serve asset
+						routeRequest()
+					}
+					else { // get session and serve html
+						main.determineSession(request, routeRequest)
+					}
 			}
 
 		/* routeRequest */

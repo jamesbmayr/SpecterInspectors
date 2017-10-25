@@ -45,7 +45,7 @@
 				var deltaY = touchY - liftY
 
 				if (Math.abs(deltaX) > Math.abs(deltaY)) { // left right
-					if (deltaX < -20) { // swipe left-to-right
+					if (deltaX < 0) { // swipe left-to-right
 						if (parent.id == "story" || parent.id == "notes") {
 							var button = Array.prototype.slice.call(document.querySelectorAll("#notes:not(.invisible) .slideContainer[value='right']"))[0]
 							if (button) { button.click() }
@@ -55,7 +55,7 @@
 							if (button) { button.click() }
 						}
 					}
-					else if (deltaX > 20) { // swipe right-to-left
+					else if (deltaX > 0) { // swipe right-to-left
 						if (parent.id == "story" || parent.id == "chats") {
 							var button = Array.prototype.slice.call(document.querySelectorAll("#chats:not(.hidden) .slideContainer[value='left']"))[0]
 							if (button) { button.click() }
@@ -191,6 +191,8 @@
 					}
 					else {
 						var value = sanitizeString(input.value)
+						button.setAttribute("selected",true)
+						input.setAttribute("selected",true)
 					}
 				}
 				else if ((event.target.className.indexOf("event-button") !== -1) && (event.target.value == "submit-text")) {
@@ -205,6 +207,8 @@
 					}
 					else {
 						var value = sanitizeString(input.value)
+						button.setAttribute("selected",true)
+						input.setAttribute("selected",true)
 					}
 				}
 				else if (event.target.className.indexOf("event-select") !== -1) {
@@ -212,12 +216,16 @@
 					var button = Array.prototype.slice.call(container.querySelectorAll("button"))[0]
 
 					var value = select.value
+					button.setAttribute("selected",true)
+					select.setAttribute("selected",true)
 				}
 				else if ((event.target.className.indexOf("event-button") !== -1) && (event.target.value == "submit-select")) {
 					var button = event.target
 					var select = Array.prototype.slice.call(container.querySelectorAll("select"))[0]
 
 					var value = select.value
+					button.setAttribute("selected",true)
+					select.setAttribute("selected",true)
 				}
 				else if ((event.target.className.indexOf("event-button") !== -1) && (event.target.value == "okay" || Number(event.target.value) == 1 || Number(event.target.value) == 0)) {
 					var buttons = Array.prototype.slice.call(container.querySelectorAll("button"))
@@ -226,7 +234,7 @@
 
 					for (var b in buttons) {
 						if ((buttons[b].value == value) || (Number(buttons[b].value) == Number(value))) {
-							buttons[b].className = buttons[b].className.replace("incomplete", "").trim()
+							buttons[b].setAttribute("selected",true)
 						}
 					}
 				}	
@@ -257,7 +265,7 @@
 				var author  = chat.name    || null
 				var text    = chat.text    || ""
 				var created = chat.created ? new Date(chat.created) : new Date()
-					created = created.toLocaleString().split(",")[1]
+					created = created.toTimeString().split(" ")[0]
 
 			// content
 				var authorBlock = document.createElement("div")
@@ -309,7 +317,7 @@
 				var type = event.type  || "story"
 				var text = event.text  || ""
 				var time = event.time ? new Date(event.time) : new Date()
-					time = time.toLocaleString().split(",")[1]
+					time = time.toTimeString().split(" ")[0]
 
 			// content
 				var typeBlock = document.createElement("div")
@@ -331,7 +339,10 @@
 						inputBlock.className = "event-input"
 						inputBlock.type = "text"
 						inputBlock.placeholder = "your response"
-						inputBlock.setAttribute("validation", event.options)
+						inputBlock.setAttribute("autocomplete", "off")
+						inputBlock.setAttribute("autocorrect", "off")
+						inputBlock.setAttribute("autocapitalize", "off")
+						inputBlock.setAttribute("spellcheck", "false")
 						inputBlock.addEventListener("keyup", function (event) { if (event.which == 13) { submitEvent(event) } })
 
 					var submitBlock = document.createElement("button")
@@ -378,13 +389,13 @@
 				}
 				else if (event.input == "buttons") {
 					var falseBlock = document.createElement("button")
-						falseBlock.className = "event-button incomplete"
+						falseBlock.className = "event-button"
 						falseBlock.value = 0
 						falseBlock.appendChild(document.createTextNode(event.options[0]))
 						falseBlock.addEventListener("click", submitEvent)
 
 					var trueBlock = document.createElement("button")
-						trueBlock.className = "event-button incomplete"
+						trueBlock.className = "event-button"
 						trueBlock.value = 1
 						trueBlock.appendChild(document.createTextNode(event.options[1]))
 						trueBlock.addEventListener("click", submitEvent)
@@ -439,7 +450,7 @@
 						buildGhosts(5, false)
 					}
 					
-				// clear chats on story-ghost
+				// switch chats on ghost
 					if (type == "story-ghost") {
 						document.getElementById("chats-list").innerHTML == ""
 						document.getElementById("chats").className = ""
@@ -447,25 +458,46 @@
 
 				// disable launch on launch
 					if (type == "start-story") {
-						disableEvent(Array.prototype.slice.call(document.getElementsByClassName("start-launch"))[0].id)
+						var launch = Array.prototype.slice.call(document.getElementsByClassName("start-launch"))[0]
+						if (launch) { disableEvent(launch.id) }
+					}
+
+				// disable nominations on execution
+					if (type == "story-execution") {
+						var nominations = Array.prototype.slice.call(document.getElementsByClassName("execution-nomination"))
+						var polls = Array.prototype.slice.call(document.getElementsByClassName("execution-poll"))
+						var array = nominations.concat(polls)
+						for (var a in array) {
+							disableEvent(array[a].id)
+						}
 					}
 
 				// disable nominations on murder
-					if (type == "story-execution") {
-						disableEvent(Array.prototype.slice.call(document.getElementsByClassName("execution-nomination"))[0].id)
-						var polls =  Array.prototype.slice.call(document.getElementsByClassName("execution-poll"))
-						for (var p in polls) {
-							disableEvent(polls[p].id)
+					if (type == "murder-complete") {
+						var nominations = Array.prototype.slice.call(document.getElementsByClassName("murder-nomination"))
+						var polls = Array.prototype.slice.call(document.getElementsByClassName("murder-poll"))
+						var array = nominations.concat(polls)
+						for (var a in array) {
+							disableEvent(array[a].id)
 						}
+					}
+
+				// move triggers on decision-complete, execution-complete, murder-complete, and dream-complete
+					if (["decision-complete", "execution-complete", "murder-complete", "dream-complete"].indexOf(type) !== -1) {
+						var triggers = Array.prototype.slice.call(document.getElementsByClassName("trigger-sleep:last-child, trigger-wake:last-child"))
+						var trigger = triggers[triggers.length - 1]
+						console.log(trigger)
 					}
 		}
 
 /*** dis/enable ***/
 	/* disableEvent */
 		function disableEvent(id) {
-			var event   = document.getElementById(id)
+			var event = document.getElementById(id)
 
 			if (event) {
+				event.setAttribute("disabled",true)
+				
 				var inputs  = Array.prototype.slice.call(event.querySelectorAll("input[type='text']"))
 				var selects = Array.prototype.slice.call(event.querySelectorAll("select"))
 				var buttons = Array.prototype.slice.call(event.querySelectorAll("button"))
@@ -476,7 +508,7 @@
 				if (buttons) { array = array.concat(buttons) }
 
 				for (var a in array) {
-					array[a].disabled = true
+					array[a].setAttribute("disabled",true)
 				}
 			}
 		}
@@ -496,8 +528,8 @@
 				if (buttons) { array = array.concat(buttons) }
 
 				for (var a in array) {
-					array[a].disabled = false
-					array[a].className = array[a].className.replace("incomplete", "").trim() + " incomplete"
+					array[a].setAttribute("disabled",false)
+					array[a].setAttribute("selected",false)
 				}
 			}
 		}

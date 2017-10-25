@@ -202,9 +202,12 @@
 			overflow-x: hidden;
 			overflow-y: scroll;
 			-ms-overflow-style: none;
+			display: flex;
+			flex-direction: column;
+			align-self: stretch;
 		}
 
-		@-moz-document url-prefix() {
+		@-moz-document url-prefix() { /* hide firefox scrollbars */
 			#events-list {
 				width: calc(100% + 15px);
 			}
@@ -217,6 +220,8 @@
 			padding: 10px;
 			padding-bottom: 20px;
 			float: left;
+			flex-basis: auto;
+			flex-shrink: 0;
 		}
 
 		.event:last-child {
@@ -269,16 +274,6 @@
 			outline: none;
 			background-color: rgba(0,0,0,0.2);
 			cursor: pointer;
-		}
-
-		.event-input[disabled], .event-select[disabled], .event-button[disabled] {
-			background-color: rgba(0,0,0,0);
-			color: #222222;
-			cursor: default;
-		}
-
-		.event-input.incomplete[disabled], .event-select.incomplete[disabled], .event-button.incomplete[disabled] {
-			color: #777777;
 		}
 
 		.event-select {
@@ -337,6 +332,25 @@
 			box-shadow: 0px 0px 10px #111111;
 		}
 
+	/* disabled / selected */
+		.event-input[disabled], .event-select[disabled], .event-button[disabled] {
+			cursor: default;
+			background-color: rgba(0,0,0,0);
+			color: #777777;
+			-webkit-text-fill-color: #777777;
+		}
+
+		.event-input[disabled][selected], .event-select[disabled][selected], .event-button[disabled][selected] {
+			cursor: default;
+			background-color: rgba(0,0,0,0);
+			color: #222222;
+			-webkit-text-fill-color: #222222;
+		}
+
+		.event.trigger-sleep:not([disabled]), .event.trigger-wake:not([disabled]) {
+			order: 1000000;
+		}
+
 	/* events types */
 		.event.story-day {
 			box-shadow: 0px 0px 20px orange inset;
@@ -368,4 +382,9 @@
 
 		.event.start-role {
 			box-shadow: 0px 0px 30px skyblue inset;
+		}
+
+		.event.trigger-sleep:not([disabled]), .event.trigger-wake:not([disabled]) {
+			order: 100000;
+			padding-bottom: 80px;
 		}

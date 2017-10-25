@@ -81,6 +81,10 @@
 		}
 
 	/* feedback */
+		#feedback {
+			margin-bottom: 60px;
+		}
+
 		#feedback-text {
 			border-radius: 20px;
 			padding: 20px;

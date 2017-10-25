@@ -135,6 +135,14 @@
 					return "Facebook"
 				break
 
+				case (agent.indexOf("bingbot") !== -1):
+					return "BingBot"
+				break
+
+				case (agent.indexOf("YandexBot") !== -1):
+					return "YandexBot"
+				break
+
 				default:
 					return null
 				break
@@ -260,10 +268,11 @@
 		module.exports.determineSession = determineSession
 		function determineSession(request, callback) {
 			// new activity
-				var activity = {
-					time: new Date().getTime(),
-					url:  request.url,
-					post: request.post ? request.post.action : null
+				var activity = {}
+				if (!request.post || request.post.action !== "fetchData") {
+					activity.time = new Date().getTime()
+					activity.url  = request.url
+					activity.post = request.post ? request.post.action : null
 				}
 
 			// new session
@@ -318,12 +327,11 @@
 							else if (result.info.ip !== request.ip) {
 								request.session = result
 
-								var activity = {
-									time:         new Date().getTime(),
-									"ip":         request.ip,
-									"user-agent": request.headers["user-agent"],
-									"language":   request.headers["accept-language"],
-								}
+								var activity = {}
+									activity.time =          new Date().getTime()
+									activity["ip"] =         request.ip
+									activity["user-agent"] = request.headers["user-agent"]
+									activity["language"] =   request.headers["accept-language"]
 
 								var push = {}
 									push.activity = activity

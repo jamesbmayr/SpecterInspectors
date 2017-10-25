@@ -30,7 +30,7 @@
 								var eventIDs = eventIDs.filter(function (e) {
 									return ((request.game.events[e].created > lastEvent.created) && (request.game.events[e].viewers.indexOf(request.session.id) !== -1))
 								}).sort(function(x, y) {
-									return request.game.events[x].created > request.game.events[y].created
+									return request.game.events[x].created - request.game.events[y].created
 								})
 
 								for (var e in eventIDs) {
@@ -62,7 +62,7 @@
 								chats = chats.filter(function (c) {
 									return (c.created > lastChat.created)
 								}).sort(function(x, y) {
-									return x.created > y.created
+									return x.created - y.created
 								})
 							}
 
@@ -313,6 +313,10 @@
 							event.text = main.chooseRandom(["Things are gonna get a bit crazy, so you might need to write stuff down.", "To solve these murders, you might need to write down some clues.", "To make things a bit easier, there's a place for you to keep track of everything.", "As you play the game, you might need a place to keep your thoughts.", "If you're looking for a place to organize your ideas..."]) + " Check out the Notes tab to the left."
 						break
 
+						case "start-night":
+							event.text = "Every night, the killers can select 1 person to murder - but dead players come back as ghosts! These ghosts - including " + request.game.flavor.ghost + " - can send dreams to living players, providing clues to help find the killers."
+						break
+
 					// morning
 						case "story-day":
 							event.text = main.chooseRandom(["The sun is rising here " + request.game.flavor.locale + ".", "A new dawn rises.", "It's the start of a brand new day here " + request.game.flavor.locale + ".", "The next day has begun.", "Goooooood morning!", "The story continues with a new day.", "Day phase, activated.", "The next day has commenced.", "Let us begin a new day.", "Here we go: another day " + request.game.flavor.locale + ".", "You wake up once again " + request.game.flavor.locale + ".", "New day. Still alive. Still " + request.game.flavor.locale + "."])
@@ -440,7 +444,7 @@
 						break
 
 						case "special-necromancer":
-							event.text = main.chooseRandom(["Chanting the mystical, ancient words, you bring to life those who have died this night.", "You sense that someone was slain in the darkness - but through the power of the spirits, you bring air back into their lungs that they may breathe again.", "Nope. Not another murder. Not this time. Not as long as you can bring people back to life.", "When the spell is complete, the dead will walk again - without any knowledge of their passing into the other side and back.", "You are a powerful sorcerer, using magic beyond all human understanding to resurrect all those who have died in the last few hours.", "Hey, it worked! The dead person isn't dead anymore! Yay!", "With all sorts of whooshing sounds and flickery candles and stuff, you pull off a cool party trick - bringing a dead person back to life.", "You weren't fast enough to resurrect " + request.game.flavor.ghost + ", but you have successfully brought back <span class='special-text'>" + data.name + "</span>."])
+							event.text = main.chooseRandom(["Chanting the mystical, ancient words, you bring to life those who have died this night.", "You sense that someone was slain in the darkness - but through the power of the spirits, you bring air back into their lungs that they may breathe again.", "Nope. Not another murder. Not this time. Not as long as you can bring people back to life.", "When the spell is complete, the dead will walk again - without any knowledge of their passing onto the other side and back.", "You are a powerful sorcerer, using magic beyond all human understanding to resurrect all those who have died in the last few hours.", "Hey, it worked! The dead person isn't dead anymore! Yay!", "With all sorts of whooshing sounds and flickery candles and stuff, you pull off a cool party trick - bringing a dead person back to life.", "You weren't fast enough to resurrect " + request.game.flavor.ghost + ", but you have successfully brought back <span class='special-text'>" + data.name + "</span>."])
 						break
 
 						case "special-obscurer":
@@ -898,28 +902,27 @@
 				callback({success: false, message: "Other players are still setting up."})
 			}
 			else {
-				// get data
-					var playerList = Object.keys(request.game.players)
-					var playerCount = playerList.length
-					var evilCount = Math.floor(playerCount / 3)
+				// get team sizes
+					var players          = Object.keys(request.game.players)
+					var evilCount        = Math.floor(players.length / 3)
 					var evilSpecialCount = Math.floor(evilCount / 2)
-					var goodCount = playerCount - evilCount
+					var goodCount        = players.length - evilCount
 					var goodSpecialCount = Math.floor(goodCount / 2)
-					var roles = []
+					var roles            = []
 
 				// evil
 					// get list
 						var availableEvil = []
-						if (playerCount >= 5) {
+						if (players.length >= 5) {
 							availableEvil.push("dreamsnatcher")
 						}
-						if (playerCount >= 7) {
+						if (players.length >= 7) {
 							availableEvil.push("obscurer")
 						}
-						if (playerCount >= 9) {
+						if (players.length >= 9) {
 							availableEvil.push("cheater")
 						}
-						if (playerCount >= 11) {
+						if (players.length >= 11) {
 							availableEvil.push("spellcaster")
 						}
 
@@ -939,28 +942,32 @@
 				// good
 					// get list
 						var availableGood = []
-						if (playerCount >= 5) {
-							availableGood.push("illusionist")
+						roles.push(main.chooseRandom(["necromancer", "immortal", "illusionist"]))
+
+						if (players.length >= 5) {
 							availableGood.push("necromancer")
+							availableGood.push("illusionist")
 							availableGood.push("augur")
 							availableGood.push("clairvoyant")
 							availableGood.push("medium")
 							availableGood.push("seer")
 						}
-						if (playerCount >= 7) {
+						if (players.length >= 7) {
 							availableGood.push("immortal")
 							availableGood.push("insomniac")
 							availableGood.push("psychic")
 						}
-						if (playerCount >= 9) {
+						if (players.length >= 9) {
 							availableGood.push("empath")
 							availableGood.push("telepath")
 							availableGood.push("telepath")
-							availableGood.push("watchkeeper")
-							availableGood = availableGood.filter(function (a) { return a !== "necromancer" })
 						}
-						if (playerCount >= 11) {
-							availableGood.push("detective")
+						if (players.length >= 11) {
+							roles.push("detective")
+							roles.push("watchkeeper")
+
+							availableGood = availableGood.filter(function (a) { return a !== "necromancer" })
+							roles = roles.filter(function (r) { return r !== "necromancer" })
 						}
 
 					// generate specials
@@ -979,19 +986,13 @@
 						}
 
 					// generate normals
-						while (roles.length < playerCount) {
+						while (roles.length < players.length) {
 							roles.push("person")
 						}
 
 				// shuffle roles
 					roles = roles.sort(function(x, y) {
-						return Math.floor(Math.random() * 2)
-					})
-					roles = roles.sort(function(x, y) {
-						return Math.floor(Math.random() * 2)
-					})
-					roles = roles.sort(function(x, y) {
-						return Math.floor(Math.random() * 2)
+						return (Math.floor(Math.random() * 2) ? 1 : -1)
 					})
 
 				// start game
@@ -1011,8 +1012,8 @@
 
 				// create players event
 					var infoArray = []
-					for (var p in playerList) {
-						var player = request.game.players[playerList[p]]
+					for (var p in players) {
+						var player = request.game.players[players[p]]
 						infoArray.push("<span class='special-text'>" + player.name + "</span> " + player.colors.shirt + " shirt, " + player.colors.pants + " pants, " + player.colors.shoes + " shoes... ")
 					}
 
@@ -1027,31 +1028,25 @@
 
 				// shuffle some more
 					roles = roles.sort(function(x, y) {
-						return Math.floor(Math.random() * 2)
-					})
-					roles = roles.sort(function(x, y) {
-						return Math.floor(Math.random() * 2)
-					})
-					roles = roles.sort(function(x, y) {
-						return Math.floor(Math.random() * 2)
+						return (Math.floor(Math.random() * 2) ? 1 : -1)
 					})
 
 				// assign roles & role events
-					for (var p = 0; p < playerCount; p++) {
-						set["players." + playerList[p] + ".status.role"] = request.game.players[playerList[p]].status.role = roles[p]
+					for (var p = 0; p < players.length; p++) {
+						set["players." + players[p] + ".status.role"] = request.game.players[players[p]].status.role = roles[p]
 
-						var roleEvent = createActionEvent(request, {type: "start-role", viewers: [playerList[p]], doers: [playerList[p]], role: roles[p], queue: queueEvent.id})
+						var roleEvent = createActionEvent(request, {type: "start-role", viewers: [players[p]], doers: [players[p]], role: roles[p], queue: queueEvent.id})
 						set["events." + roleEvent.id] = roleEvent
 
 						if (["killer", "spellcaster", "obscurer", "dreamsnatcher", "cheater"].indexOf(roles[p]) !== -1) {
-							set["players." + playerList[p] + ".status.good"] = request.game.players[playerList[p]].status.good = false
+							set["players." + players[p] + ".status.good"] = request.game.players[players[p]].status.good = false
 						}
 
 						if (["telepath", "augur", "clairvoyant", "medium", "psychic", "seer", "necromancer", "empath", "immortal", "spellcaster", "obscurer", "dreamcatcher"].indexOf(roles[p]) !== -1) {
-							set["players." + playerList[p] + ".status.magic"] = request.game.players[playerList[p]].status.magic = true
+							set["players." + players[p] + ".status.magic"] = request.game.players[players[p]].status.magic = true
 						}
 
-						if (playerList[p] == request.session.id) {
+						if (players[p] == request.session.id) {
 							myEvents.push(roleEvent)
 						}
 					}					
@@ -1089,8 +1084,9 @@
 					callback(results)
 				}, function (queue) { // success
 					// get data
-						var dreams = Object.keys(request.game.temporary.dreams) || []
-						var killed = request.game.temporary.killed || []
+						var players = Object.keys(request.game.players)
+						var dreams  = Object.keys(request.game.temporary.dreams) || []
+						var killed  = request.game.temporary.killed || []
 
 					// set data
 						var myEvents = []
@@ -1109,27 +1105,27 @@
 
 					// preventing death
 						// specials
-							var spellcaster = Object.keys(request.game.players).find(function (p) { // special-spellcaster
+							var spellcaster = players.find(function (p) { // special-spellcaster
 								return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "spellcaster"))
 							}) || null
 
-							var necromancer = Object.keys(request.game.players).find(function (p) { // special-necromancer
+							var necromancer = players.find(function (p) { // special-necromancer
 								return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "necromancer"))
 							}) || null
 
-							var watchkeeper = Object.keys(request.game.players).find(function (p) { // special-watchkeeper
+							var watchkeeper = players.find(function (p) { // special-watchkeeper
 								return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "watchkeeper"))
 							}) || null
 
-							var illusionist = Object.keys(request.game.players).find(function (p) { // special-illusionist
+							var illusionist = players.find(function (p) { // special-illusionist
 								return (request.game.players[p].status.alive && (request.game.players[p].status.role == "illusionist"))
 							}) || null
 
-							var immortal = Object.keys(request.game.players).find(function (p) { // special-immortal
+							var immortal = players.find(function (p) { // special-immortal
 								return (request.game.players[p].status.alive && !spellcaster && (request.game.players[p].status.role == "immortal"))
 							}) || null
 
-							var killers = Object.keys(request.game.players).filter(function (p) {
+							var killers = players.filter(function (p) {
 								return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && !request.game.players[p].status.good)
 							}) || []
 
@@ -1188,37 +1184,37 @@
 							}
 
 					// more specials
-						var seer = Object.keys(request.game.players).find(function (p) { // special-seer
+						var seer = players.find(function (p) { // special-seer
 							return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "seer"))
 						}) || null
 
-						var insomniac = Object.keys(request.game.players).find(function (p) { // special-insomniac
+						var insomniac = players.find(function (p) { // special-insomniac
 							return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "insomniac"))
 						}) || null
 
-						var medium = Object.keys(request.game.players).find(function (p) { // special-medium
+						var medium = players.find(function (p) { // special-medium
 							return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "medium"))
 						}) || null
 
-						var clairvoyant = Object.keys(request.game.players).find(function (p) { // special-clairvoyant
+						var clairvoyant = players.find(function (p) { // special-clairvoyant
 							return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "clairvoyant"))
 						}) || null
 
-						var detective = Object.keys(request.game.players).find(function (p) { // special-detective
+						var detective = players.find(function (p) { // special-detective
 							return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "detective"))
 						}) || null
 
-						var dreamsnatcher = Object.keys(request.game.players).find(function (p) { // special-dreamsnatcher
+						var dreamsnatcher = players.find(function (p) { // special-dreamsnatcher
 							return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "dreamsnatcher"))
 						}) || null
 
-						var telepaths = Object.keys(request.game.players).filter(function (p) { // special-telepath
+						var telepaths = players.filter(function (p) { // special-telepath
 							return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "telepath"))
 						}) || []
 
 					// special-detective
 						if (detective) {
-							var alive = Object.keys(request.game.players).filter(function (p) { return (request.game.players[p].status.alive && (p !== detective)) })
+							var alive = players.filter(function (p) { return (request.game.players[p].status.alive && (p !== detective)) })
 							var suspect = main.chooseRandom(alive)
 							var detectiveEvent = createStaticEvent(request, {type: "special-detective", viewers: [detective], name: request.game.players[suspect].name, team: (request.game.players[suspect].good ? "good" : "evil") })
 							set["events." + detectiveEvent.id] = detectiveEvent
@@ -1232,73 +1228,6 @@
 						var dayEvent = createStaticEvent(request, {type: "story-day"})
 						set["events." + dayEvent.id] = dayEvent
 						myEvents.push(dayEvent)
-
-					// dreams
-						// ai dream
-							var sleepers = Object.keys(request.game.players).filter(function(s) {
-								return (request.game.players[s].status.alive && (killed.indexOf(s) == -1) && (s !== insomniac)) // special-insomniac
-							})
-
-							var suspect   = main.chooseRandom(sleepers)
-							var slumberer = main.chooseRandom(sleepers)
-							var item      = main.chooseRandom(["shirt", "pants", "shoes"])
-
-							var aiDreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [slumberer, seer, dreamsnatcher], color: request.game.players[suspect].colors[item], item: (item + "s").replace("ss", "s")}) // special-seer
-							set["events." + aiDreamEvent.id] = aiDreamEvent
-
-							if ((slumberer == request.session.id) || (request.session.id == seer)) { // special-seer
-								myEvents.push(aiDreamEvent)
-							}
-
-							// special-medium
-								if (slumberer == medium) {
-									var mediumEvent = createStaticEvent(request, {type: "special-medium", viewers: [medium], name: request.game.flavor.ghost})
-									set["events." + mediumEvent.id] = mediumEvent
-
-									if (slumberer == request.session.id) {
-										myEvents.push(mediumEvent)
-									}
-								}
-
-							sleepers = sleepers.filter(function (p) { return p !== slumberer })
-
-						// ghost dreams
-							for (var d in dreams) {
-								var dream = request.game.temporary.dreams[dreams[d]] || false
-								
-								if (dream && dream.target && dream.item && dream.color) {
-									sleepers = sleepers.filter(function (p) { return p !== dream.target })
-									
-									if (request.game.players[dream.target].status.alive && (killed.indexOf(dream.target) == -1) && (dream.target !== insomniac)) { // special-insomniac
-										var dreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [dream.target, seer, dreamsnatcher], color: dream.color, item: (dream.item + "s").replace("ss", "s")}) // special-seer
-										set["events." + dreamEvent.id] = dreamEvent
-
-										if ((dream.target == request.session.id) || request.session.id == seer) { // special-seer
-											myEvents.push(dreamEvent)
-										}
-
-										// special-medium
-											if (dream.target == medium) {
-												var mediumEvent = createStaticEvent(request, {type: "special-medium", viewers: [medium], name: request.game.players[dream.author].name})
-												set["events." + mediumEvent.id] = mediumEvent
-
-												if (dream.target == request.session.id) {
-													myEvents.push(mediumEvent)
-												}
-											}
-									}
-								}
-							}
-
-						// fake dreams
-						for (var s in sleepers) {
-							var fakeDreamEvent = createStaticEvent(request, {type: "story-sleep", viewers: [sleepers[s]]})
-							set["events." + fakeDreamEvent.id] = fakeDreamEvent
-
-							if (sleepers[s] == request.session.id) {
-								myEvents.push(fakeDreamEvent)
-							}
-						}
 
 					// first day only
 						// special-spellcaster
@@ -1317,6 +1246,75 @@
 									myEvents.push(telepathEvent)
 								}
 							}
+
+					// dreams (subsequent days)
+						if (request.game.state.day > 1) {
+							// ai dream
+								var sleepers = players.filter(function(s) {
+									return (request.game.players[s].status.alive && (killed.indexOf(s) == -1) && (s !== insomniac)) // special-insomniac
+								})
+
+								var suspect   = main.chooseRandom(sleepers)
+								var slumberer = main.chooseRandom(sleepers)
+								var item      = main.chooseRandom(["shirt", "pants", "shoes"])
+
+								var aiDreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [slumberer, seer, dreamsnatcher], color: request.game.players[suspect].colors[item], item: (item + "s").replace("ss", "s")}) // special-seer
+								set["events." + aiDreamEvent.id] = aiDreamEvent
+
+								if ((slumberer == request.session.id) || (request.session.id == seer)) { // special-seer
+									myEvents.push(aiDreamEvent)
+								}
+
+								// special-medium
+									if (slumberer == medium) {
+										var mediumEvent = createStaticEvent(request, {type: "special-medium", viewers: [medium], name: request.game.flavor.ghost})
+										set["events." + mediumEvent.id] = mediumEvent
+
+										if (slumberer == request.session.id) {
+											myEvents.push(mediumEvent)
+										}
+									}
+
+								sleepers = sleepers.filter(function (p) { return p !== slumberer })
+
+							// ghost dreams
+								for (var d in dreams) {
+									var dream = request.game.temporary.dreams[dreams[d]] || false
+									
+									if (dream && dream.target && dream.item && dream.color) {
+										sleepers = sleepers.filter(function (p) { return p !== dream.target })
+										
+										if (request.game.players[dream.target].status.alive && (killed.indexOf(dream.target) == -1) && (dream.target !== insomniac)) { // special-insomniac
+											var dreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [dream.target, seer, dreamsnatcher], color: dream.color, item: (dream.item + "s").replace("ss", "s")}) // special-seer
+											set["events." + dreamEvent.id] = dreamEvent
+
+											if ((dream.target == request.session.id) || request.session.id == seer || request.session.id == dreamsnatcher) { // special-seer // special-dreamsnatcher
+												myEvents.push(dreamEvent)
+											}
+
+											// special-medium
+												if (dream.target == medium) {
+													var mediumEvent = createStaticEvent(request, {type: "special-medium", viewers: [medium], name: request.game.players[dreams[d]].name})
+													set["events." + mediumEvent.id] = mediumEvent
+
+													if (medium == request.session.id) {
+														myEvents.push(mediumEvent)
+													}
+												}
+										}
+									}
+								}
+
+							// fake dreams
+								for (var s in sleepers) {
+									var fakeDreamEvent = createStaticEvent(request, {type: "story-sleep", viewers: [sleepers[s]]})
+									set["events." + fakeDreamEvent.id] = fakeDreamEvent
+
+									if (sleepers[s] == request.session.id) {
+										myEvents.push(fakeDreamEvent)
+									}
+								}
+						}
 
 					// murders
 						if ((!killed || killed.length == 0) && (request.game.state.day > 1)) {
@@ -1353,8 +1351,9 @@
 						}
 
 					// check for game end
-						var goodAlive = Object.keys(request.game.players).filter(function(p) { return (request.game.players[p].status.alive &&  request.game.players[p].status.good) })
-						var evilAlive = Object.keys(request.game.players).filter(function(p) { return (request.game.players[p].status.alive && !request.game.players[p].status.good) })
+						var alive     = players.filter(function(p) { return  request.game.players[p].status.alive })
+						var goodAlive =   alive.filter(function(p) { return  request.game.players[p].status.good  })
+						var evilAlive =   alive.filter(function(p) { return !request.game.players[p].status.good  })
 
 						if (evilAlive.length == 0) {
 							set["state.end"]     = request.game.state.end     = new Date().getTime()
@@ -1364,7 +1363,7 @@
 							set["events." + goodEvent.id] = goodEvent
 							myEvents.push(goodEvent)
 						}
-						else if (goodAlive.length < evilAlive.length) {
+						else if (goodAlive.length <= evilAlive.length) {
 							set["state.end"]     = request.game.state.end     = new Date().getTime()
 							set["state.victory"] = request.game.state.victory = "evil"
 							
@@ -1373,23 +1372,27 @@
 							myEvents.push(evilEvent)
 						}
 						else {
-							// night queue
-								var alive = Object.keys(request.game.players).filter(function(p) { return request.game.players[p].status.alive == true })
-								var queueEvent = createQueueEvent(request, {for: "story-night", doers: alive})
+							// night queue and trigger-sleep
+								var queueEvent = createQueueEvent(request, {for: "story-night", doers: players})
 								set["events." + queueEvent.id] = queueEvent
 
-							// execution-nomination and sleep
+								for (var p in players) {
+									var sleepEvent = createActionEvent(request, {type: "trigger-sleep", viewers: [players[p]], doers: [players[p]], queue: queueEvent.id})
+									set["events." + sleepEvent.id] = sleepEvent
+
+									if (players[p] == request.session.id) {
+										myEvents.push(sleepEvent)
+									}
+								}								
+
+							// execution-nomination and sleep								
 								for (var a in alive) {
 									var others = alive.filter(function (p) { return p !== alive[a] })
 									var nominationEvent = createActionEvent(request, {type: "execution-nomination", viewers: [alive[a]], doers: [alive[a]], options: others})
 									set["events." + nominationEvent.id] = nominationEvent
 
-									var sleepEvent = createActionEvent(request, {type: "trigger-sleep", viewers: [alive[a]], doers: [alive[a]], queue: queueEvent.id})
-									set["events." + sleepEvent.id] = sleepEvent
-
 									if (alive[a] == request.session.id) {
 										myEvents.push(nominationEvent)
-										myEvents.push(sleepEvent)
 									}
 								}
 						}
@@ -1426,23 +1429,23 @@
 					callback(results)
 				}, function (queue) { // success
 					// get data
-						var playerList = Object.keys(request.game.players)
-						var killers    = []
-						var ghosts     = []
-						var persons    = []
-						var alive      = []
+						var players = Object.keys(request.game.players)
+						var killers = []
+						var ghosts  = []
+						var persons = []
+						var alive   = []
 						
-						for (var p in playerList) {
-							if (!request.game.players[playerList[p]].status.alive) {
-								ghosts.push(playerList[p])
+						for (var p in players) {
+							if (!request.game.players[players[p]].status.alive) {
+								ghosts.push(players[p])
 							}
-							else if (!request.game.players[playerList[p]].status.good) {
-								killers.push(playerList[p])
-								alive.push(playerList[p])
+							else if (!request.game.players[players[p]].status.good) {
+								killers.push(players[p])
+								alive.push(players[p])
 							}
 							else {
-								persons.push(playerList[p])
-								alive.push(playerList[p])
+								persons.push(players[p])
+								alive.push(players[p])
 							}
 						}
 
@@ -1470,14 +1473,21 @@
 						var queueEvent = createQueueEvent(request, {for: "story-day"})
 						set["events." + queueEvent.id] = queueEvent
 
+					// first night only
+						if (request.game.state.day == 1) {
+							var explainEvent = createStaticEvent(request, {type: "start-night"})
+							set["events." + explainEvent.id] = explainEvent
+							myEvents.push(explainEvent)
+						}
+
 					// wake (for ghosts / killers)
-						for (var p in playerList) {
+						for (var p in players) {
 							// alive/good can't see it until after randoms
-								if (persons.indexOf(playerList[p]) == -1) {
-									var wakeEvent = createActionEvent(request, {type: "trigger-wake", viewers: [playerList[p]], doers: [playerList[p]], queue: queueEvent.id})
+								if (persons.indexOf(players[p]) == -1) {
+									var wakeEvent = createActionEvent(request, {type: "trigger-wake", viewers: [players[p]], doers: [players[p]], queue: queueEvent.id})
 									set["events." + wakeEvent.id] = wakeEvent
 
-									if (playerList[p] == request.session.id) {
+									if (players[p] == request.session.id) {
 										myEvents.push(wakeEvent)
 									}
 								}
@@ -1508,7 +1518,7 @@
 							}
 						}
 
-					// killers
+					// first night only
 						if (request.game.state.day == 1) {
 							var killerChatEvent = createStaticEvent(request, {type: "special-killer", viewers: killers})
 							set["events." + killerChatEvent.id] = killerChatEvent
@@ -1516,8 +1526,16 @@
 							if (killers.indexOf(request.session.id) !== -1) {
 								myEvents.push(killerChatEvent)
 							}
+
+							var randomExplanation = createStaticEvent(request, {type: "random-why", viewers: persons})
+							set["events." + randomExplanation.id] = randomExplanation
+
+							if (persons.indexOf(request.session.id) !== -1) {
+								myEvents.push(randomExplanation)
+							}
 						}
 
+					// killers
 						for (var k in killers) {
 							var killerEvent = createActionEvent(request, {type: "murder-nomination", options: alive, viewers: [killers[k]], doers: [killers[k]]})
 							set["events." + killerEvent.id] = killerEvent
@@ -1528,15 +1546,6 @@
 						}
 
 					// random (for persons)
-						if (request.game.state.day == 1) {
-							var randomExplanation = createStaticEvent(request, {type: "random-why", viewers: persons})
-							set["events." + randomExplanation.id] = randomExplanation
-
-							if (persons.indexOf(request.session.id) !== -1) {
-								myEvents.push(randomExplanation)
-							}
-						}
-
 						for (var p in persons) {
 							var randomEvent = createActionEvent(request, {type: "random-select", viewers: [persons[p]], doers: [persons[p]]})
 							set["events." + randomEvent.id] = randomEvent
@@ -1597,17 +1606,17 @@
 							set["events." + request.event.id + ".doers"]  = request.event.doers  = []
 
 					// create queue
-						var playerList = Object.keys(request.game.players)
-						var queueEvent = createQueueEvent(request, {for: "execution-poll", author: request.session.id, target: request.post.value, doers: playerList.filter(function(p) { return ((request.game.players[p].id !== request.post.value) && (request.game.players[p].status.alive)) }) })
+						var players = Object.keys(request.game.players)
+						var queueEvent = createQueueEvent(request, {for: "execution-poll", author: request.session.id, target: request.post.value, doers: players.filter(function(p) { return ((request.game.players[p].id !== request.post.value) && (request.game.players[p].status.alive)) }) })
 						set["events." + queueEvent.id] = queueEvent
 
 					// create poll event
-						for (var p in playerList) {
-							if (request.game.players[playerList[p]].status.alive && (playerList[p] !== request.post.value)) {
-								var pollEvent = createActionEvent(request, {type: "execution-poll", author: request.game.players[request.session.id].name, target: request.game.players[request.post.value].name, viewers: [playerList[p]], doers: [playerList[p]], queue: queueEvent.id})
+						for (var p in players) {
+							if (request.game.players[players[p]].status.alive && (players[p] !== request.post.value)) {
+								var pollEvent = createActionEvent(request, {type: "execution-poll", author: request.game.players[request.session.id].name, target: request.game.players[request.post.value].name, viewers: [players[p]], doers: [players[p]], queue: queueEvent.id})
 								set["events." + pollEvent.id] = pollEvent
 
-								if (playerList[p] == request.session.id) {
+								if (players[p] == request.session.id) {
 									myEvents.push(pollEvent)
 								}
 							}
