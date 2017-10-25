@@ -261,11 +261,10 @@
 	/* buildChat */
 		function buildChat(chat) {
 			// data
-				var id      = chat.id      || 0
-				var author  = chat.name    || null
-				var text    = chat.text    || ""
-				var created = chat.created ? new Date(chat.created) : new Date()
-					created = created.toTimeString().split(" ")[0]
+				var id     = chat.id      || 0
+				var author = chat.name    || null
+				var text   = chat.text    || ""
+				var time   = new Date(chat.created).toLocaleString().split(" at ")[1] ? new Date(chat.created).toLocaleString().split(" at ")[1].split(" ")[0] : new Date(chat.created).toLocaleString().split(" ")[1]
 
 			// content
 				var authorBlock = document.createElement("div")
@@ -316,8 +315,7 @@
 			// data
 				var type = event.type  || "story"
 				var text = event.text  || ""
-				var time = event.time ? new Date(event.time) : new Date()
-					time = time.toTimeString().split(" ")[0]
+				var time = new Date(event.created).toLocaleString().split(" at ")[1] ? new Date(event.created).toLocaleString().split(" at ")[1].split(" ")[0] : new Date(event.created).toLocaleString().split(" ")[1]
 
 			// content
 				var typeBlock = document.createElement("div")
