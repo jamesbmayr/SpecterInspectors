@@ -304,7 +304,7 @@
 						break
 
 						case "start-players":
-							event.text = "Here are all the suspects: <br>" + data.players.join("<br>") + "<br><br>And here are all the roles: <br><span class='special-text'>" + data.roles.join("</span> <span class='special-text'>") + "</span>"
+							event.text = "Here are all the suspects: <br>" + main.sortRandom(data.players).join("<br>") + "<br><br>And here are all the roles: <br><span class='special-text'>" + main.sortRandom(data.roles).join("</span> <span class='special-text'>") + "</span>"
 							event.input = "link"
 							event.options = ["../../about", "see role descriptions"]
 						break
@@ -544,9 +544,9 @@
 						case "execution-nomination":
 							event.text = main.chooseRandom(["Who do you want to point the finger at for these deaths?", "Who dunnit?", "Who is the killer?", "Who do you blame for the murder?", "Somebody's gotta pay for this murder. But who?", "Who is responsible for this atrocious murder?", "Someone did it - someone killed 'em - but who?", "Who should we execute for committing these crimes?", "One of us is the killer... but which one of us?", "Who deserves to be executed?"])
 							event.input = "select"
-							event.options = data.options
+							event.options = main.sortRandom(data.options)
 								var names = []
-								data.options.forEach(function (o) { names.push(request.game.players[o].name) })
+								event.options.forEach(function (o) { names.push(request.game.players[o].name) })
 							event.names = names
 						break
 
@@ -560,9 +560,9 @@
 						case "murder-nomination":
 							event.text = main.chooseRandom(["Who do you want to kill tonight?", "Whose turn is it to die?", "Who should we murder?", "Who do you want to off tonight?", "Somebody's gonna die... but who?", "Who is the next victim?", "Someone has seconds to live - but who?", "Who should we do away with?", "One of these people is a murder victim... but which?", "Who deserves to be executed?"])
 							event.input = "select"
-							event.options = data.options
+							event.options = main.sortRandom(data.options)
 								var names = []
-								data.options.forEach(function (o) { names.push(request.game.players[o].name) })
+								event.options.forEach(function (o) { names.push(request.game.players[o].name) })
 							event.names = names
 						break
 
@@ -576,9 +576,9 @@
 						case "dream-name":
 							event.text = main.chooseRandom(["Who do you want to give a dream to tonight?", "Whose turn is it to dream?", "Who should have a dream now?", "Who do you want to send a dream to?", "Somebody's gonna dream... but who?", "Who is the next dreamer?", "Someone is about to have a dream - but who?", "Whose perfect night of sleep should we interrupt?", "One of these people is about to have a strange dream - but which one?", "Who needs to get this dream?"])
 							event.input = "select"
-							event.options = data.options
-							var names = []
-								data.options.forEach(function (o) { names.push(request.game.players[o].name) })
+							event.options = main.sortRandom(data.options)
+								var names = []
+								event.options.forEach(function (o) { names.push(request.game.players[o].name) })
 							event.names = names
 						break
 
@@ -598,7 +598,7 @@
 						case "random-select":
 							event.text = main.chooseRandom(["While you're waiting, what's your favorite?", "What's the best?", "Also, we're doing a survey:", "If you had to choose one (and you do), what would you choose?", "So...", "Take your time deciding:", "Which of these is the good one?", "So many options, so little significance:", "What's the worst?"])
 							event.input = "select"
-							event.options = main.chooseRandom([["red","orange","yellow","green","blue","purple","brown","white","gray","black"], ["shirt", "pants", "shoes"], ["earth", "wind", "fire", "water"], ["spring", "summer", "autumn", "winter"], ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"], [0,1,2,3,4,5,6,7,8,9], ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"], ["north", "east", "west", "south"], ["up", "right", "left", "down"], ["rock", "paper", "scissors"], ["africa", "antarctica", "asia", "australia", "europe", "north america", "south america"]])
+							event.options = main.sortRandom(main.chooseRandom([["red","orange","yellow","green","blue","purple","brown","white","gray","black"], ["shirt", "pants", "shoes"], ["earth", "wind", "fire", "water"], ["spring", "summer", "autumn", "winter"], ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"], [0,1,2,3,4,5,6,7,8,9], ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"], ["north", "east", "west", "south"], ["up", "right", "left", "down"], ["rock", "paper", "scissors"], ["africa", "antarctica", "asia", "australia", "europe", "north america", "south america"]]))
 						break
 
 						case "random-text":
