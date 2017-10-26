@@ -260,232 +260,241 @@
 /*** build ***/
 	/* buildChat */
 		function buildChat(chat) {
-			// data
-				var id     = chat.id      || 0
-				var author = chat.name    || null
-				var text   = chat.text    || ""
-				var time   = new Date(chat.created).toLocaleString().split(" at ")[1] ? new Date(chat.created).toLocaleString().split(" at ")[1].split(" ")[0] : new Date(chat.created).toLocaleString().split(" ")[1]
+			var existing = document.getElementById(chat.id)
+			if (!existing) {
+				
+				// data
+					var author = chat.name    || null
+					var text   = chat.text    || ""
+					var time = new Date(chat.created).toLocaleString()
+						time = (time.split(" at ")[1] ? time.split(" at ")[1].split(" ")[0] : time.split(" ")[1])
 
-			// content
-				var authorBlock = document.createElement("div")
-					authorBlock.className = "chat-author"
-					authorBlock.appendChild(document.createTextNode(author))
+				// content
+					var authorBlock = document.createElement("div")
+						authorBlock.className = "chat-author"
+						authorBlock.appendChild(document.createTextNode(author))
 
-				var timeBlock = document.createElement("div")
-					timeBlock.className = "chat-time"
-					timeBlock.appendChild(document.createTextNode(created))
+					var timeBlock = document.createElement("div")
+						timeBlock.className = "chat-time"
+						timeBlock.appendChild(document.createTextNode(time))
 
-				var infoBlock = document.createElement("div")
-					infoBlock.className = "chat-info"
-					infoBlock.appendChild(authorBlock)
-					infoBlock.appendChild(timeBlock)
+					var infoBlock = document.createElement("div")
+						infoBlock.className = "chat-info"
+						infoBlock.appendChild(authorBlock)
+						infoBlock.appendChild(timeBlock)
 
-				var textBlock = document.createElement("div")
-					textBlock.className = "chat-text"
-					textBlock.appendChild(document.createTextNode(text))
+					var textBlock = document.createElement("div")
+						textBlock.className = "chat-text"
+						textBlock.appendChild(document.createTextNode(text))
 
-			// structure
-				var chatBlock = document.createElement("div")
-					chatBlock.id = id
-					chatBlock.className = "chat"
-					chatBlock.style.opacity = 0
-					chatBlock.appendChild(infoBlock)
-					chatBlock.appendChild(textBlock)
+				// structure
+					var chatBlock = document.createElement("div")
+						chatBlock.id = chat.id
+						chatBlock.className = "chat"
+						chatBlock.style.opacity = 0
+						chatBlock.appendChild(infoBlock)
+						chatBlock.appendChild(textBlock)
 
-			// append
-				var chats = document.getElementById("chats-list")
-					chats.appendChild(chatBlock)
-					scrollToNewest("chats")
+				// append
+					var chats = document.getElementById("chats-list")
+						chats.appendChild(chatBlock)
+						scrollToNewest("chats")
 
-			// fade in
-				var chatFadein = setInterval(function() { // fade in
-					var opacity = Number(chatBlock.style.opacity)
+				// fade in
+					var chatFadein = setInterval(function() { // fade in
+						var opacity = Number(chatBlock.style.opacity)
 
-					if (opacity < 1) {
-						chatBlock.style.opacity = ((opacity * 100) + 5) / 100
-					}
-					else {
-						clearInterval(chatFadein)
-					}
-				}, 100)
+						if (opacity < 1) {
+							chatBlock.style.opacity = ((opacity * 100) + 5) / 100
+						}
+						else {
+							clearInterval(chatFadein)
+						}
+					}, 100)
+			}
 		}
 		
 	/* buildEvent */
 		function buildEvent(event) {
-			// data
-				var type = event.type  || "story"
-				var text = event.text  || ""
-				var time = new Date(event.created).toLocaleString().split(" at ")[1] ? new Date(event.created).toLocaleString().split(" at ")[1].split(" ")[0] : new Date(event.created).toLocaleString().split(" ")[1]
+			var existing = document.getElementById(event.id)
+			if (!existing) {
 
-			// content
-				var typeBlock = document.createElement("div")
-					typeBlock.className = "event-type"
-					typeBlock.appendChild(document.createTextNode(type))
+				// data
+					var type = event.type  || "story"
+					var text = event.text  || ""
+					var time = new Date(event.created).toLocaleString()
+						time = (time.split(" at ")[1] ? time.split(" at ")[1].split(" ")[0] : time.split(" ")[1])
 
-				var timeBlock = document.createElement("div")
-					timeBlock.className = "event-time"
-					timeBlock.appendChild(document.createTextNode(time))
+				// content
+					var typeBlock = document.createElement("div")
+						typeBlock.className = "event-type"
+						typeBlock.appendChild(document.createTextNode(type))
 
-				var textBlock = document.createElement("div")
-					textBlock.className = "event-text"
-					textBlock.innerHTML = text
+					var timeBlock = document.createElement("div")
+						timeBlock.className = "event-time"
+						timeBlock.appendChild(document.createTextNode(time))
 
-			// inputs
-				var inputBlocks = []
-				if (event.input == "text") {
-					var inputBlock = document.createElement("input")
-						inputBlock.className = "event-input"
-						inputBlock.type = "text"
-						inputBlock.placeholder = "your response"
-						inputBlock.setAttribute("autocomplete", "off")
-						inputBlock.setAttribute("autocorrect", "off")
-						inputBlock.setAttribute("autocapitalize", "off")
-						inputBlock.setAttribute("spellcheck", "false")
-						inputBlock.addEventListener("keyup", function (event) { if (event.which == 13) { submitEvent(event) } })
+					var textBlock = document.createElement("div")
+						textBlock.className = "event-text"
+						textBlock.innerHTML = text
 
-					var submitBlock = document.createElement("button")
-						submitBlock.className = "event-button"
-						submitBlock.value = "submit-text"
-						submitBlock.innerHTML = "&#8595;"
-						submitBlock.addEventListener("click", submitEvent)
+				// inputs
+					var inputBlocks = []
+					if (event.input == "text") {
+						var inputBlock = document.createElement("input")
+							inputBlock.className = "event-input"
+							inputBlock.type = "text"
+							inputBlock.placeholder = "your response"
+							inputBlock.setAttribute("autocomplete", "off")
+							inputBlock.setAttribute("autocorrect", "off")
+							inputBlock.setAttribute("autocapitalize", "off")
+							inputBlock.setAttribute("spellcheck", "false")
+							inputBlock.addEventListener("keyup", function (event) { if (event.which == 13) { submitEvent(event) } })
 
-					inputBlocks = [inputBlock, submitBlock]
-				}
-				else if (event.input == "select") {
-					var labelBlock = document.createElement("optgroup")
-						labelBlock.setAttribute("label", "select...")
+						var submitBlock = document.createElement("button")
+							submitBlock.className = "event-button"
+							submitBlock.value = "submit-text"
+							submitBlock.innerHTML = "&#8595;"
+							submitBlock.addEventListener("click", submitEvent)
 
-					var selectBlock = document.createElement("select")
-						selectBlock.className = "event-select"
-						selectBlock.appendChild(labelBlock)
-						selectBlock.addEventListener("keyup", function (event) { if (event.which == 13) { submitEvent(event) } })
-
-					for (var o = 0; o < event.options.length; o++) {
-						var optionBlock = document.createElement("option")
-							optionBlock.value = event.options[o]
-							optionBlock.appendChild(document.createTextNode(event.names ? event.names[o] : event.options[o]))
-
-						selectBlock.appendChild(optionBlock)
+						inputBlocks = [inputBlock, submitBlock]
 					}
+					else if (event.input == "select") {
+						var labelBlock = document.createElement("optgroup")
+							labelBlock.setAttribute("label", "select...")
 
-					var submitBlock = document.createElement("button")
-						submitBlock.className = "event-button"
-						submitBlock.value = "submit-select"
-						submitBlock.innerHTML = "&#8595;"
-						submitBlock.addEventListener("click", submitEvent)
+						var selectBlock = document.createElement("select")
+							selectBlock.className = "event-select"
+							selectBlock.appendChild(labelBlock)
+							selectBlock.addEventListener("keyup", function (event) { if (event.which == 13) { submitEvent(event) } })
 
-					inputBlocks = [selectBlock, submitBlock]
-				}
-				else if (event.input == "okay") {
-					var okayBlock = document.createElement("button")
-						okayBlock.className = "event-button"
-						okayBlock.value = "okay"
-						okayBlock.innerHTML = event.options
-						okayBlock.addEventListener("click", submitEvent)
+						for (var o = 0; o < event.options.length; o++) {
+							var optionBlock = document.createElement("option")
+								optionBlock.value = event.options[o]
+								optionBlock.appendChild(document.createTextNode(event.names ? event.names[o] : event.options[o]))
 
-					inputBlocks = [okayBlock]
-				}
-				else if (event.input == "buttons") {
-					var falseBlock = document.createElement("button")
-						falseBlock.className = "event-button"
-						falseBlock.value = 0
-						falseBlock.appendChild(document.createTextNode(event.options[0]))
-						falseBlock.addEventListener("click", submitEvent)
-
-					var trueBlock = document.createElement("button")
-						trueBlock.className = "event-button"
-						trueBlock.value = 1
-						trueBlock.appendChild(document.createTextNode(event.options[1]))
-						trueBlock.addEventListener("click", submitEvent)
-
-					inputBlocks = [falseBlock, trueBlock]
-				}
-				else if (event.input == "link") {
-					var linkBlock = document.createElement("a")
-						linkBlock.className = "event-link"
-						linkBlock.href = event.options[0]
-						linkBlock.appendChild(document.createTextNode(event.options[1]))
-
-					inputBlocks = [linkBlock]
-				}
-
-			// structure
-				var eventBlock = document.createElement("div")
-					eventBlock.id = event.id
-					eventBlock.className = "event " + type
-					eventBlock.style.opacity = 0
-					eventBlock.setAttribute("day", event.day)
-					eventBlock.setAttribute("night", event.night)
-					eventBlock.appendChild(typeBlock)
-					eventBlock.appendChild(timeBlock)
-					eventBlock.appendChild(textBlock)
-					for (var i in inputBlocks) {
-						eventBlock.appendChild(inputBlocks[i])
-					}
-
-			// append
-				var events = document.getElementById("events-list")
-					events.appendChild(eventBlock)
-				if (["start-role", "start-players", "start-notes"].indexOf(type) == -1) {
-					scrollToNewest("events")
-				}
-
-			// fade in
-				var eventFadein = setInterval(function() { // fade in
-					var opacity = Number(eventBlock.style.opacity)
-
-					if (opacity < 1) {
-						eventBlock.style.opacity = ((opacity * 100) + 5) / 100
-					}
-					else {
-						clearInterval(eventFadein)
-					}
-				}, 100)
-
-			// special events
-				// animate on setup, start, execution & murder, end
-					if (["setup-name", "start-story", "story-execution", "story-murder", "end-good", "end-evil"].indexOf(type) !== -1) {
-						buildGhosts(5, false)
-					}
-					
-				// switch chats on ghost
-					if (type == "story-ghost") {
-						document.getElementById("chats-list").innerHTML == ""
-						document.getElementById("chats").className = ""
-					}
-
-				// disable launch on launch
-					if (type == "start-story") {
-						var launch = Array.prototype.slice.call(document.getElementsByClassName("start-launch"))[0]
-						if (launch) { disableEvent(launch.id) }
-					}
-
-				// disable nominations on execution
-					if (type == "story-execution") {
-						var nominations = Array.prototype.slice.call(document.getElementsByClassName("execution-nomination"))
-						var polls = Array.prototype.slice.call(document.getElementsByClassName("execution-poll"))
-						var array = nominations.concat(polls)
-						for (var a in array) {
-							disableEvent(array[a].id)
+							selectBlock.appendChild(optionBlock)
 						}
+
+						var submitBlock = document.createElement("button")
+							submitBlock.className = "event-button"
+							submitBlock.value = "submit-select"
+							submitBlock.innerHTML = "&#8595;"
+							submitBlock.addEventListener("click", submitEvent)
+
+						inputBlocks = [selectBlock, submitBlock]
+					}
+					else if (event.input == "okay") {
+						var okayBlock = document.createElement("button")
+							okayBlock.className = "event-button"
+							okayBlock.value = "okay"
+							okayBlock.innerHTML = event.options
+							okayBlock.addEventListener("click", submitEvent)
+
+						inputBlocks = [okayBlock]
+					}
+					else if (event.input == "buttons") {
+						var falseBlock = document.createElement("button")
+							falseBlock.className = "event-button"
+							falseBlock.value = 0
+							falseBlock.appendChild(document.createTextNode(event.options[0]))
+							falseBlock.addEventListener("click", submitEvent)
+
+						var trueBlock = document.createElement("button")
+							trueBlock.className = "event-button"
+							trueBlock.value = 1
+							trueBlock.appendChild(document.createTextNode(event.options[1]))
+							trueBlock.addEventListener("click", submitEvent)
+
+						inputBlocks = [falseBlock, trueBlock]
+					}
+					else if (event.input == "link") {
+						var linkBlock = document.createElement("a")
+							linkBlock.className = "event-link"
+							linkBlock.href = event.options[0]
+							linkBlock.appendChild(document.createTextNode(event.options[1]))
+
+						inputBlocks = [linkBlock]
 					}
 
-				// disable nominations on murder
-					if (type == "murder-complete") {
-						var nominations = Array.prototype.slice.call(document.getElementsByClassName("murder-nomination"))
-						var polls = Array.prototype.slice.call(document.getElementsByClassName("murder-poll"))
-						var array = nominations.concat(polls)
-						for (var a in array) {
-							disableEvent(array[a].id)
+				// structure
+					var eventBlock = document.createElement("div")
+						eventBlock.id = event.id
+						eventBlock.className = "event " + type
+						eventBlock.style.opacity = 0
+						eventBlock.setAttribute("day", event.day)
+						eventBlock.setAttribute("night", event.night)
+						eventBlock.appendChild(typeBlock)
+						eventBlock.appendChild(timeBlock)
+						eventBlock.appendChild(textBlock)
+						for (var i in inputBlocks) {
+							eventBlock.appendChild(inputBlocks[i])
 						}
+
+				// append
+					var events = document.getElementById("events-list")
+						events.appendChild(eventBlock)
+					if (["start-role", "start-players", "start-notes"].indexOf(type) == -1) {
+						scrollToNewest("events")
 					}
 
-				// move triggers on decision-complete, execution-complete, murder-complete, and dream-complete
-					if (["decision-complete", "execution-complete", "murder-complete", "dream-complete"].indexOf(type) !== -1) {
-						var triggers = Array.prototype.slice.call(document.getElementsByClassName("trigger-sleep:last-child, trigger-wake:last-child"))
-						var trigger = triggers[triggers.length - 1]
-						console.log(trigger)
-					}
+				// fade in
+					var eventFadein = setInterval(function() { // fade in
+						var opacity = Number(eventBlock.style.opacity)
+
+						if (opacity < 1) {
+							eventBlock.style.opacity = ((opacity * 100) + 5) / 100
+						}
+						else {
+							clearInterval(eventFadein)
+						}
+					}, 100)
+
+				// special events
+					// animate on setup, start, execution & murder, end
+						if (["setup-name", "start-story", "story-execution", "story-murder", "end-good", "end-evil"].indexOf(type) !== -1) {
+							buildGhosts(5, false)
+						}
+						
+					// switch chats on ghost
+						if (type == "story-ghost") {
+							document.getElementById("chats-list").innerHTML = ""
+							document.getElementById("chats").className = ""
+						}
+
+					// disable launch on launch
+						if (type == "start-story") {
+							var launch = Array.prototype.slice.call(document.getElementsByClassName("start-launch"))[0]
+							if (launch) { disableEvent(launch.id) }
+						}
+
+					// disable nominations on execution
+						if (type == "story-execution") {
+							var nominations = Array.prototype.slice.call(document.getElementsByClassName("execution-nomination"))
+							var polls = Array.prototype.slice.call(document.getElementsByClassName("execution-poll"))
+							var array = nominations.concat(polls)
+							for (var a in array) {
+								disableEvent(array[a].id)
+							}
+						}
+
+					// disable nominations on murder
+						if (type == "murder-complete") {
+							var nominations = Array.prototype.slice.call(document.getElementsByClassName("murder-nomination"))
+							var polls = Array.prototype.slice.call(document.getElementsByClassName("murder-poll"))
+							var array = nominations.concat(polls)
+							for (var a in array) {
+								disableEvent(array[a].id)
+							}
+						}
+
+					// move triggers on decision-complete, execution-complete, murder-complete, and dream-complete
+						if (["decision-complete", "execution-complete", "murder-complete", "dream-complete"].indexOf(type) !== -1) {
+							var triggers = Array.prototype.slice.call(document.getElementsByClassName("trigger-sleep:last-child, trigger-wake:last-child"))
+							var trigger = triggers[triggers.length - 1]
+							console.log(trigger)
+						}
+			}
 		}
 
 /*** dis/enable ***/
@@ -538,6 +547,17 @@
 		}
 
 /*** fetch ***/
+	/* onload */
+		localizeTimes()
+		function localizeTimes() {
+			var timestamps = Array.prototype.slice.call(document.querySelectorAll(".event-time, .chat-time"))
+			for (var t in timestamps) {
+				var time = new Date(Number(timestamps[t].textContent)).toLocaleString()
+					time = (time.split(" at ")[1] ? time.split(" at ")[1].split(" ")[0] : time.split(" ")[1])
+				timestamps[t].textContent = time
+			}
+		}
+
 	/* fetchData */
 		fetchLoop = setInterval(fetchData, 5000)
 		if (typeof window.clearLoop !== "undefined" && window.clearLoop !== null && window.clearLoop) { clearInterval(fetchLoop) }

@@ -246,7 +246,6 @@
 								break
 
 								case "dream-name":
-								case "dream-item":
 								case "dream-color":
 									setupDream(request, callback)
 								break
@@ -304,7 +303,7 @@
 						break
 
 						case "start-players":
-							event.text = "Here are all the suspects: <br>" + main.sortRandom(data.players).join("<br>") + "<br><br>And here are all the roles: <br><span class='special-text'>" + main.sortRandom(data.roles).join("</span> <span class='special-text'>") + "</span>"
+							event.text = "Here are all the suspects: <br>" + main.sortRandom(data.players).join("<br>") + "<br><br>And here are all the roles: <br>" + main.sortRandom(data.roles).join(" ")
 							event.input = "link"
 							event.options = ["../../about", "see role descriptions"]
 						break
@@ -323,11 +322,11 @@
 						break
 
 						case "story-dream":
-							event.text = main.chooseRandom(["You had the strangest dream last night - something about " + data.color + " " + data.item + "?", "That was definitely a bizarre dream - " + data.color + " " + data.item + "...", "Well, dreams don't get more interesting than " + data.color + " " + data.item + ", right?", "What a dream! You can still see it clearly: " + data.color + " " + data.item + ".", "No, no! Not the " + data.color + " " + data.item + "! Oh... it was only a dream.", "Are these dreams, or visions? All you know is you can't get " + data.color + " " + data.item + " out of your head.", "What a nightmare! Just " + data.color + " " + data.item + " everywhere!", "And that dream about " + data.color + " " + data.item + " was pretty interesting, to say the least.", "You begin to wonder if anyone else dreams about " + data.color + " " + data.item + ".", "Wow, what a restless night, constantly interrupted by visions of " + data.color + " " + data.item + "!", "You suspect there's something up with " + data.color + " " + data.item + " after those thoughts dancing in your mind all of last night."])
+							event.text = main.chooseRandom(["You had the strangest dream last night - something about <span class='special-text " + data.color + "'>" + data.color + "</span> things?", "That was definitely a bizarre dream - everything was <span class='special-text " + data.color + "'>" + data.color + "</span>, everywhere you looked...", "Well, dreams don't get more interesting than wall-to-wall <span class='special-text " + data.color + "'>" + data.color + "</span>, right?", "What a dream! You can still see it clearly: everything you touched turned <span class='special-text " + data.color + "'>" + data.color + "</span>.", "No, no! Not the <span class='special-text " + data.color + "'>" + data.color + "</span> squares! Oh... it was only a dream.", "Are these dreams, or visions? All you know is you can't get <span class='special-text " + data.color + "'>" + data.color + "</span> out of your head.", "What a nightmare! Just <span class='special-text " + data.color + "'>" + data.color + "</span> liquids, everywhere, as far as the eye can see!", "And that dream about <span class='special-text " + data.color + "'>" + data.color + "</span> shadows was pretty interesting, to say the least.", "You begin to wonder if anyone else dreams about everyday objects all being <span class='special-text " + data.color + "'>" + data.color + "</span>.", "Wow, what a restless night, constantly interrupted by visions of <span class='special-text " + data.color + "'>" + data.color + "</span>!", "You suspect there's something up with <span class='special-text " + data.color + "'>" + data.color + "</span> after those thoughts dancing in your mind all of last night.", "Even the air you breathed felt thoroughly <span class='special-text " + data.color + "'>" + data.color + "</span> in your dreams last night."])
 						break
 
 						case "story-sleep":
-							event.text = main.chooseRandom(["BEES! BEES EVERYWHERE! Oh... oh, it was only a dream.", "Between the astronauts, the jazz trombone, and the flying zebras, that was an awesome dream last night.", "You hate that dream - you know, the one about the pigeons and the celery. Ugh. Terrible.", "Why is it that your dreams about attractive models are always after the zombie apocalypse?", "In your dream last night, the sun and moon decided to swap places. Few people noticed.", "Crazy dream last night - everyone was speaking in barcodes.", "!!! Oh, you were sleeping. But what a nightmare! Kindergarten - again!", "You had a dream about pancakes, but they were stale.", "Your favorite dreams are always the ones about scuba diving on the moon. Someone should make that a thing.", "They say it's in dreams that our best ideas are born. So I guess your best idea is a pantsuit for hamsters. Huh.", "You dreamed mostly about the number 31, but you're not sure if that's significant. Probably not.", "Whoa - you just had that recurring nightmare again - the one with the octopus telemarketer. You should talk to someone about that.", "You dreamt that you had been a better child to your parents. Alas.", "Last night, you had a dream about unicorns, but they were all on strike for workplace safety violations.", "Is it normal to dream about throwing your friends in a volcano? No, probably not.", "Your latest dream was a revolutionary new tech gadget, but... sigh... the specifics have faded from your memory.", "You had a dream last night that you crawled into your bed.", "Your dream last night was one for the history books... in that it was literally about you reading a history book.", "Strange visions in your sleep - visions of smells. Bad ones.", "You dreamt that you had wet the bed, but you awoke to find you hadn't. Nice.", "Last night, you had a dream that you and your friends were playing a sort of board game on your phone... ghosts and guesses, was it?", "It's probably best if you forget your latest dreams altogether.", "Honestly, that was the best dream you will ever have - you had a steady job, a family that cared about you, and attainable ambitions... oh well...", "Huh, that was a first. Never had a dream about a rabbit wielding katanas before.", "At this point, most of your dreams are just pop-up ads for more expensive dreams.", "Can't remember the last time you had a dream that all of America's former governors had invited you to tea.", "Terrible, terrible nightmares last night - all of the birds were singing cartoon theme songs! In harmony!", "Your dream last night included Beethoven's Moonlight Sonata, as performed by a box of crayons distraught over the state of the economy.", "Worst. Dream. Ever. 0 out of 5 stars. You literally can't even."])
+							event.text = main.chooseRandom(["BEES! BEES EVERYWHERE! Oh... oh, it was only a dream.", "Between the astronauts, the jazz trombone, and the flying zebras, that was an awesome dream last night.", "You hate that dream - you know, the one about the pigeons and the celery. Ugh. Terrible.", "Why is it that your dreams about attractive models are always after the zombie apocalypse?", "In your dream last night, the sun and moon decided to swap places. Few people noticed.", "Crazy dream last night - everyone was speaking in barcodes.", "!!! Oh, you were sleeping. But what a nightmare! Kindergarten - again!", "You had a dream about pancakes, but they were stale.", "Your favorite dreams are always the ones about scuba diving on the moon. Someone should make that a thing.", "They say it's in dreams that our best ideas are born. So I guess your best idea is a pantsuit for hamsters. Huh.", "You dreamed mostly about the number 31, but you're not sure if that's significant. Probably not.", "Whoa - you just had that recurring nightmare again - the one with the octopus telemarketer. You should talk to someone about that.", "You dreamt that you had been a better child to your parents. Alas.", "Last night, you had a dream about unicorns, but they were all on strike for workplace safety violations.", "Is it normal to dream about throwing your friends in a volcano? No, probably not.", "Your latest dream was a revolutionary new tech gadget, but... sigh... the specifics have faded from your memory.", "You had a dream last night that you crawled into your bed.", "Your dream last night was one for the history books... in that it was literally about you reading a history book.", "Strange visions in your sleep - visions of smells. Bad ones.", "You dreamt that you had wet the bed, but you awoke to find you hadn't. Nice.", "Last night, you had a dream that you and your friends were playing a sort of board game on your phone... ghosts and guesses, was it?", "It's probably best if you forget your latest dreams altogether.", "Honestly, that was the best dream you will ever have - you had a steady job, a family that cared about you, and attainable ambitions... oh well...", "Huh, that was a first. Never had a dream about a rabbit wielding katanas before.", "At this point, most of your dreams are just pop-up ads for more expensive dreams.", "Can't remember the last time you had a dream that all of America's former governors had invited you to tea.", "Terrible, terrible nightmares last night - all of the birds were singing cartoon theme songs! In harmony!", "Your dream last night included Beethoven's Moonlight Sonata, as performed by a box of crayons distraught over the state of the economy.", "Worst. Dream. Ever. 0 out of 5 stars. You literally can't even.", "Your favorite dreams are generally the ones where you're somebody's household pet.", "File this under freaky: last night, you dreamt that you were dreaming about not getting enough sleep.", "In a strange twist, your dream last night involved physical words flying out of your mouth - all of them with the squiggly underline for incorrect spelling.", "Your parents would be proud - in your dream last night, you actually accomplished something meaningful.", "It was first day at the police academy all over again in your most recent dream.", "The muses must be speaking to you in code, because your dream last night was literally javascript.", "Do dreams about mirrors generally involve action stars punching through them screaming about revenge? No? Just you? Okay.", "Vampires, goblins, and werewolves were the main feature of your dreams this evening. Not ghosts, though.", "You had a dream that you were extinguishing everyone else's candles by inhaling the flame into your nostrils. Kinda mean, now that you think about it.", "Aw, yeah, dreams about laser guns and space ships. Awesome.", "During last night's slumber, you were transported back to your 7th birthday party - complete with the pizza and that weird kid your mom insisted on inviting.", "In your dream last night, you were good at racing video games. But in reality, you are not."])
 						break
 
 						case "story-murder":
@@ -544,9 +543,9 @@
 						case "execution-nomination":
 							event.text = main.chooseRandom(["Who do you want to point the finger at for these deaths?", "Who dunnit?", "Who is the killer?", "Who do you blame for the murder?", "Somebody's gotta pay for this murder. But who?", "Who is responsible for this atrocious murder?", "Someone did it - someone killed 'em - but who?", "Who should we execute for committing these crimes?", "One of us is the killer... but which one of us?", "Who deserves to be executed?"])
 							event.input = "select"
-							event.options = main.sortRandom(data.options)
+							event.options = data.options
 								var names = []
-								event.options.forEach(function (o) { names.push(request.game.players[o].name) })
+								data.options.forEach(function (o) { names.push(request.game.players[o].name) })
 							event.names = names
 						break
 
@@ -560,9 +559,9 @@
 						case "murder-nomination":
 							event.text = main.chooseRandom(["Who do you want to kill tonight?", "Whose turn is it to die?", "Who should we murder?", "Who do you want to off tonight?", "Somebody's gonna die... but who?", "Who is the next victim?", "Someone has seconds to live - but who?", "Who should we do away with?", "One of these people is a murder victim... but which?", "Who deserves to be executed?"])
 							event.input = "select"
-							event.options = main.sortRandom(data.options)
+							event.options = data.options
 								var names = []
-								event.options.forEach(function (o) { names.push(request.game.players[o].name) })
+								data.options.forEach(function (o) { names.push(request.game.players[o].name) })
 							event.names = names
 						break
 
@@ -576,41 +575,35 @@
 						case "dream-name":
 							event.text = main.chooseRandom(["Who do you want to give a dream to tonight?", "Whose turn is it to dream?", "Who should have a dream now?", "Who do you want to send a dream to?", "Somebody's gonna dream... but who?", "Who is the next dreamer?", "Someone is about to have a dream - but who?", "Whose perfect night of sleep should we interrupt?", "One of these people is about to have a strange dream - but which one?", "Who needs to get this dream?"])
 							event.input = "select"
-							event.options = main.sortRandom(data.options)
+							event.options = data.options
 								var names = []
-								event.options.forEach(function (o) { names.push(request.game.players[o].name) })
+								data.options.forEach(function (o) { names.push(request.game.players[o].name) })
 							event.names = names
 						break
 
-						case "dream-item":
-							event.text = main.chooseRandom(["And what should they dream about?", "What's the dream gonna be about?", "What's the focus of this dream?", "What does this dream involve?", "What should the dream include?", "Next, pick an article of clothing:", "Select the relevant item:", "What's the core component of this dream?", "And what do they see in this dream?", "Pick a piece of clothing..."])
-							event.input = "select"
-							event.options = ["shirt", "pants", "shoes"]
-						break
-
 						case "dream-color":
-							event.text = main.chooseRandom(["And what color?", "What color is that?", "Pick a hue:", "Let's determine the color:", "Let's make this more colorful:", "Finally, the color:", "Color it in!", "Send them a hue too...", "Select the right color:", "Let's add a little detail:"])
+							event.text = main.chooseRandom(["And what color should you send?", "What color is it gonna be?", "Pick a hue:", "Let's determine the color:", "Let's make this more colorful:", "Finally, the color:", "Color it in!", "Send them a hue too...", "Select the right color:", "Let's add a little detail:", "Make everything a specific color:", "Send them a clue in color form...", "How should you shade in the details?"])
 							event.input = "select"
 							event.options = ["red","orange","yellow","green","blue","purple","brown","white","gray","black"]
 						break
 
 					// random
 						case "random-select":
-							event.text = main.chooseRandom(["While you're waiting, what's your favorite?", "What's the best?", "Also, we're doing a survey:", "If you had to choose one (and you do), what would you choose?", "So...", "Take your time deciding:", "Which of these is the good one?", "So many options, so little significance:", "What's the worst?"])
+							event.text = main.chooseRandom(["While you're waiting, what's your favorite?", "What's the best?", "Also, we're doing a survey:", "If you had to choose one (and you do), what would you choose?", "So...", "Take your time deciding:", "Which of these is the good one?", "So many options, so little significance:", "What's the worst?", "There's a lot of options, but one is clearly coming out on top...", "Choose!", "Let's hear it!", "Survey says...", "We're just asking for opinions, here.", "The choice is clear:"])
 							event.input = "select"
-							event.options = main.sortRandom(main.chooseRandom([["red","orange","yellow","green","blue","purple","brown","white","gray","black"], ["shirt", "pants", "shoes"], ["earth", "wind", "fire", "water"], ["spring", "summer", "autumn", "winter"], ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"], [0,1,2,3,4,5,6,7,8,9], ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"], ["north", "east", "west", "south"], ["up", "right", "left", "down"], ["rock", "paper", "scissors"], ["africa", "antarctica", "asia", "australia", "europe", "north america", "south america"]]))
+							event.options = main.sortRandom(main.chooseRandom([["red","orange","yellow","green","blue","purple","brown","white","gray","black"], ["shirt", "pants", "shoes"], ["earth", "wind", "fire", "water"], ["spring", "summer", "autumn", "winter"], ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"], [0,1,2,3,4,5,6,7,8,9], ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"], ["north", "east", "west", "south"], ["up", "right", "left", "down"], ["rock", "paper", "scissors"], ["africa", "antarctica", "asia", "australia", "europe", "north america", "south america"], ["up", "down", "top", "bottom", "strange", "charmed"], ["circle", "triangle", "square", "pentagon", "hexagon", "septagon", "octagon"], ["like", "love", "haha", "wow", "sad", "angry"], ["flute", "oboe", "clarinet", "saxophone", "bassoon"], ["trumpet", "trombone", "horn", "tuba"], ["violin", "viola", "cello", "bass"], ["guitar", "bass", "drums", "keys"], ["soprano", "alto", "tenor", "bass"], ["baseball", "basketball", "football", "hockey", "soccer", "tennis"], ["velociraptor", "tyrannosaur", "stegasaur", "brachiosaur", "pteradactyl", "triceratops"]]))
 						break
 
 						case "random-text":
-							event.text = main.chooseRandom(["Type any word you want:", "Go ahead and type a word.", "What's a word you particularly enjoy?", "So, tell me what you had for breakfast.", "What's the farthest you've ever been from home?", "Name a country. Any country.", "What's the best flavor of ice cream?", "If you could be anything, what would it be?", "What's your favorite type of cloud?", "Enter a number. Any number.", "Type your favorite letter.", "Time to button mash. (Letters and numbers only.)"])
+							event.text = main.chooseRandom(["Type any word you want:", "Go ahead and type a word.", "What's a word you particularly enjoy?", "So, tell me what you had for breakfast.", "What's the farthest you've ever been from home?", "Name a country. Any country.", "What's the best flavor of ice cream?", "If you could be anything, what would it be?", "What's your favorite type of cloud?", "Enter a number. Any number.", "Type your favorite letter.", "Time to button mash. (Letters and numbers only.)", "Wish your friend a happy birthday!", "What is the optimal number of cats?", "How many are we talking, here?", "Best song on the radio right now?", "Anyone you want to shout out?", "Favorite holiday?", "Knock-knock.", "A train is leaving from Chicago at 9 PM traveling east at 45 mph. Another train will leave from NYC at 10:30 PM traveling west at 37.5 mph. Assuming no friction or air resistance, who was driving the bus?", "Which city has the best public transportation system?", "Worst date of the year?", "Favorite font?"])
 							event.input = "text"
 							event.options = null
 						break
 
 						case "random-buttons":
-							event.text = main.chooseRandom(["While you're waiting, which is better?", "So uh... click a random button.", "The eternal dilemma...", "What do you like better?", "Which do you prefer?", "Left or right?", "Quick question:", "Just doing a survey here..."])
+							event.text = main.chooseRandom(["While you're waiting, which is better?", "So uh... click a random button.", "The eternal dilemma...", "What do you like better?", "Which do you prefer?", "Left or right?", "Quick question:", "Just doing a survey here...", "Interested in your thoughts...", "This is very, very important:", "If you could only ever have one, what would you rather have?", "And the award goes to..."])
 							event.input = "buttons"
-							event.options = main.chooseRandom([["no", "yes"], ["cats", "dogs"], ["left", "right"], ["0", "1"], ["a", "z"], ["circles", "squares"], ["ghosts", "ghouls"], ["detectives", "inspectors"], ["mystery", "horror"], ["chocolate", "vanilla"], ["cookies", "cake"], ["rock-n-roll", "classical"], ["night", "day"], ["ocean", "mountains"], ["urban", "rural"], ["music", "science"], ["buttons", "dropdowns"], ["light", "dark"], ["rain", "sun"], ["scifi", "fantasy"]])
+							event.options = main.chooseRandom([["no", "yes"], ["cats", "dogs"], ["left", "right"], ["0", "1"], ["a", "z"], ["circles", "squares"], ["ghosts", "ghouls"], ["detectives", "inspectors"], ["mystery", "horror"], ["chocolate", "vanilla"], ["cookies", "cake"], ["rock-n-roll", "classical"], ["night", "day"], ["ocean", "mountains"], ["urban", "rural"], ["music", "science"], ["buttons", "dropdowns"], ["light", "dark"], ["rain", "sun"], ["scifi", "fantasy"], ["capitalism", "socialism"], ["democracy", "monarchy"], ["iced tea", "cold brew"], ["tea", "coffee"], ["texting", "calling"], ["inside", "outside"], ["board games", "video games"], ["chocolate", "peanut butter"], ["fish", "chicken"], ["astronaut", "astronomer"]])
 						break
 
 					// other
@@ -659,83 +652,83 @@
 			switch (role) {
 				// evil magic
 					case "spellcaster":
-						return "You are <span class='special-text'>evil</span>. You are <span class='special-text'>magic</span>. <br>As long as you're alive, no one's magic abilities will work! Mwuahahahahaha!"
+						return "You are <span class='special-text red'>evil</span>. You are <span class='special-text purple'>magic</span>. <br>As long as you're alive, no one's magic abilities will work! Mwuahahahahaha!"
 					break
 
 					case "obscurer":
-						return "You are <span class='special-text'>evil</span>. You are <span class='special-text'>magic</span>. <br>As long as you're alive, no one will know how people vote in execution polls - all the names will disappear from their minds!"
+						return "You are <span class='special-text red'>evil</span>. You are <span class='special-text purple'>magic</span>. <br>As long as you're alive, no one will know how people vote in execution polls - all the names will disappear from their minds!"
 					break
 
 					case "dreamsnatcher":
-						return "You are <span class='special-text'>evil</span>. You are <span class='special-text'>magic</span>. <br>Every night, all the ghost-crafted dreams will be absorbed into your mind - as well as floating off to their intended recipients."
+						return "You are <span class='special-text red'>evil</span>. You are <span class='special-text purple'>magic</span>. <br>Every night, all the ghost-crafted dreams will be absorbed into your mind - as well as floating off to their intended recipients."
 					break
 
 					case "cheater":
-						return "You are <span class='special-text'>evil</span>. You are <span class='special-text'>not magic</span>. <br>Every time there's an execution poll, you'll change one random vote to match your own. Nobody will suspect a thing! Except, you know... that person."
+						return "You are <span class='special-text red'>evil</span>. You are <span class='special-text'>not magic</span>. <br>Every time there's an execution poll, you'll change one random vote to match your own. Nobody will suspect a thing! Except, you know... that person."
 					break
 
 				// evil normal
 					case "killer":
-						return "You are <span class='special-text'>evil</span>. You are <span class='special-text'>not magic</span>. <br>Your goal is to kill off all the good people, at least until your team is just as big as theirs. You and any fellow killers can coordinate at night in the chat tab."
+						return "You are <span class='special-text red'>evil</span>. You are <span class='special-text'>not magic</span>. <br>Your goal is to kill off all the good people, at least until your team is just as big as theirs. You and any fellow killers can coordinate at night in the chat tab."
 					break
 
 				// good magic
 					case "telepath":
-						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>You want to get out of here alive, just like everyone else - and that means figuring out who the killers are. Luckily, you and the other telepath can read each others' minds during the day... in the chat tab."
+						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>You want to get out of here alive, just like everyone else - and that means figuring out who the killers are. Luckily, you and the other telepath can read each others' minds during the day... in the chat tab."
 					break
 
 					case "augur":
-						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>And you don't want to be murdered! To help you survive, you can read others' auras. Specifically, when someone is executed during the day, you can tell if they were good or evil - in the moment they pass from this world."
+						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>And you don't want to be murdered! To help you survive, you can read others' auras. Specifically, when someone is executed during the day, you can tell if they were good or evil - in the moment they pass from this world."
 					break
 
 					case "clairvoyant":
-						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>And you can sense magic around people - but only once their souls have left their bodies. That means you can determine if the recently deceased have special magical abilities. <br>(telepath, augur, medium, seer, psychic, empath, immortal, necromancer, spellcaster, obscurer, dreamsnatcher)"
+						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>And you can sense magic around people - but only once their souls have left their bodies. That means you can determine if the recently deceased have special magical abilities. <br>(telepath, augur, medium, seer, psychic, empath, immortal, necromancer, spellcaster, obscurer, dreamsnatcher)"
 					break
 
 					case "medium":
-						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>You'd prefer not to be killed and turned into a ghost. But you have a pretty good understanding of ghosts - in fact, when ghosts communicate with you through dreams, you know who's talking!"
+						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>You'd prefer not to be killed and turned into a ghost. But you have a pretty good understanding of ghosts - in fact, when ghosts communicate with you through dreams, you know who's talking!"
 					break
 
 					case "psychic":
-						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>And as it happens, you have an extrasensory ability to judge people's morals. Whenever another player proposes an execution, you can sense if the accused and accuser are on the same team - even if they can't."
+						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>And as it happens, you have an extrasensory ability to judge people's morals. Whenever another player proposes an execution, you can sense if the accused and accuser are on the same team - even if they can't."
 					break
 
 					case "seer":
-						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>For you, dreams are plentiful and powerful, and they come to you every night. In fact, you receive every dream sent by every ghost, no matter who that dream was intended for."
+						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>For you, dreams are plentiful and powerful, and they come to you every night. In fact, you receive every dream sent by every ghost, no matter who that dream was intended for."
 					break
 
 					case "empath":
-						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>You can make other people feel whatever emotions you want - and that means every time there's a poll, one random player will vote the way you feel."
+						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>You can make other people feel whatever emotions you want - and that means every time there's a poll, one random player will vote the way you feel."
 					break
 
 					case "immortal":
-						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>You cannot die... well... mostly. Your power protects you from being murdered in the nighttime. In fact, you'll sleep right through it."
+						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>You cannot die... well... mostly. Your power protects you from being murdered in the nighttime. In fact, you'll sleep right through it."
 					break
 
 					case "necromancer":
-						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>magic</span>. <br>As long as you're alive, you can bring back the dead - and that means anyone who's murdered at night will wake up all the same the next morning."
+						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>As long as you're alive, you can bring back the dead - and that means anyone who's murdered at night will wake up all the same the next morning."
 					break
 
 				// good normal
 					case "detective":
-						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>not magic</span>. <br>Each night, you'll do a bit of investigative work and ascertain the allegiance - good or evil - of some random person."
+						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text'>not magic</span>. <br>Each night, you'll do a bit of investigative work and ascertain the allegiance - good or evil - of some random person."
 					break
 
 					case "illusionist":
-						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>not magic</span>. <br>The first time someone tries to murder you, you'll almost certainly find a way to disappear and escape - though you probably won't get much sleep that night. But the second time? Yeah, they'll definitely get you the second time."
+						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text'>not magic</span>. <br>The first time someone tries to murder you, you'll almost certainly find a way to disappear and escape - though you probably won't get much sleep that night. But the second time? Yeah, they'll definitely get you the second time."
 					break
 
 					case "watchkeeper":
-						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>not magic</span>. <br>As long as you're alive, you can protect people - you can fight off the killers, every time, if they go after anyone else. Unfortunately, the murderers will see who you are and will probably go after you next!"
+						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text'>not magic</span>. <br>As long as you're alive, you can protect people - you can fight off the killers, every time, if they go after anyone else. Unfortunately, the murderers will see who you are and will probably go after you next!"
 					break
 
 					case "insomniac":
-						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>not magic</span>. <br>You can't sleep - too scared of all these murderers! But that means you can hear what the killers are up to each night - specifically, who they're thinking about killing."
+						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text'>not magic</span>. <br>You can't sleep - too scared of all these murderers! But that means you can hear what the killers are up to each night - specifically, who they're thinking about killing."
 					break
 
 					case "person":
 					default:
-						return "You are <span class='special-text'>good</span>. You are <span class='special-text'>not magic</span>. <br>And you just want to live! There are some other people on your side with some special abilities, but you're not sure who's who."
+						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text'>not magic</span>. <br>And you just want to live! There are some other people on your side with some special abilities, but you're not sure who's who."
 					break
 			}
 		}
@@ -1012,10 +1005,20 @@
 					var infoArray = []
 					for (var p in players) {
 						var player = request.game.players[players[p]]
-						infoArray.push("<span class='special-text'>" + player.name + "</span> " + player.colors.shirt + " shirt, " + player.colors.pants + " pants, " + player.colors.shoes + " shoes... ")
+						infoArray.push("<span class='special-text'>" + player.name + "</span> : <span class='special-text " + player.colors.shirt + "'>" + player.colors.shirt + "</span> shirt, <span class='special-text " + player.colors.pants + "'>" + player.colors.pants + "</span> pants, <span class='special-text " + player.colors.shoes + "'>" + player.colors.shoes + "</span> shoes... ")
 					}
 
-					var playersEvent = createStaticEvent(request, {type: "start-players", players: infoArray, roles: roles})
+					var rolesArray = []
+					for (var r in roles)  {
+						if (["killer", "spellcaster", "obscurer", "dreamsnatcher", "cheater"].indexOf(roles[r]) !== -1) {
+							rolesArray.push("<span class='special-text red'>" + role + "</span>")
+						}
+						else {
+							rolesArray.push("<span class='special-text blue'>" + role + "</span>")
+						}
+					}
+
+					var playersEvent = createStaticEvent(request, {type: "start-players", players: infoArray, roles: rolesArray})
 					set["events." + playersEvent.id] = playersEvent
 					myEvents.push(playersEvent)
 
@@ -1254,7 +1257,7 @@
 								var slumberer = main.chooseRandom(sleepers)
 								var item      = main.chooseRandom(["shirt", "pants", "shoes"])
 
-								var aiDreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [slumberer, seer, dreamsnatcher], color: request.game.players[suspect].colors[item], item: (item + "s").replace("ss", "s")}) // special-seer
+								var aiDreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [slumberer, seer, dreamsnatcher], color: request.game.players[suspect].colors[item]}) // special-seer
 								set["events." + aiDreamEvent.id] = aiDreamEvent
 
 								if ((slumberer == request.session.id) || (request.session.id == seer)) { // special-seer
@@ -1277,11 +1280,11 @@
 								for (var d in dreams) {
 									var dream = request.game.temporary.dreams[dreams[d]] || false
 									
-									if (dream && dream.target && dream.item && dream.color) {
+									if (dream && dream.target && dream.color) {
 										sleepers = sleepers.filter(function (p) { return p !== dream.target })
 										
 										if (request.game.players[dream.target].status.alive && (killed.indexOf(dream.target) == -1) && (dream.target !== insomniac)) { // special-insomniac
-											var dreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [dream.target, seer, dreamsnatcher], color: dream.color, item: (dream.item + "s").replace("ss", "s")}) // special-seer
+											var dreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [dream.target, seer, dreamsnatcher], color: dream.color}) // special-seer
 											set["events." + dreamEvent.id] = dreamEvent
 
 											if ((dream.target == request.session.id) || request.session.id == seer || request.session.id == dreamsnatcher) { // special-seer // special-dreamsnatcher
@@ -1384,7 +1387,7 @@
 							// execution-nomination and sleep								
 								for (var a in alive) {
 									var others = alive.filter(function (p) { return p !== alive[a] })
-									var nominationEvent = createActionEvent(request, {type: "execution-nomination", viewers: [alive[a]], doers: [alive[a]], options: others})
+									var nominationEvent = createActionEvent(request, {type: "execution-nomination", viewers: [alive[a]], doers: [alive[a]], options: main.sortRandom(others)})
 									set["events." + nominationEvent.id] = nominationEvent
 
 									if (alive[a] == request.session.id) {
@@ -1497,7 +1500,8 @@
 						}
 
 						for (var g in ghosts) {
-							if (oldGhosts.indexOf(ghosts[g] == -1)) {
+							console.log("next ghost is: " + request.game.players[ghosts[g]].name)
+							if (oldGhosts.indexOf(ghosts[g]) == -1) {
 								var newGhostEvent = createStaticEvent(request, {type: "special-ghost", viewers: [ghosts[g]]})
 								set["events." + newGhostEvent.id] = newGhostEvent
 
@@ -1506,7 +1510,8 @@
 								}
 							}
 
-							var ghostEvent = createActionEvent(request, {type: "dream-name", viewers: [ghosts[g]], doers: [ghosts[g]], queue: queueEvent.id, options: alive})
+							var living = alive
+							var ghostEvent = createActionEvent(request, {type: "dream-name", viewers: [ghosts[g]], doers: [ghosts[g]], queue: queueEvent.id, options: main.sortRandom(living)})
 							set["events." + ghostEvent.id] = ghostEvent
 
 							if (ghosts[g] == request.session.id) {
@@ -1533,7 +1538,7 @@
 
 					// killers
 						for (var k in killers) {
-							var killerEvent = createActionEvent(request, {type: "murder-nomination", options: alive, viewers: [killers[k]], doers: [killers[k]]})
+							var killerEvent = createActionEvent(request, {type: "murder-nomination", options: main.sortRandom(alive), viewers: [killers[k]], doers: [killers[k]]})
 							set["events." + killerEvent.id] = killerEvent
 
 							if (killers[k] == request.session.id) {
@@ -1967,7 +1972,7 @@
 	/* setupDream */
 		module.exports.setupDream = setupDream
 		function setupDream(request, callback) {
-			if (["dream-name","dream-item","dream-color"].indexOf(request.event.type) == -1) {
+			if (["dream-name","dream-color"].indexOf(request.event.type) == -1) {
 				callback({success: false, message: "That's not a dream event."})
 			}
 			else if (!request.game.state.start) {
@@ -1985,21 +1990,11 @@
 					if (request.event.type == "dream-name") {
 						set["temporary.dreams." + request.session.id] = {
 							target: request.post.value,
-							item: null,
 							color: null
 						}
 						set["events." + request.event.id + ".answer"] = request.event.answer = request.post.value
 						set["events." + request.event.id + ".doers"]  = request.event.doers = []
 						
-						var dreamEvent = createActionEvent(request, {type: "dream-item"})
-						set["events." + dreamEvent.id] = dreamEvent
-						myEvents.push(dreamEvent)
-					}
-					if (request.event.type == "dream-item") {
-						set["temporary.dreams." + request.session.id + ".item"] = request.post.value
-						set["events." + request.event.id + ".answer"] = request.event.answer = request.post.value
-						set["events." + request.event.id + ".doers"]  = request.event.doers = []
-
 						var dreamEvent = createActionEvent(request, {type: "dream-color"})
 						set["events." + dreamEvent.id] = dreamEvent
 						myEvents.push(dreamEvent)

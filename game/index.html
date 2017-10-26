@@ -45,8 +45,8 @@
 
 								try {
 									// get answer
-										var answer = event.answer || undefined
-										if (answer !== undefined) {
+										if (event.doers.indexOf(request.session.id) == -1 || request.game.state.end) {
+											var answer = event.answer || ""
 											var disabled = " disabled "
 										}
 										else {
@@ -104,12 +104,10 @@
 											inputBlock = '<a class="event-link" href="' + event.options[0] + '">' + event.options[1] + '</a>'
 										}
 
-									// info & structure
-										event.time = new Date(event.created).toLocaleString().split(" at ")[1] ? new Date(event.created).toLocaleString().split(" at ")[1].split(" ")[0] : new Date(event.created).toLocaleString().split(" ")[1]
-										
+									// info & structure								
 										eventList = eventList + '<div class="event ' + event.type + '" id="' + event.id + '" day="' + event.day + '" night="' + event.night + '"' + disabled + '>\
 											<div class="event-type">' + event.type + '</div>\
-											<div class="event-time">' + event.time + '</div>\
+											<div class="event-time">' + event.created + '</div>\
 											<div class="event-text">' + event.text + '</div>\
 											' + inputBlock + '\
 										</div>'
@@ -155,11 +153,10 @@
 
 								for (var c in chats) {
 									try {
-										chats[c].time = new Date(chats[c].created).toLocaleString().split(" at ")[1] ? new Date(chats[c].created).toLocaleString().split(" at ")[1].split(" ")[0] : new Date(chats[c].created).toLocaleString().split(" ")[1]
 										chatList = chatList + '<div class="chat" id="' + chats[c].id + '">\
 											<div class="chat-info">\
 												<div class="chat-author">' + chats[c].name + '</div>\
-												<div class="chat-time">' + chats[c].time + '</div>\
+												<div class="chat-time">' + chats[c].created + '</div>\
 											</div>\
 											<div class="chat-text">' + chats[c].text + '</div>\
 										</div>'

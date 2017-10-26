@@ -204,15 +204,23 @@
 
 	/* sortRandom */
 		module.exports.sortRandom = sortRandom
-		function sortRandom(array) {
-			var x = array.length
-			while (x > 0) {
-				var y = Math.floor(Math.random() * x)
-				x = x - 1
-				var temp = array[x]
-				array[x] = array[y]
-				array[y] = temp
-			}
+		function sortRandom(input) {
+			// duplicate array
+				var array = []
+				for (var i in input) {
+					array[i] = input[i]
+				}
+
+			// fisher-yates shuffle
+				var x = array.length
+				while (x > 0) {
+					var y = Math.floor(Math.random() * x)
+					x = x - 1
+					var temp = array[x]
+					array[x] = array[y]
+					array[y] = temp
+				}
+
 			return array
 		}
 

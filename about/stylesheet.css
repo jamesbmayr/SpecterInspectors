@@ -127,33 +127,32 @@
 		}
 
 	/* colors */
-		.white {
-			font-weight: bold;
-			color: #dddddd;
-		}
-
 		.red {
 			font-weight: bold;
-			color: darkred;
+			color: red;
 		}
 
 		.orange {
 			font-weight: bold;
-			color: goldenrod;
+			color: orange;
 		}
 
 		.green {
 			font-weight: bold;
-			color: darkgreen;
+			color: limegreen;
 		}
 
 		.blue {
 			font-weight: bold;
-			color: navy;
+			color: royalblue;
 		}
 
 		.purple {
 			font-weight: bold;
-			color: purple;
+			color: mediumpurple;
 		}
 
+		.white {
+			font-weight: bold;
+			color: #dddddd;
+		}
