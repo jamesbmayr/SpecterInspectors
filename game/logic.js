@@ -1039,11 +1039,13 @@
 					var rolesArray = []
 					for (var r in roles)  {
 						if (["killer", "spellcaster", "obscurer", "dreamsnatcher", "cheater"].indexOf(roles[r]) !== -1) {
-							rolesArray.push("<span class='special-text red'>" + roles[r] + "</span>")
+							var color = "red"
 						}
 						else {
-							rolesArray.push("<span class='special-text blue'>" + roles[r] + "</span>")
+							var color = "blue"
 						}
+						
+						rolesArray.push("<details><summary class='special-text " + color + "'>" + roles[r] + "</summary><p>" + getRoleDescription(roles[r], true) + "</p></details>")
 					}
 
 					var playersEvent = createStaticEvent(request, {type: "start-players", players: infoArray, roles: rolesArray})
