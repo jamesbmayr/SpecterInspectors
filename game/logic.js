@@ -648,89 +648,116 @@
 /*** helpers ***/
 	/* getRoleDescription */
 		module.exports.getRoleDescription = getRoleDescription
-		function getRoleDescription(role) {
+		function getRoleDescription(role, short) {
 			switch (role) {
 				// evil magic
 					case "spellcaster":
-						return "You are <span class='special-text red'>evil</span>. You are <span class='special-text purple'>magic</span>. <br>As long as you're alive, no one's magic abilities will work! Mwuahahahahaha!"
+						var long = "You are <span class='special-text red'>evil</span>. You are <span class='special-text purple'>magic</span>. <br>As long as you're alive, no one's magic abilities will work! Mwuahahahahaha!"
+						var short = "evil, magic; prevents all other magic abilities from working"
 					break
 
 					case "obscurer":
-						return "You are <span class='special-text red'>evil</span>. You are <span class='special-text purple'>magic</span>. <br>As long as you're alive, no one will know how people vote in execution polls - all the names will disappear from their minds!"
+						var long = "You are <span class='special-text red'>evil</span>. You are <span class='special-text purple'>magic</span>. <br>As long as you're alive, no one will know how people vote in execution polls - all the names will disappear from their minds!"
+						var short = "evil, magic; when poll results are revealed, names will be hidden"
 					break
 
 					case "dreamsnatcher":
-						return "You are <span class='special-text red'>evil</span>. You are <span class='special-text purple'>magic</span>. <br>Every night, all the ghost-crafted dreams will be absorbed into your mind - as well as floating off to their intended recipients."
+						var long = "You are <span class='special-text red'>evil</span>. You are <span class='special-text purple'>magic</span>. <br>Every night, all the ghost-crafted dreams will be absorbed into your mind - as well as floating off to their intended recipients."
+						var short = "evil, magic; sees all ghost dreams every night"
 					break
 
 					case "cheater":
-						return "You are <span class='special-text red'>evil</span>. You are <span class='special-text'>not magic</span>. <br>Every time there's an execution poll, you'll change one random vote to match your own. Nobody will suspect a thing! Except, you know... that person."
+						var long = "You are <span class='special-text red'>evil</span>. You are <span class='special-text'>not magic</span>. <br>Every time there's an execution poll, you'll change one random vote to match your own. Nobody will suspect a thing! Except, you know... that person."
+						var short = "evil, not magic; one random vote is switched to match this player's during each poll"
 					break
 
 				// evil normal
 					case "killer":
-						return "You are <span class='special-text red'>evil</span>. You are <span class='special-text'>not magic</span>. <br>Your goal is to kill off all the good people, at least until your team is just as big as theirs. You and any fellow killers can coordinate at night in the chat tab."
+						var long = "You are <span class='special-text red'>evil</span>. You are <span class='special-text'>not magic</span>. <br>Your goal is to kill off all the good people, at least until your team is just as big as theirs. You and any fellow killers can coordinate at night in the chat tab."
+						var short = "evil, not magic; can chat with other evil players at night"
 					break
 
 				// good magic
 					case "telepath":
-						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>You want to get out of here alive, just like everyone else - and that means figuring out who the killers are. Luckily, you and the other telepath can read each others' minds during the day... in the chat tab."
+						var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>You want to get out of here alive, just like everyone else - and that means figuring out who the killers are. Luckily, you and the other telepath can read each others' minds during the day... in the chat tab."
+						var short = "good, magic; can chat with the other telepath during the day"
 					break
 
 					case "augur":
-						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>And you don't want to be murdered! To help you survive, you can read others' auras. Specifically, when someone is executed during the day, you can tell if they were good or evil - in the moment they pass from this world."
+						var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>And you don't want to be murdered! To help you survive, you can read others' auras. Specifically, when someone is executed during the day, you can tell if they were good or evil - in the moment they pass from this world."
+						var short = "good, magic; learns allegiance of each executed player"
 					break
 
 					case "clairvoyant":
-						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>And you can sense magic around people - but only once their souls have left their bodies. That means you can determine if the recently deceased have special magical abilities. <br>(telepath, augur, medium, seer, psychic, empath, immortal, necromancer, spellcaster, obscurer, dreamsnatcher)"
+						var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>And you can sense magic around people - but only once their souls have left their bodies. That means you can determine if the recently deceased have special magical abilities. <br>(telepath, augur, medium, seer, psychic, empath, immortal, necromancer, spellcaster, obscurer, dreamsnatcher)"
+						var short = "good, magic; learns magic-ness of each executed or murdered player"
 					break
 
 					case "medium":
-						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>You'd prefer not to be killed and turned into a ghost. But you have a pretty good understanding of ghosts - in fact, when ghosts communicate with you through dreams, you know who's talking!"
+						var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>You'd prefer not to be killed and turned into a ghost. But you have a pretty good understanding of ghosts - in fact, when ghosts communicate with you through dreams, you know who's talking!"
+						var short = "good, magic; sees name of ghost sending each dream received"
 					break
 
 					case "psychic":
-						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>And as it happens, you have an extrasensory ability to judge people's morals. Whenever another player proposes an execution, you can sense if the accused and accuser are on the same team - even if they can't."
+						var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>And as it happens, you have an extrasensory ability to judge people's morals. Whenever another player proposes an execution, you can sense if the accused and accuser are on the same team - even if they can't."
+						var short = "good, magic; learns if allegiance of accused and accuser matches during each execution nomination"
 					break
 
 					case "seer":
-						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>For you, dreams are plentiful and powerful, and they come to you every night. In fact, you receive every dream sent by every ghost, no matter who that dream was intended for."
+						var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>For you, dreams are plentiful and powerful, and they come to you every night. In fact, you receive every dream sent by every ghost, no matter who that dream was intended for."
+						var short = "good, magic; sees all ghost dreams every night"
 					break
 
 					case "empath":
-						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>You can make other people feel whatever emotions you want - and that means every time there's a poll, one random player will vote the way you feel."
+						var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>You can make other people feel whatever emotions you want - and that means every time there's a poll, one random player will vote the way you feel."
+						var short = "good, magic; one random vote is switched to match this player's during each poll"
 					break
 
 					case "immortal":
-						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>You cannot die... well... mostly. Your power protects you from being murdered in the nighttime. In fact, you'll sleep right through it."
+						var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>You cannot die... well... mostly. Your power protects you from being murdered in the nighttime. In fact, you'll sleep right through it."
+						var short = "good, magic; cannot be murdered at night"
 					break
 
 					case "necromancer":
-						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>As long as you're alive, you can bring back the dead - and that means anyone who's murdered at night will wake up all the same the next morning."
+						var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>As long as you're alive, you can bring back the dead - and that means anyone who's murdered at night will wake up all the same the next morning."
+						var short = "good, magic; immediately resurrects murdered players every night"
 					break
 
 				// good normal
 					case "detective":
-						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text'>not magic</span>. <br>Each night, you'll do a bit of investigative work and ascertain the allegiance - good or evil - of some random person."
+						var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text'>not magic</span>. <br>Each night, you'll do a bit of investigative work and ascertain the allegiance - good or evil - of some random person."
+						var short = "good, not magic; learns allegiance of one random player every night"
 					break
 
 					case "illusionist":
-						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text'>not magic</span>. <br>The first time someone tries to murder you, you'll almost certainly find a way to disappear and escape - though you probably won't get much sleep that night. But the second time? Yeah, they'll definitely get you the second time."
+						var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text'>not magic</span>. <br>The first time someone tries to murder you, you'll almost certainly find a way to disappear and escape - though you probably won't get much sleep that night. But the second time? Yeah, they'll definitely get you the second time."
+						var short = "good, not magic; escapes from murder on first attempt"
 					break
 
 					case "watchkeeper":
-						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text'>not magic</span>. <br>As long as you're alive, you can protect people - you can fight off the killers, every time, if they go after anyone else. Unfortunately, the murderers will see who you are and will probably go after you next!"
+						var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text'>not magic</span>. <br>As long as you're alive, you can protect people - you can fight off the killers, every time, if they go after anyone else. Unfortunately, the murderers will see who you are and will probably go after you next!"
+						var short = "good, not magic; prevents murder of others each night, but reveals identity"
 					break
 
 					case "insomniac":
-						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text'>not magic</span>. <br>You can't sleep - too scared of all these murderers! But that means you can hear what the killers are up to each night - specifically, who they're thinking about killing."
+						var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text'>not magic</span>. <br>You can't sleep - too scared of all these murderers! But that means you can hear what the killers are up to each night - specifically, who they're thinking about killing."
+						var short = "good, not magic; sees names of murder nomination targets, but cannot receive dreams"
 					break
 
 					case "person":
 					default:
-						return "You are <span class='special-text blue'>good</span>. You are <span class='special-text'>not magic</span>. <br>And you just want to live! There are some other people on your side with some special abilities, but you're not sure who's who."
+						var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text'>not magic</span>. <br>And you just want to live! There are some other people on your side with some special abilities, but you're not sure who's who."
+						var short = "good, not magic; no special ability"
 					break
 			}
+			
+			// short or long ?
+				if (typeof short !== "undefined" && short) {
+					return short
+				}
+				else {
+					return long
+				}
 		}
 	
 	/* checkQueue */
