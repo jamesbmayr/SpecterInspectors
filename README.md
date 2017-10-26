@@ -1,6 +1,6 @@
 # Specter Inspectors
 
-a game of ghosts and guesses: https://specterinspectors.herokuapp.com
+a game of ghosts and guesses: http://www.specterinspectors.com
 
 <pre style='line-height: 0.5; text-align: center'>
       --------      
@@ -71,44 +71,44 @@ a game of ghosts and guesses: https://specterinspectors.herokuapp.com
 
 ## Roles
 
-• *person*: good, not magic; no special ability (5+ players)
+• *person*: good, not magic; no special ability
 
-• *illusionist*: good, not magic; escapes from murder on first attempt (5+ players)
+• *illusionist*: good, not magic; escapes from murder on first attempt
 
-• *necromancer*: good, magic; immediately resurrects murdered players every night (5-8 players)
+• *necromancer*: good, magic; immediately resurrects murdered players every night
 
-• *augur*: good, magic; learns allegiance of each executed player (5+ players)
+• *augur*: good, magic; learns allegiance of each executed player
 
-• *clairvoyant*: good, magic; learns magic-ness of each executed or murdered player (5+ players)
+• *clairvoyant*: good, magic; learns magic-ness of each executed or murdered player
 
-• *medium*: good, magic; sees name of ghost sending each dream received (5+ players)
+• *medium*: good, magic; sees name of ghost sending each dream received
 
-• *seer*: good, magic; sees all ghost dreams every night (5+ players)
+• *seer*: good, magic; sees all ghost dreams every night
 
-• *immortal*: good, magic; cannot be murdered at night (7+ players)
+• *immortal*: good, magic; cannot be murdered at night
 
-• *insomniac*: good, not magic; sees names of murder nomination targets, but cannot receive dreams (7+ players)
+• *insomniac*: good, not magic; sees names of murder nomination targets, but cannot receive dreams
 
-• *psychic*: good, magic; learns if allegiance of accused and accuser matches during each execution nomination (7+ players)
+• *psychic*: good, magic; learns if allegiance of accused and accuser matches during each execution nomination
 
-• *empath*: good, magic; one random vote is switched to match this player's during each poll (9+ players)
+• *empath*: good, magic; one random vote is switched to match this player's during each poll
 
-• *telepath*: good, magic; can chat with the other telepath during the day (9+ players)
+• *telepath*: good, magic; can chat with the other telepath during the day
 
-• *watchkeeper*: good, not magic; prevents murder of others each night, but reveals identity (9+ players)
+• *watchkeeper*: good, not magic; prevents murder of others each night, but reveals identity
 
-• *detective*: good, not magic; learns allegiance of one random player every night (11+ players)
+• *detective*: good, not magic; learns allegiance of one random player every night
 
 
-• *killer*: evil, not magic; can chat with other evil players at night (5+ players)
+• *killer*: evil, not magic; can chat with other evil players at night
 
-• *dreamsnatcher*: evil, magic; sees all ghost dreams every night (6+ players)
+• *dreamsnatcher*: evil, magic; sees all ghost dreams every night
 
-• *obscurer*: evil, magic; when poll results are revealed, names will be hidden (7+ players)
+• *obscurer*: evil, magic; when poll results are revealed, names will be hidden
 
-• *cheater*: evil, not magic; one random vote is switched to match this player's during each poll (9+ players)
+• *cheater*: evil, not magic; one random vote is switched to match this player's during each poll
 
-• *spellcaster*: evil, magic; prevents all other magic abilities from working (11+ players)
+• *spellcaster*: evil, magic; prevents all other magic abilities from working
 
 
 
@@ -136,9 +136,9 @@ a game of ghosts and guesses: https://specterinspectors.herokuapp.com
 |   |- games
 |
 |- /main/
-|   |- logic.js (logError, logStatus, logMessage, getEnvironment, getAsset, isReserved, isNumLet, isBot, renderHTML, generateRandom, chooseRandom, locateIP, sanitizeString, determineSession, retrieveData, storeData)
+|   |- logic.js (logError, logStatus, logMessage, getEnvironment, getAsset, isReserved, isNumLet, isBot, renderHTML, generateRandom, chooseRandom, sortRandom, locateIP, sanitizeString, determineSession, retrieveData, storeData)
 |   |- stylesheet.css
-|   |- script.js (isNumLet, sanitizeString, displayError, buildGhosts, animateGhosts, sendPost)
+|   |- script.js (isNumLet, isEmail, sanitizeString, displayError, buildGhosts, animateGhosts, sendPost)
 |   |
 |   |- logo_100.png
 |   |- logo_1000.png
@@ -160,5 +160,5 @@ a game of ghosts and guesses: https://specterinspectors.herokuapp.com
     |- logic.js (fetchData, submitChat, submitNotes, submitEvent, createStaticEvent, createActionEvent, createQueueEvent, getRoleDescription, checkQueue, setupPlayer, launchGame, createDay, createNight, executePlayer, murderPlayer, setupDream, setupRandom)
     |- index.html
     |- stylesheet.css
-    |- script.js (scrollToNewest, startTouch, moveTouch, slideContainer, submitNotes, submitChat, submitEvent, buildChat, buildEvent, disableEvent, enableEvent, fetchData)
+    |- script.js (scrollToNewest, startTouch, moveTouch, slideContainer, submitNotes, submitChat, submitEvent, buildChat, buildEvent, disableEvent, enableEvent, localizeTimes, fetchData)
 </pre>
