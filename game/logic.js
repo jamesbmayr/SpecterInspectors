@@ -435,7 +435,7 @@
 						break
 
 						case "special-watchkeeper":
-							event.text = main.chooseRandom(["Without seeing the killers' faces, <span class='special-text'>" + data.watchkeeeper + "</span>, the <span class='special-text'>watchkeeper</span>, rescues <span class='special-text'>" + data.target + "</span> from certain doom.", "Not so fast! The <span class='special-text'>watchkeeper</span>, <span class='special-text'>" + data.watchkeeper + "</span>, is here to protect <span class='special-text'>" + data.target + "</span>.", "The killers are going in after <span class='special-text'>" + data.target + "</span>, but all of a sudden, <span class='special-text'>" + data.watchkeeper + "</span>, the <span class='special-text'>watchkeeper</span>, intervenes!", "They were about to slaughter <span class='special-text'>" + data.name + "</span> when the <span class='special-text'>watchkeeper</span> - none other than <span class='special-text'>" + data.watchkeeper + "</span> - got involved (without getting a good look at the killers).", "The <span class='special-text'>watchkeeper</span> was too fast! Though the killers remain anonymous for now, <span class='special-text'>" + data.watchkeeper + "</span> has protected <span class='special-text'>" + data.name + "</span> from murder.", "Well, <span class='special-text'>" + data.watchkeeper + "</span> couldn't protect " + request.game.flavor.ghost + ", but they could protect <span class='special-text'>" + data.name + "</span>. Except now the killers know who's keeping watch."])
+							event.text = main.chooseRandom(["Without seeing the killers' faces, <span class='special-text'>" + data.watchkeeeper + "</span>, the <span class='special-text'>watchkeeper</span>, rescues <span class='special-text'>" + data.target + "</span> from certain doom.", "Not so fast! The <span class='special-text'>watchkeeper</span>, <span class='special-text'>" + data.watchkeeper + "</span>, is here to protect <span class='special-text'>" + data.target + "</span>.", "The killers are going in after <span class='special-text'>" + data.target + "</span>, but all of a sudden, <span class='special-text'>" + data.watchkeeper + "</span>, the <span class='special-text'>watchkeeper</span>, intervenes!", "They were about to slaughter <span class='special-text'>" + data.target + "</span> when the <span class='special-text'>watchkeeper</span> - none other than <span class='special-text'>" + data.watchkeeper + "</span> - got involved (without getting a good look at the killers).", "The <span class='special-text'>watchkeeper</span> was too fast! Though the killers remain anonymous for now, <span class='special-text'>" + data.watchkeeper + "</span> has protected <span class='special-text'>" + data.target + "</span> from murder.", "Well, <span class='special-text'>" + data.watchkeeper + "</span> couldn't protect " + request.game.flavor.ghost + ", but they could protect <span class='special-text'>" + data.target + "</span>. Except now the killers know who's keeping watch."])
 						break
 
 						case "special-detective":
@@ -984,6 +984,7 @@
 						}
 
 				// shuffle roles
+					// roles = ["cheater", "spellcaster", "telepath", "telepath", "immortal", "watchkeeper", "detective", "empath"] // xxx
 					roles = main.sortRandom(roles)
 
 				// start game
@@ -1011,10 +1012,10 @@
 					var rolesArray = []
 					for (var r in roles)  {
 						if (["killer", "spellcaster", "obscurer", "dreamsnatcher", "cheater"].indexOf(roles[r]) !== -1) {
-							rolesArray.push("<span class='special-text red'>" + role + "</span>")
+							rolesArray.push("<span class='special-text red'>" + roles[r] + "</span>")
 						}
 						else {
-							rolesArray.push("<span class='special-text blue'>" + role + "</span>")
+							rolesArray.push("<span class='special-text blue'>" + roles[r] + "</span>")
 						}
 					}
 
@@ -1215,7 +1216,7 @@
 						if (detective) {
 							var alive = players.filter(function (p) { return (request.game.players[p].status.alive && (p !== detective)) })
 							var suspect = main.chooseRandom(alive)
-							var detectiveEvent = createStaticEvent(request, {type: "special-detective", viewers: [detective], name: request.game.players[suspect].name, team: (request.game.players[suspect].good ? "good" : "evil") })
+							var detectiveEvent = createStaticEvent(request, {type: "special-detective", viewers: [detective], name: request.game.players[suspect].name, team: (request.game.players[suspect].status.good ? "good" : "evil") })
 							set["events." + detectiveEvent.id] = detectiveEvent
 
 							if (request.session.id == detective) {
@@ -1660,11 +1661,13 @@
 					callback(results)
 				}, function (queue) { // success
 					// get info
-						var author = queue.author
-						var target = queue.target
-						var voters = Object.keys(queue.results)
-						var pro    = []
-						var anti   = []
+						var author   = queue.author
+						var target   = queue.target
+						var voters   = Object.keys(queue.results)
+						var pro      = []
+						var anti     = []
+						var proText  = []
+						var antiText = []
 
 					// specials
 						var spellcaster = Object.keys(request.game.players).find(function (p) { // special-spellcaster
@@ -1692,26 +1695,14 @@
 						}) || null
 
 					// determine pro and anti
-						if (obscurer) { // special-obscurer
-							for (var v in voters) {
+						for (var v in voters) {
 								if (Number(queue.results[voters[v]]) == 1) {
-									pro.push("<span class='special-text'>?</span>")
+									pro.push(voters[v])
 								}
 								else {
-									anti.push("<span class='special-text'>?</span>")
+									anti.push(voters[v])
 								}
 							}
-						}
-						else {
-							for (var v in voters) {
-								if (Number(queue.results[voters[v]]) == 1) {
-									pro.push("<span class='special-text'>" + request.game.players[voters[v]].name + "</span>")
-								}
-								else {
-									anti.push("<span class='special-text'>" + request.game.players[voters[v]].name + "</span>")
-								}
-							}
-						}
 
 					// special-empath
 						if (empath) {
@@ -1741,13 +1732,35 @@
 							}
 						}
 
+					// get text
+						if (obscurer) { // special-obscurer
+							for (var v in voters) {
+								if (pro.indexOf(voters[v]) !== -1) {
+									 proText.push("<span class='special-text'>?</span>")
+								}
+								else if (anti.indexOf(voters[v]) !== -1) {
+									antiText.push("<span class='special-text'>?</span>")
+								}
+							}
+						}
+						else {
+							for (var v in voters) {
+								if (pro.indexOf(voters[v]) !== -1) {
+									 proText.push("<span class='special-text'>" + request.game.players[voters[v]].name + "</span>")
+								}
+								else if (anti.indexOf(voters[v]) !== -1) {
+									antiText.push("<span class='special-text'>" + request.game.players[voters[v]].name + "</span>")
+								}
+							}
+						}
+
 					// set info
 						var myEvents = []
 						var set = {}
 							set.updated = new Date().getTime()
 
 					// decision
-						var decisionEvent = createStaticEvent(request, {type: "decision-complete", pro: pro, anti: anti})
+						var decisionEvent = createStaticEvent(request, {type: "decision-complete", pro: proText, anti: antiText})
 						set["events." + decisionEvent.id] = decisionEvent
 						myEvents.push(decisionEvent)
 
@@ -1817,7 +1830,7 @@
 							set["events." + goodEvent.id] = goodEvent
 							myEvents.push(goodEvent)
 						}
-						else if (goodAlive.length < evilAlive.length) {
+						else if (goodAlive.length <= evilAlive.length) {
 							set["state.end"]     = request.game.state.end     = new Date().getTime()
 							set["state.victory"] = request.game.state.victory = "evil"
 							
@@ -1916,19 +1929,23 @@
 					callback(results)
 				}, function (queue) { // success
 					// get info
-						var author = queue.author
-						var target = queue.target
-						var voters = Object.keys(queue.results)
-						var pro    = []
-						var anti   = []
+						var author   = queue.author
+						var target   = queue.target
+						var voters   = Object.keys(queue.results)
+						var pro      = []
+						var anti     = []
+						var proText  = []
+						var antiText = []
 
 					// determine pro and anti
 						for (var v in voters) {
 							if (Number(queue.results[voters[v]]) == 1) {
-								pro.push("<span class='special-text'>" + request.game.players[voters[v]].name + "</span>")
+								pro.push(voters[v])
+								proText.push("<span class='special-text'>" + request.game.players[voters[v]].name + "</span>")
 							}
 							else {
-								anti.push("<span class='special-text'>" + request.game.players[voters[v]].name + "</span>")
+								anti.push(voters[v])
+								antiText.push("<span class='special-text'>" + request.game.players[voters[v]].name + "</span>")
 							}
 						}
 
@@ -1938,7 +1955,7 @@
 							set.updated = new Date().getTime()
 
 					// decision
-						var decisionEvent = createStaticEvent(request, {type: "decision-complete", pro: pro, anti: anti, viewers: voters})
+						var decisionEvent = createStaticEvent(request, {type: "decision-complete", pro: proText, anti: antiText, viewers: voters})
 						set["events." + decisionEvent.id] = decisionEvent
 						myEvents.push(decisionEvent)
 

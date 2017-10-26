@@ -58,7 +58,7 @@
 										var inputBlock = ""
 
 										if (event.input == "text") {
-											if (answer !== undefined) { var selected = " selected " }
+											if (answer && answer.length) { var selected = " selected " }
 											else { var selected = "" }
 
 											inputBlock = '<input class="event-input" type="text" placeholder="your response" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" value="' + answer + '"' + disabled + selected + '/>\
@@ -74,7 +74,7 @@
 												options.push('<option value="' + event.options[o] + '"' + selected + '>' + (event.names ? event.names[o] : event.options[o]) + '</option>')
 											}
 
-											if (answer !== undefined) { var selected = " selected " }
+											if (answer && answer.length) { var selected = " selected " }
 											else { var selected = "" }
 
 											// structure
