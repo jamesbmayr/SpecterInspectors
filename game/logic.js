@@ -404,6 +404,11 @@
 						case "decision-complete":
 							event.text = main.chooseRandom(["The decision is " + data.pro.length + " for, " + data.anti.length + " against.", "Yea: " + data.pro.length + ". Nay: " + data.anti.length + ".", data.pro.length + " said yes, " + data.anti.length + " said no.", "The results: " + data.pro.length + " think yes, " + data.anti.length + " think no.", "How many for? " + data.pro.length + ". How many against? " + data.anti.length + ".", "All those in favor: " + data.pro.length + ". All those opposed: " + data.anti.length + "."]) + "<br>yes: " + data.pro.join(" ") + "<br>no: " + data.anti.join(" ")
 						break
+						
+						case "special-empath":
+						case "special-cheater":
+							event.text = main.chooseRandom(["Wait, that's not how you wanted to vote... somebody changed something...", "Powers beyond your control have conspired to change your vote...", "Strange. You could have sworn you voted differently...", "Something - or someone - is changing votes!", "Your vote has been altered! But who is responsible!?", "Interesting. Not how you intended to vote, but that's how it came out. You wonder who's to blame for this.", "Somehow, your vote is not your own. Somebody's messing with it."])
+						break
 
 					// special
 						case "special-augur":
@@ -1725,13 +1730,13 @@
 
 					// determine pro and anti
 						for (var v in voters) {
-								if (Number(queue.results[voters[v]]) == 1) {
-									pro.push(voters[v])
-								}
-								else {
-									anti.push(voters[v])
-								}
+							if (Number(queue.results[voters[v]]) == 1) {
+								pro.push(voters[v])
 							}
+							else {
+								anti.push(voters[v])
+							}
+						}
 
 					// special-empath
 						if (empath) {
@@ -1744,6 +1749,14 @@
 								var switchID = main.chooseRandom(pro)
 								pro = pro.filter(function (p) { return p !== switchID })
 								anti.push(switchID)
+							}
+							
+							if (switchID) {
+								var empathEvent = createStaticEvent(request, {type: "special-empath", viewers: [switchID]})
+								set["events." + empathEvent.id] = empathEvent
+								if (switchID == request.session.id) {
+									myEvents.push(empathEvent)
+								}
 							}
 						}
 
@@ -1758,6 +1771,14 @@
 								var switchID = main.chooseRandom(pro)
 								pro = pro.filter(function (p) { return p !== switchID })
 								anti.push(switchID)
+							}
+							
+							if (switchID) {
+								var cheaterEvent = createStaticEvent(request, {type: "special-cheater", viewers: [switchID]})
+								set["events." + cheaterEvent.id] = cheaterEvent
+								if (switchID == request.session.id) {
+									myEvents.push(cheaterEvent)
+								}
 							}
 						}
 
