@@ -524,7 +524,7 @@
 						break
 
 						case "start-role":
-							event.text = "In this game, your role will be the <span class='special-text'>" + data.role + "</span>. What does that mean? <br>" + getRoleDescription(data.role)
+							event.text = "In this game, your role will be the <span class='special-text'>" + data.role + "</span>. What does that mean? <br>" + getRoleDescription(data.role, false)
 							event.input = "okay"
 							event.options = "got it"
 						break
@@ -651,7 +651,7 @@
 /*** helpers ***/
 	/* getRoleDescription */
 		module.exports.getRoleDescription = getRoleDescription
-		function getRoleDescription(role, short) {
+		function getRoleDescription(role, quick) {
 			switch (role) {
 				// evil magic
 					case "spellcaster":
@@ -755,7 +755,7 @@
 			}
 			
 			// short or long ?
-				if (typeof short !== "undefined" && short) {
+				if ((typeof quick !== "undefined") && quick) {
 					return short
 				}
 				else {
