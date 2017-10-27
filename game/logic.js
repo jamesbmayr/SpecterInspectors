@@ -304,8 +304,6 @@
 
 						case "start-players":
 							event.text = "Here are all the suspects: <br>" + main.sortRandom(data.players).join("<br>") + "<br><br>And here are all the roles: <br>" + main.sortRandom(data.roles).join(" ")
-							event.input = "link"
-							event.options = ["../../about", "see role descriptions"]
 						break
 
 						case "start-notes":
@@ -330,7 +328,7 @@
 						break
 
 						case "story-murder":
-							event.text = main.chooseRandom(["It's a murder! <span class='special-text'>" + data.name + "</span> is dead!", "You awake to find <span class='special-text'>" + data.name + "</span> is no longer with us.", "It seems that <span class='special-text'>" + data.name + "</span> was killed in the middle of the night.", "Oh no! <span class='special-text'>" + data.name + "</span> is dead!", "Sadly, <span class='special-text'>" + data.name + "</span> has passed on from this world.", "And the next ghost is: <span class='special-text'>" + data.name + "</span>.", "Well, can't say we didn't see this coming. <span class='special-text'>" + data.name + "</span> is dead.", "They got another one! <span class='special-text'>" + data.name + "</span> has been murdered!", "Tragically, <span class='special-text'>" + data.name + "</span> is off to join " + request.game.flavor.ghost + " in the afterlife.", "First " + request.game.flavor.ghost + ", and now <span class='special-text'>" + data.name + "</span>!?", "Well... at least <span class='special-text'>" + data.name + "</span> can keep " + request.game.flavor.ghost + " company in the great beyond.", "As you examine the deceased body of <span class='special-text'>" + data.name + "</span>, you wonder if " + request.game.flavor.ghost + " will be happy to see them.", "They came after " + request.game.flavor.ghost + ". And now they've killed <span class='special-text'>" + data.name + "</span> too."]) + main.chooseRandom(["Nearby, you find ", "The weapon of choice? ...", "It appears it was ", "How!? Well, it was ", "Strangely enough, the murder weapon was ", "All due to ", "How did this happen? ...", "No one suspected ", "Turns out the killer used "]) + main.chooseRandom(["a chalice of cyanide", "a chalice of hemlock", "a chalice of arsenic", "a chalice of nightshade", "a large orange container reeking of gasoline", "a 50-year-old rusty cylinder of propane", "a rusty knife stained with the blood of a hundred murders", "an ancient battle axe", "a glimmering replica prop sword", "a 3D-printed carbon filament katana", "some embarassing childhood photographs", "a mechanical pencil sharpener", "frayed piano wire", "a skein of multicolored acrlyic yarn", "a plastic grocery bag with a smiley face on the front", "a cast-iron frying pan", "some origami throwing stars", "a broken stapler", "half a pound of pink chewing gum", "two and a half wool socks", "a syringe dripping with some sort of poison", "a handful of matches and three-quarters of a pack of playing cards", "a cucumber sandwich cut into triangles", "some terrible puns scribbled on post-it notes", "a crude dagger composed of hardened cheese", "some paperclips and rubberbands, mostly", "a map of the nearest children's museum", "twenty live tarantulas in glass jars", "a now-deceased canary", "rocks, paper, and scissors", "a civil war-era musket", "three semi-automatic rifles", "C4", "a standard police pistol", "plastic cling wrap", "kitchen utensils", "ink cartridges", "a water gun converted into a flamethrower", "truly awful top-40 music on shuffle", "a cell phone battery"]) + "."
+							event.text = main.chooseRandom(["It's a murder! <span class='special-text'>" + data.name + "</span> is dead!", "You awake to find <span class='special-text'>" + data.name + "</span> is no longer with us.", "It seems that <span class='special-text'>" + data.name + "</span> was killed in the middle of the night.", "Oh no! <span class='special-text'>" + data.name + "</span> is dead!", "Sadly, <span class='special-text'>" + data.name + "</span> has passed on from this world.", "And the next ghost is: <span class='special-text'>" + data.name + "</span>.", "Well, can't say we didn't see this coming. <span class='special-text'>" + data.name + "</span> is dead.", "They got another one! <span class='special-text'>" + data.name + "</span> has been murdered!", "Tragically, <span class='special-text'>" + data.name + "</span> is off to join " + request.game.flavor.ghost + " in the afterlife.", "First " + request.game.flavor.ghost + ", and now <span class='special-text'>" + data.name + "</span>!?", "Well... at least <span class='special-text'>" + data.name + "</span> can keep " + request.game.flavor.ghost + " company in the great beyond.", "As you examine the deceased body of <span class='special-text'>" + data.name + "</span>, you wonder if " + request.game.flavor.ghost + " will be happy to see them.", "They came after " + request.game.flavor.ghost + ". And now they've killed <span class='special-text'>" + data.name + "</span> too."]) + " " + main.chooseRandom(["Nearby, you find ", "The weapon of choice? ...", "It appears it was ", "How!? Well, it was ", "Strangely enough, the murder weapon was ", "All due to ", "How did this happen? ...", "No one suspected ", "Turns out the killer used "]) + main.chooseRandom(["a chalice of cyanide", "a chalice of hemlock", "a chalice of arsenic", "a chalice of nightshade", "a large orange container reeking of gasoline", "a 50-year-old rusty cylinder of propane", "a rusty knife stained with the blood of a hundred murders", "an ancient battle axe", "a glimmering replica prop sword", "a 3D-printed carbon filament katana", "some embarassing childhood photographs", "a mechanical pencil sharpener", "frayed piano wire", "a skein of multicolored acrlyic yarn", "a plastic grocery bag with a smiley face on the front", "a cast-iron frying pan", "some origami throwing stars", "a broken stapler", "half a pound of pink chewing gum", "two and a half wool socks", "a syringe dripping with some sort of poison", "a handful of matches and three-quarters of a pack of playing cards", "a cucumber sandwich cut into triangles", "some terrible puns scribbled on post-it notes", "a crude dagger composed of hardened cheese", "some paperclips and rubberbands, mostly", "a map of the nearest children's museum", "twenty live tarantulas in glass jars", "a now-deceased canary", "rocks, paper, and scissors", "a civil war-era musket", "three semi-automatic rifles", "C4", "a standard police pistol", "plastic cling wrap", "kitchen utensils", "ink cartridges", "a water gun converted into a flamethrower", "truly awful top-40 music on shuffle", "a cell phone battery"]) + "."
 						break
 
 						case "story-safe":
@@ -432,7 +430,7 @@
 						break
 
 						case "special-immortal":
-							event.text = main.chooseRandom(["LOL. They tried to murder you last night. You even pretended to be dead. Kinda feel bad about that now.", "The latest murder victim? You! Just kidding, of course. You can't die. But they still tried.", "It's good to be invincible, especially when people keep trying to murder you.", "They tried to murder you last night - but they of course did not succeed.", "Stellar performance, you think to yourself, reflecting on last night's attempted murder - and your dedication to playing the part.", "You have sustained literally no damage from the killing last night - too bad, killers!", "Who do they think you are, " + data.game.flavor.ghost + "? You're immortal!"])
+							event.text = main.chooseRandom(["LOL. They tried to murder you last night. You even pretended to be dead. Kinda feel bad about that now.", "The latest murder victim? You! Just kidding, of course. You can't die. But they still tried.", "It's good to be invincible, especially when people keep trying to murder you.", "They tried to murder you last night - but they of course did not succeed.", "Stellar performance, you think to yourself, reflecting on last night's attempted murder - and your dedication to playing the part.", "You have sustained literally no damage from the killing last night - too bad, killers!", "Who do they think you are, " + request.game.flavor.ghost + "? You're immortal!"])
 						break
 
 						case "special-illusionist":
@@ -440,7 +438,7 @@
 						break
 
 						case "special-watchkeeper":
-							event.text = main.chooseRandom(["Without seeing the killers' faces, <span class='special-text'>" + data.watchkeeeper + "</span>, the <span class='special-text'>watchkeeper</span>, rescues <span class='special-text'>" + data.target + "</span> from certain doom.", "Not so fast! The <span class='special-text'>watchkeeper</span>, <span class='special-text'>" + data.watchkeeper + "</span>, is here to protect <span class='special-text'>" + data.target + "</span>.", "The killers are going in after <span class='special-text'>" + data.target + "</span>, but all of a sudden, <span class='special-text'>" + data.watchkeeper + "</span>, the <span class='special-text'>watchkeeper</span>, intervenes!", "They were about to slaughter <span class='special-text'>" + data.target + "</span> when the <span class='special-text'>watchkeeper</span> - none other than <span class='special-text'>" + data.watchkeeper + "</span> - got involved (without getting a good look at the killers).", "The <span class='special-text'>watchkeeper</span> was too fast! Though the killers remain anonymous for now, <span class='special-text'>" + data.watchkeeper + "</span> has protected <span class='special-text'>" + data.target + "</span> from murder.", "Well, <span class='special-text'>" + data.watchkeeper + "</span> couldn't protect " + request.game.flavor.ghost + ", but they could protect <span class='special-text'>" + data.target + "</span>. Except now the killers know who's keeping watch."])
+							event.text = main.chooseRandom(["Without seeing the killers' faces, <span class='special-text'>" + data.watchkeeeper + "</span>, the <span class='special-text'>watchkeeper</span>, rescues <span class='special-text'>" + data.targets.join(" & ") + "</span> from certain doom.", "Not so fast! The <span class='special-text'>watchkeeper</span>, <span class='special-text'>" + data.watchkeeper + "</span>, is here to protect <span class='special-text'>" + data.targets.join(" & ") + "</span>.", "The killers are going in after <span class='special-text'>" + data.targets.join(" & ") + "</span>, but all of a sudden, <span class='special-text'>" + data.watchkeeper + "</span>, the <span class='special-text'>watchkeeper</span>, intervenes!", "They were about to slaughter <span class='special-text'>" + data.targets.join(" & ") + "</span> when the <span class='special-text'>watchkeeper</span> - none other than <span class='special-text'>" + data.watchkeeper + "</span> - got involved (without getting a good look at the killers).", "The <span class='special-text'>watchkeeper</span> was too fast! Though the killers remain anonymous for now, <span class='special-text'>" + data.watchkeeper + "</span> has protected <span class='special-text'>" + data.targets.join(" & ") + "</span> from murder.", "Well, <span class='special-text'>" + data.watchkeeper + "</span> couldn't protect " + request.game.flavor.ghost + ", but they could protect <span class='special-text'>" + data.targets.join(" & ") + "</span>. Except now the killers know who's keeping watch."])
 						break
 
 						case "special-detective":
@@ -1016,7 +1014,6 @@
 						}
 
 				// shuffle roles
-					// roles = ["cheater", "spellcaster", "telepath", "telepath", "immortal", "watchkeeper", "detective", "empath"] // xxx
 					roles = main.sortRandom(roles)
 
 				// start game
@@ -1163,6 +1160,23 @@
 								return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && !request.game.players[p].status.good)
 							}) || []
 
+						// special-watchkeeper
+							if (watchkeeper && killed.length) {
+								var killedNames = []
+								for (var k in killed) {
+									killedNames.push(request.game.players[killed[k]].name)
+								}
+								
+								var watchkeeperEvent = createStaticEvent(request, {type: "special-watchkeeper", viewers: killers.concat([watchkeeper]), watchkeeper: request.game.players[watchkeeper].name, targets: killedNames})
+								set["events." + watchkeeperEvent.id] = watchkeeperEvent
+
+								if ((watchkeeper == request.session.id) || (killers.indexOf(request.session.id) !== -1)) {
+									myEvents.push(watchkeeperEvent)
+								}
+
+								killed = []
+							}
+
 						// special-immortal
 							if (immortal && (killed.indexOf(immortal) !== -1)) {
 								var immortalEvent = createStaticEvent(request, {type: "special-immortal", viewers: [immortal]})
@@ -1198,23 +1212,6 @@
 								}
 
 								killed = []				
-							}
-
-						// special-watchkeeper
-							if (watchkeeper && killed.length) {
-								var killedNames = []
-								for (var k in killed) {
-									killedNames.push(request.game.players[killed[k]].name)
-								}
-								
-								var watchkeeperEvent = createStaticEvent(request, {type: "special-watchkeeper", viewers: killers.concat([watchkeeper]), watchkeeper: request.game.players[watchkeeper].name, targets: killedNames})
-								set["events." + watchkeeperEvent.id] = watchkeeperEvent
-
-								if ((watchkeeper == request.session.id) || (killers.indexOf(request.session.id) !== -1)) {
-									myEvents.push(watchkeeperEvent)
-								}
-
-								killed = []
 							}
 
 					// more specials
@@ -1625,6 +1622,13 @@
 					callback({success: false, message: "That's not a valid target."})
 				}
 				else {
+					// set data
+						var myEvents = []
+						var set = {}
+							set.updated = new Date().getTime()
+							set["events." + request.event.id + ".answer"] = request.event.answer = request.post.value
+							set["events." + request.event.id + ".doers"]  = request.event.doers  = []
+
 					// specials
 						var spellcaster = Object.keys(request.game.players).find(function (p) { // special-spellcaster
 							return (request.game.players[p].status.alive && (request.game.players[p].status.role == "spellcaster"))
@@ -1633,13 +1637,6 @@
 						var psychic = Object.keys(request.game.players).find(function (p) { // special-psychic
 							return (request.game.players[p].status.alive && !spellcaster && (request.game.players[p].status.role == "psychic"))
 						}) || null
-
-					// set data
-						var myEvents = []
-						var set = {}
-							set.updated = new Date().getTime()
-							set["events." + request.event.id + ".answer"] = request.event.answer = request.post.value
-							set["events." + request.event.id + ".doers"]  = request.event.doers  = []
 
 					// create queue
 						var players = Object.keys(request.game.players)
@@ -1702,6 +1699,11 @@
 						var anti     = []
 						var proText  = []
 						var antiText = []
+
+					// set info
+						var myEvents = []
+						var set = {}
+							set.updated = new Date().getTime()
 
 					// specials
 						var spellcaster = Object.keys(request.game.players).find(function (p) { // special-spellcaster
@@ -1803,11 +1805,6 @@
 								}
 							}
 						}
-
-					// set info
-						var myEvents = []
-						var set = {}
-							set.updated = new Date().getTime()
 
 					// decision
 						var decisionEvent = createStaticEvent(request, {type: "decision-complete", pro: proText, anti: antiText})
@@ -1923,17 +1920,17 @@
 					callback({success: false, message: "That's not a valid target."})
 				}
 				else {
-					// specials
-						var insomniac = Object.keys(request.game.players).filter(function (p) { // special-insomniac
-							return (request.game.players[p].status.alive && (request.game.players[p].status.role == "insomniac"))
-						}) || null
-
 					// set data
 						var myEvents = []
 						var set = {}
 							set.updated = new Date().getTime()
 							set["events." + request.event.id + ".answer"] = request.event.answer = request.post.value
 							set["events." + request.event.id + ".doers"]  = request.event.doers  = []
+
+					// specials
+						var insomniac = Object.keys(request.game.players).find(function (p) { // special-insomniac
+							return (request.game.players[p].status.alive && (request.game.players[p].status.role == "insomniac"))
+						}) || null					
 
 					// create queue
 						var killerList = Object.keys(request.game.players).filter(function(p) { return ((!request.game.players[p].status.good) && (request.game.players[p].status.alive)) })
@@ -1987,6 +1984,11 @@
 						var proText  = []
 						var antiText = []
 
+					// set info
+						var myEvents = []
+						var set = {}
+							set.updated = new Date().getTime()
+
 					// determine pro and anti
 						for (var v in voters) {
 							if (Number(queue.results[voters[v]]) == 1) {
@@ -1998,11 +2000,6 @@
 								antiText.push("<span class='special-text'>" + request.game.players[voters[v]].name + "</span>")
 							}
 						}
-
-					// set info
-						var myEvents = []
-						var set = {}
-							set.updated = new Date().getTime()
 
 					// decision
 						var decisionEvent = createStaticEvent(request, {type: "decision-complete", pro: proText, anti: antiText, viewers: voters})
