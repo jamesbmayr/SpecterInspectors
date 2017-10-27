@@ -309,9 +309,13 @@
 						case "start-notes":
 							event.text = main.chooseRandom(["Things are gonna get a bit crazy, so you might need to write stuff down.", "To solve these murders, you might need to write down some clues.", "To make things a bit easier, there's a place for you to keep track of everything.", "As you play the game, you might need a place to keep your thoughts.", "If you're looking for a place to organize your ideas..."]) + " Check out the Notes tab to the left."
 						break
+						
+						case "start-day":
+							event.text = "Every day, each living player can nominate someone they suspect... for execution! If a simple majority approves, the player is put to death and becomes a ghost. (Only one person can be executed each day.)"
+						break
 
 						case "start-night":
-							event.text = "Every night, the killers can select 1 person to murder - but dead players come back as ghosts! These ghosts - including " + request.game.flavor.ghost + " - can send dreams to living players, providing clues to help find the killers."
+							event.text = "Every night, the killers can (unanimously) select one person to murder - but dead players come back as ghosts! These ghosts - including " + request.game.flavor.ghost + " - can send dreams to living players, providing clues to help find the killers."
 						break
 
 					// morning
@@ -1261,15 +1265,20 @@
 						myEvents.push(dayEvent)
 
 					// first day only
+						if (request.game.state.day == 1) {
+							var firstDayEvent = createStaticEvent(request, {type: "start-day"})
+							set["events." + firstDayEvent.id] = firstDayEvent
+							myEvents.push(firstDayEvent)
+					
 						// special-spellcaster
-							if (spellcaster && request.game.state.day == 1) {
+							if (spellcaster) {
 								var spellcasterEvent = createStaticEvent(request, {type: "special-spellcaster"})
 								set["events." + spellcasterEvent.id] = spellcasterEvent
 								myEvents.push(spellcasterEvent)
 							}
 
 						// special-telepath
-							if ((request.game.state.day == 1) && telepaths && telepaths.length) {
+							if (telepaths && telepaths.length) {
 								var telepathEvent = createStaticEvent(request, {type: "special-telepath", viewers: telepaths})
 								set["events." + telepathEvent.id] = telepathEvent
 
@@ -1277,9 +1286,10 @@
 									myEvents.push(telepathEvent)
 								}
 							}
+						}
 
 					// dreams (subsequent days)
-						if (request.game.state.day > 1) {
+						else if (request.game.state.day > 1) {
 							// ai dream
 								var sleepers = players.filter(function(s) {
 									return (request.game.players[s].status.alive && (killed.indexOf(s) == -1) && (s !== insomniac)) // special-insomniac
