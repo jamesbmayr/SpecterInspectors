@@ -313,6 +313,10 @@
 						case "start-day":
 							event.text = "Every day, each living player can nominate someone they suspect... for execution! If a simple majority approves, the player is put to death and becomes a ghost. (Only one person can be executed each day.)"
 						break
+						
+						case "start-evil":
+							event.text = "Here's the evil team: " + data.names.join(" ") + "..."
+						break
 
 						case "start-night":
 							event.text = "Every night, the killers can (unanimously) select one person to murder - but dead players come back as ghosts! These ghosts - including " + request.game.flavor.ghost + " - can send dreams to living players, providing clues to help find the killers."
@@ -1274,6 +1278,23 @@
 							var firstDayEvent = createStaticEvent(request, {type: "start-day"})
 							set["events." + firstDayEvent.id] = firstDayEvent
 							myEvents.push(firstDayEvent)
+							
+						// start-evil
+							var evil = Object.keys(request.game.players).filter(function (p) {
+								return !request.game.players[p].status.good
+							})
+							
+							var evilNames = []
+							for (var e in evil) {
+								evilNames.push("<span class='special-text'>" + request.game.players[evil[e]].name + "</span>")	
+							}
+							
+							var evilEvent = createStaticEvent(request, {type: "start-evil", viewers: evil, names: evilNames})
+							set["events." + evilEvent.id] = evilEvent
+							
+							if (evil.indexOf(request.session.id) !== -1) {
+								myEvents.push(evilEvent)
+							}
 					
 						// special-spellcaster
 							if (spellcaster) {
