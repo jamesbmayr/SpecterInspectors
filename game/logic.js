@@ -218,7 +218,6 @@
 								case "setup-name":
 								case "setup-shirt":
 								case "setup-pants":
-								case "setup-shoes":
 									setupPlayer(request, callback)
 								break
 
@@ -518,12 +517,6 @@
 							event.options = ["red","orange","yellow","green","blue","purple","brown","white","gray","black"]
 						break
 
-						case "setup-shoes":
-							event.text = main.chooseRandom(["Last one, I promise: what color shoes do you have on?", "And your shoes - what color are they?", "What about those shoes?", "Thanks! Now I just need to know about your shoes.", "And to finish up: shoes?"])
-							event.input = "select"
-							event.options = ["red","orange","yellow","green","blue","purple","brown","white","gray","black"]
-						break
-
 					// start
 						case "start-launch":
 							event.text = main.chooseRandom(["Is everybody ready to go?", "Shall we launch the game?", "Is everyone in?", "Are all players accounted for?", "Everybody good to go?", "Can we get this thing going?", "Ready to play?", "Let me know when the rest of them are ready.", "Ready to launch Specter Inspectors, at your command...", "Anyone else we're waiting on?"])
@@ -815,7 +808,7 @@
 	/* setupPlayer */
 		module.exports.setupPlayer = setupPlayer
 		function setupPlayer(request, callback) {
-			if (["setup-welcome","setup-name","setup-shirt","setup-pants","setup-shoes"].indexOf(request.event.type) == -1) {
+			if (["setup-welcome","setup-name","setup-shirt","setup-pants"].indexOf(request.event.type) == -1) {
 				callback({success: false, message: "This is not a valid setup event."})
 			}
 			else if (request.game.state.start) {
@@ -860,23 +853,14 @@
 					else if (request.event.type == "setup-pants") {
 						set["players." + request.session.id + ".colors.pants"] = request.post.value
 						set["events." + request.event.id + ".answer"] = request.event.answer = request.post.value
-						set["events." + request.event.id + ".doers"]  = request.event.doers = []
-						
-						var setupEvent = createActionEvent(request, {type: "setup-shoes"})
-						set["events." + setupEvent.id] = setupEvent
-						myEvents.push(setupEvent)
-					}
-					else if (request.event.type == "setup-shoes") {
-						set["players." + request.session.id + ".colors.shoes"] = request.post.value
-						set["events." + request.event.id + ".answer"] = request.event.answer = request.post.value
-						set["events." + request.event.id + ".doers"]  = request.event.doers = []
+						set["events." + request.event.id + ".doers"]  = request.event.doers = []	
 					}
 
 				main.storeData("games", {id: request.game.id}, {$set: set}, {}, function (data) {
 					if (!data) {
 						callback({success: false, message: "Unable to save player data..."})
 					}
-					else if (request.event.type !== "setup-shoes") { // continue
+					else if (request.event.type !== "setup-pants") { // continue
 						callback({success: true, events: myEvents})
 					}
 					else { // checkQueue
@@ -1043,7 +1027,7 @@
 					var infoArray = []
 					for (var p in players) {
 						var player = request.game.players[players[p]]
-						infoArray.push("<span class='special-text'>" + player.name + "</span> : <span class='special-text " + player.colors.shirt + "'>" + player.colors.shirt + "</span> shirt, <span class='special-text " + player.colors.pants + "'>" + player.colors.pants + "</span> pants, <span class='special-text " + player.colors.shoes + "'>" + player.colors.shoes + "</span> shoes... ")
+						infoArray.push("<span class='special-text'>" + player.name + "</span> : <span class='special-text " + player.colors.shirt + "'>" + player.colors.shirt + "</span> shirt, <span class='special-text " + player.colors.pants + "'>" + player.colors.pants + "</span> pants... ")
 					}
 
 					var rolesArray = []
@@ -1323,7 +1307,7 @@
 
 								var suspect   = main.chooseRandom(sleepers)
 								var slumberer = main.chooseRandom(sleepers)
-								var item      = main.chooseRandom(["shirt", "pants", "shoes"])
+								var item      = main.chooseRandom(["shirt", "pants"])
 
 								var aiDreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [slumberer, seer, dreamsnatcher], color: request.game.players[suspect].colors[item]}) // special-seer
 								set["events." + aiDreamEvent.id] = aiDreamEvent
