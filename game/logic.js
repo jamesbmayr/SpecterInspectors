@@ -570,7 +570,7 @@
 						break
 
 						case "murder-poll":
-							event.text = main.chooseRandom(["It seems <span class='special-text'>" + data.author + "</span> has nominated <span class='special-text'>" + data.target + "</span> to die - what's your take?", "It would appear <span class='special-text'>" + data.author + "</span> is ready to murder <span class='special-text'>" + data.target + "</span>... are you?", "Now <span class='special-text'>" + data.author + "</span> wants to kill <span class='special-text'>" + data.target + "</span>. Do you?", "Do you agree with <span class='special-text'>" + data.author + "</span> in murdering <span class='special-text'>" + data.target + "</span>?", "Should we listen to <span class='special-text'>" + data.author + "</span> and kill off <span class='special-text'>" + data.target + "</span>?"])
+							event.text = main.chooseRandom(["It seems <span class='special-text'>" + data.author + "</span> has nominated <span class='special-text'>" + data.target + "</span> to die - what's your take?", "It would appear <span class='special-text'>" + data.author + "</span> is ready to murder <span class='special-text'>" + data.target + "</span>. What do you say?", "Now <span class='special-text'>" + data.author + "</span> wants to kill <span class='special-text'>" + data.target + "</span>. Vote!", "So... <span class='special-text'>" + data.author + "</span> wants to murder <span class='special-text'>" + data.target + "</span>. Should we go through with it?", "Well, <span class='special-text'>" + data.author + "</span> says it's time to kill off <span class='special-text'>" + data.target + "</span>. What's your vote?"])
 							event.input = "buttons"
 							event.options = ["don't murder", "murder"]
 						break
