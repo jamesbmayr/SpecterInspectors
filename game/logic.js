@@ -789,17 +789,39 @@
 						set["events." + queue.id + ".results." + request.session.id] = queue.results[request.session.id] = request.post.value
 					}
 				
-					main.storeData("games", {id: request.game.id}, {$set: set}, {}, function (data) {
-						// incomplete
-							if (queue.doers.length > 0) {
-								var waitingEvent = createStaticEvent(request, {type: "decision-waiting", viewers: [request.session.id]})
-								failure({success: true, events: [waitingEvent]})
-							}
+					main.storeData("games", {id: request.game.id}, {$set: set}, {}, function (game) {
+						if (!game) {
+							// undo
+								var set = {}
+								set.updated = new Date().getTime()
+								
+								request.event.doers.push(request.session.id)
+								set["events." + request.event.id + ".doers"] = request.event.doers
+								
+								queue.doers.push(request.session.id)
+								set["events." +         queue.id + ".doers"] = queue.doers
+							
+								main.storeData("games", {id: request.game.id}, {$set: set}, {}, function (data) {
+									var waitingEvent = createStaticEvent(request, {type: "decision-waiting", viewers: [request.session.id]})
+									failure({success: true, events: [waitingEvent]})
+								})
+								
+						}
+						else {
+							request.game = game
+							var queue = request.game.events[request.event.queue]
+							
+							// incomplete
+								if (queue.doers.length > 0) {
+									var waitingEvent = createStaticEvent(request, {type: "decision-waiting", viewers: [request.session.id]})
+									failure({success: true, events: [waitingEvent]})
+								}
 
-						// complete
-							else {
-								success(queue)
-							}
+							// complete
+								else {
+									success(queue)
+								}
+						}
 					})
 				}
 		}
