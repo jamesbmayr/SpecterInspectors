@@ -450,7 +450,7 @@
 						break
 
 						case "special-necromancer":
-							event.text = main.chooseRandom(["Chanting the mystical, ancient words, you bring to life those who have died this night.", "You sense that someone was slain in the darkness - but through the power of the spirits, you bring air back into their lungs that they may breathe again.", "Nope. Not another murder. Not this time. Not as long as you can bring people back to life.", "When the spell is complete, the dead will walk again - without any knowledge of their passing onto the other side and back.", "You are a powerful sorcerer, using magic beyond all human understanding to resurrect all those who have died in the last few hours.", "Hey, it worked! The dead person isn't dead anymore! Yay!", "With all sorts of whooshing sounds and flickery candles and stuff, you pull off a cool party trick - bringing a dead person back to life.", "You weren't fast enough to resurrect " + request.game.flavor.ghost + ", but you have successfully brought back <span class='special-text'>" + data.name + "</span>."])
+							event.text = main.chooseRandom(["Chanting the mystical, ancient words, you bring to life those who have died this night: <span class='special-text'>" + data.names.join(" & ") + "</span>.", "You sense that <span class='special-text'>" + data.names.join(" & ") + "</span>. was slain in the darkness - but through the power of the spirits, you bring air back into their lungs that they may breathe again.", "Nope. Not another murder. Not <span class='special-text'>" + data.names.join(" & ") + "</span>. Not as long as you can bring people back to life.", "When the spell is complete, the dead <span class='special-text'>" + data.names.join(" & ") + "</span> will walk again - without any knowledge of their passing onto the other side and back.", "You are a powerful sorcerer, using magic beyond all human understanding to resurrect all those who have died in the last few hours: <span class='special-text'>" + data.names.join(" & ") + "</span>.", "Hey, it worked! The dead person isn't dead anymore! Hooray for <span class='special-text'>" + data.names.join(" & ") + "</span>.", "With all sorts of whooshing sounds and flickery candles and stuff, you pull off a cool party trick - bringing a dead person back to life: <span class='special-text'>" + data.names.join(" & ") + "</span>.", "You weren't fast enough to resurrect " + request.game.flavor.ghost + ", but you have successfully brought back <span class='special-text'>" + data.names.join(" & ") + "</span>."])
 						break
 
 						case "special-obscurer":
@@ -1208,7 +1208,12 @@
 
 						// special-necromancer
 							if (necromancer && killed.length) {
-								var necromancerEvent = createStaticEvent(request, {type: "special-necromancer", viewers: [necromancer]})
+								var killedNames = []
+								for (var k in killed) {
+									killedNames.push(request.game.players[killed[k]].name)
+								}
+								
+								var necromancerEvent = createStaticEvent(request, {type: "special-necromancer", viewers: [necromancer], names: killedNames})
 								set["events." + necromancerEvent.id] = necromancerEvent
 
 								if (necromancer == request.session.id) {
