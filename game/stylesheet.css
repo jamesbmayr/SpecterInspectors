@@ -93,11 +93,19 @@
 
 /*** chats ***/
 	/* chats-list */
-		#chats-list {
-			float: left;
+		#chats .header {
+			position: absolute;
+			top: 80px;
 			width: 80vw;
-			height: calc(100vh - 80px - 100px);
-			margin-bottom: 40px;
+		}
+
+		#chats-list {
+			position: absolute;
+			top: 130px;
+			right: 10vw;
+			width: 80vw;
+			height: calc(100vh - 80px - 110px);
+			margin-bottom: 60px;
 			overflow-x: hidden;
 			overflow-y: scroll;
 			-ms-overflow-style: none;
@@ -146,7 +154,10 @@
 
 	/* chats input */
 		#chats-input {
-			float: left;
+			position: absolute;
+			top: 80px;
+			right: 10vw;
+			width: 80vw;
 			padding: 10px;
 			height: 30px;
 			width: calc(80vw - 20px);
@@ -157,8 +168,9 @@
 		#chats-button {
 			position: absolute;
 			right: 0px;
+			top: 80px;
 			height: 50px;
-			width: 50px;
+			width: 10vw;
 			padding: 0px;
 			vertical-align: bottom;
 			background-color: rgba(0,0,0,0);
