@@ -240,7 +240,7 @@
 				}	
 
 			// send
-				if (typeof value !== "undefined" && value !== null) {
+				if (typeof value !== "undefined" && value !== null && value !== "null") {
 					disableEvent(id)
 
 					sendPost({action: "submitEvent", value: value, id: id}, function(data) {
@@ -254,6 +254,9 @@
 							}
 						}
 					})
+				}
+				else {
+					displayError("invalid option")
 				}
 		}
 
