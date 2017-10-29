@@ -401,7 +401,7 @@
 
 			//aggregate with $match and $sample
 				else if (sample) {
-					logMessage("aggregate: " + collection + ": " + JSON.stringify([{$match: query}, {$sample: sample}]))
+					// logMessage("aggregate: " + collection + ": " + JSON.stringify([{$match: query}, {$sample: sample}]))
 					db.collection(collection).aggregate([{$match: query}, {$sample: sample}]).sort(sort).limit(limit).maxTimeMS(1000).toArray(function (error, resultArray) {
 						if (error) {
 							logError(error)
@@ -419,7 +419,7 @@
 
 			//aggregate with $match and $project
 				else if (project) {
-					logMessage("aggregate: " + collection + ": " + JSON.stringify([{$match: query}, {$project: project}]))
+					// logMessage("aggregate: " + collection + ": " + JSON.stringify([{$match: query}, {$project: project}]))
 					db.collection(collection).aggregate([{$match: query}, {$project: project}, {$sort: sort}, {$limit: limit}]).maxTimeMS(1000).toArray(function (error, resultArray) {
 						if (error) {
 							logError(error)
@@ -437,7 +437,7 @@
 
 			//findOne
 				else if (!multi) {
-					logMessage("findOne: " + collection + ": " + JSON.stringify(query))
+					// logMessage("findOne: " + collection + ": " + JSON.stringify(query))
 					db.collection(collection).findOne(query, projection, function (error, result) {
 						if (error) {
 							logError(error)
@@ -452,7 +452,7 @@
 
 			//find
 				else if (multi) {
-					logMessage("find: " + collection + ": " + JSON.stringify(query))
+					// logMessage("find: " + collection + ": " + JSON.stringify(query))
 					db.collection(collection).find(query, projection).sort(sort).limit(limit).maxTimeMS(1000).toArray(function (error, resultArray) {
 						if (error) {
 							logError(error)
@@ -493,7 +493,7 @@
 
 			//insert
 				else if ((filter === null) && (data !== null)) {
-					logMessage("insert: " + collection + ":\n" + JSON.stringify(data))
+					// logMessage("insert: " + collection + ":\n" + JSON.stringify(data))
 					db.collection(collection).insert(data, function (error, result) {
 						if (error) {
 							logError(error)
@@ -508,7 +508,7 @@
 
 			//findOneAndUpdate
 				else if ((filter !== null) && (data !== null) && (!multi)) {
-					logMessage("findOneAndUpdate: " + collection + ": " + JSON.stringify(filter) + ":\n" + JSON.stringify(data))
+					// logMessage("findOneAndUpdate: " + collection + ": " + JSON.stringify(filter) + ":\n" + JSON.stringify(data))
 					db.collection(collection).findOneAndUpdate(filter, data, {returnOriginal: false, upsert: upsert, sort: sort, projection: projection}, function (error, result) {
 						if (error) {
 							logError(error)
@@ -523,7 +523,7 @@
 
 			//update, then find
 				else if ((filter !== null) && (data !== null) && (multi)) {
-					logMessage("update: " + collection + ": " + JSON.stringify(filter) + ":\n" + JSON.stringify(data))
+					// logMessage("update: " + collection + ": " + JSON.stringify(filter) + ":\n" + JSON.stringify(data))
 					db.collection(collection).update(filter, data, {upsert: upsert, multi: true}, function (error, result) {
 						if (error) {
 							logError(error)
@@ -551,7 +551,7 @@
 				else if ((filter !== null) && (data === null)) {
 					if (multi) { multi = true }
 
-					logMessage("remove: " + collection + ": " + JSON.stringify(filter))
+					// logMessage("remove: " + collection + ": " + JSON.stringify(filter))
 					db.collection(collection).remove(filter, !multi, function (error, result) {
 						if (error) {
 							logError(error)
