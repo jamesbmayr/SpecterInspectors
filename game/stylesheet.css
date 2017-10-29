@@ -96,8 +96,8 @@
 		#chats-list {
 			float: left;
 			width: 80vw;
-			height: calc(100vh - 80px - 80px);
-			margin-bottom: 20px;
+			height: calc(100vh - 80px - 100px);
+			margin-bottom: 40px;
 			overflow-x: hidden;
 			overflow-y: scroll;
 			-ms-overflow-style: none;
