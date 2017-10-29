@@ -440,7 +440,7 @@
 				// append
 					var events = document.getElementById("events-list")
 						events.appendChild(eventBlock)
-					if (["start-role", "start-players", "start-notes"].indexOf(type) == -1) {
+					if (["setup-gamecode", "setup-welcome", "setup-name", "setup-shirt", "setup-pants", "start-launch", "execution-poll", "murder-poll", "error", "start-story", "start-day", "start-night", "story-execution", "story-ghost", "story-accusation", "murder-ghost", "murder-complete", "dream-complete", "dream-color", "end-good", "end-evil", "decision-waiting", "decision-complete"].indexOf(type) !== -1) {
 						scrollToNewest("events")
 					}
 
