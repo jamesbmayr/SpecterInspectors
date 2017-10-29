@@ -371,6 +371,7 @@
 							unselectBlock.value = "null"
 							unselectBlock.appendChild(document.createTextNode("select..."))
 							unselectBlock.setAttribute("disabled",true)
+							unselectBlock.setAttribute("selected",true)
 						selectBlock.appendChild(unselectBlock)
 
 						for (var o = 0; o < event.options.length; o++) {
