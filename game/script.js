@@ -363,12 +363,8 @@
 						inputBlocks = [inputBlock, submitBlock]
 					}
 					else if (event.input == "select") {
-						var labelBlock = document.createElement("optgroup")
-							labelBlock.setAttribute("label", "select...")
-
 						var selectBlock = document.createElement("select")
 							selectBlock.className = "event-select"
-							selectBlock.appendChild(labelBlock)
 							selectBlock.addEventListener("keyup", function (event) { if (event.which == 13) { submitEvent(event) } })
 						
 						var unselectBlock = document.createElement("option")
