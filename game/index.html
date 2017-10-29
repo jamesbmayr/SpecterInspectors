@@ -79,7 +79,7 @@
 
 											// structure
 												inputBlock = '<select class="event-select"' + disabled + selected + '>\
-													<option disabled value="null">select...</option>\
+													<option disabled value="null"' + (selected.length ? "" : " selected ") + '>select...</option>\
 													' + options.join("") + '\
 												</select>\
 												<button class="event-button" value="submit-select"' + disabled + selected + '>&#8595;</button>'
