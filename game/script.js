@@ -370,6 +370,12 @@
 							selectBlock.className = "event-select"
 							selectBlock.appendChild(labelBlock)
 							selectBlock.addEventListener("keyup", function (event) { if (event.which == 13) { submitEvent(event) } })
+						
+						var unselectBlock = document.createElement("option")
+							unselectBlock.value = "null"
+							unselectBlock.appendChild(document.createTextNode("select..."))
+							unselectBlock.setAttribute("disabled",true)
+						selectBlock.appendChild(unselectBlock)
 
 						for (var o = 0; o < event.options.length; o++) {
 							var optionBlock = document.createElement("option")
