@@ -348,7 +348,11 @@
 						break
 
 						case "story-accusation":
-							event.text = "An accusation has been made against you! " + main.chooseRandom(["It appears <span class='special-text'>" + data.author + "</span> thinks it's all your fault.", "Everyone will cast a vote on <span class='special-text'>" + data.author + "</span>'s motion... to kill you.", "Now that <span class='special-text'>" + data.author + "</span> has suggested it, everyone will vote... except you.", "Let's see if everyone else agrees with <span class='special-text'>" + data.author + "</span>.", "Will <span class='special-text'>" + data.author + "</span> get their way, or will you live to fight another day?", "First, <span class='special-text'>" + data.author + "</span> points the finger. Then everyone else decides.", "Time to find out if <span class='special-text'>" + data.author + "</span> has convinced the others."])
+							event.text = "An accusation has been made against you! " + main.chooseRandom(["It appears <span class='special-text'>" + data.author + "</span> thinks it's all your fault.", "Everyone will cast a vote on <span class='special-text'>" + data.author + "</span>'s motion... to kill you.", "Now that <span class='special-text'>" + data.author + "</span> has suggested executing you, everyone will vote... except you.", "Let's see if everyone else agrees with <span class='special-text'>" + data.author + "</span> in executing you.", "Will <span class='special-text'>" + data.author + "</span> get their way, or will you live to fight another day?", "First, <span class='special-text'>" + data.author + "</span> points the finger at you. Now everyone else decides.", "Time to find out if <span class='special-text'>" + data.author + "</span> has convinced the others that you should die."])
+						break
+
+						case "story-ghostpoll":
+							event.text = "An accusation has been made! " + main.chooseRandom(["It appears <span class='special-text'>" + data.author + "</span> thinks it's all <span class='special-text'>" + data.target + "</span>'s fault.", "Everyone will cast a vote on <span class='special-text'>" + data.author + "</span>'s motion... to kill <span class='special-text'>" + data.target + "</span>.", "Now that <span class='special-text'>" + data.author + "</span> has suggested killing <span class='special-text'>" + data.target + "</span>, everyone will vote...", "Let's see if everyone else agrees with <span class='special-text'>" + data.author + "</span> in killing <span class='special-text'>" + data.target + "</span>.", "Will <span class='special-text'>" + data.author + "</span> get their way, or will <span class='special-text'>" + data.target + "</span> live to fight another day?", "First, <span class='special-text'>" + data.author + "</span> points the finger at <span class='special-text'>" + data.target + "</span>. Then everyone else decides.", "Time to find out if <span class='special-text'>" + data.author + "</span> has convinced the others that <span class='special-text'>" + data.target + "</span> should die."])
 						break
 
 						case "story-execution":
@@ -390,13 +394,13 @@
 
 					// end
 						case "end-good":
-							event.text = main.chooseRandom(["And with that, the good guys win!", "The winners are... the good guys!", "Congratulations, Team Good - you did it!", "And for once, the murderers don't get away with it!", "That's a wrap! Great job, not-evil people!", "Victory goes to the good ones!", request.game.flavor.ghost + ", you have been avenged!", "As we celebrate the victory of the good team, let us remember our departed friend, " + request.game.flavor.ghost + "."])
+							event.text = "Everyone on the evil team is dead! " + main.chooseRandom(["And with that, the good guys win!", "The winners are... the good guys!", "Congratulations, Team Good - you did it!", "And for once, the murderers don't get away with it!", "That's a wrap! Great job, not-evil people!", "Victory goes to the good ones!", request.game.flavor.ghost + ", you have been avenged!", "As we celebrate the victory of the good team, let us remember our departed friend, " + request.game.flavor.ghost + "."])
 							event.input = "link"
 							event.options = ["../../", "play again"]
 						break
 
 						case "end-evil":
-							event.text = main.chooseRandom(["And that's the game. Well done, you villanous scum!", "Game over - better luck next time, good team.", "The murderers emerge victorious.", "It just wasn't enough - you can't stop these killers!", "The bad guys are victorious! Thanks for playing!", "And that's another win for evil.", "It appears the death of " + request.game.flavor.ghost + " sent everyone down a path of doom. Evil seizes the day.", "Going after " + request.game.flavor.ghost + " just wasn't enough... they had to go and kill everyone. Evil wins."])
+							event.text = "The evil team now matches or outnumbers the good team. " + main.chooseRandom(["And that's the game. Well done, you villanous scum!", "Game over - better luck next time, good team.", "The murderers emerge victorious.", "It just wasn't enough - you can't stop these killers!", "The bad guys are victorious! Thanks for playing!", "And that's another win for evil.", "It appears the death of " + request.game.flavor.ghost + " sent everyone down a path of doom. Evil seizes the day.", "Going after " + request.game.flavor.ghost + " just wasn't enough... they had to go and kill everyone. Evil wins."])
 							event.input = "link"
 							event.options = ["../../", "play again"]
 						break
@@ -437,7 +441,7 @@
 						break
 
 						case "special-immortal":
-							event.text = main.chooseRandom(["LOL. They tried to murder you last night. You even pretended to be dead. Kinda feel bad about that now.", "The latest murder victim? You! Just kidding, of course. You can't die. But they still tried.", "It's good to be invincible, especially when people keep trying to murder you.", "They tried to murder you last night - but they of course did not succeed.", "Stellar performance, you think to yourself, reflecting on last night's attempted murder - and your dedication to playing the part.", "You have sustained literally no damage from the killing last night - too bad, killers!", "Who do they think you are, " + request.game.flavor.ghost + "? You're immortal!"])
+							event.text = main.chooseRandom(["LOL. The killers tried to murder you last night. You even pretended to be dead. Kinda feel bad about that now.", "The latest murder victim? You! Just kidding, of course. You can't die. But the killers still tried.", "It's good to be invincible, especially when people keep trying to murder you - like last night.", "The murderers attempted to murder you last night - but they of course did not succeed.", "Stellar performance, you think to yourself, reflecting on last night's attempted murder - and your dedication to pretending to be dead. Of course, you're not dead.", "You have sustained literally no damage from the attempted killing last night - too bad, killers!", "The evil team tried to get you last night. But who do they think you are - " + request.game.flavor.ghost + "? You're immortal!"])
 						break
 
 						case "special-illusionist":
@@ -534,13 +538,13 @@
 						case "trigger-sleep":
 							event.text = ""
 							event.input = "okay"
-							event.options = "end the day"
+							event.options = "ready to end the day"
 						break
 
 						case "trigger-wake":
 							event.text = ""
 							event.input = "okay"
-							event.options = "end the night"
+							event.options = "ready to end the night"
 						break
 
 					// execution
@@ -797,15 +801,16 @@
 								
 								request.event.doers.push(request.session.id)
 								set["events." + request.event.id + ".doers"] = request.event.doers
-								
+								set["events." + request.event.id + ".answer"] = null
+
 								queue.doers.push(request.session.id)
 								set["events." +         queue.id + ".doers"] = queue.doers
-							
+								
+								main.logError("queue error: " + queue.id)
 								main.storeData("games", {id: request.game.id}, {$set: set}, {}, function (data) {
 									var waitingEvent = createStaticEvent(request, {type: "decision-waiting", viewers: [request.session.id]})
-									failure({success: true, events: [waitingEvent]})
+									failure({success: false, message: "Unable to submit response"})
 								})
-								
 						}
 						else {
 							request.game = game
@@ -1700,6 +1705,11 @@
 					// accused event
 						var accusedEvent = createStaticEvent(request, {type: "story-accusation", author: request.game.players[request.session.id].name, viewers: [request.post.value]})
 						set["events." + accusedEvent.id] = accusedEvent
+
+					//ghostpoll event
+						var ghosts = players.filter(function (p) { return !request.game.players[p].status.alive })
+						var ghostpollEvent = createStaticEvent(request, {type: "story-ghostpoll", author: request.game.players[request.session.id].name, target: request.game.players[request.post.value].name, viewers: ghosts})
+						set["events." + ghostpollEvent.id] = ghostpollEvent
 
 					// special-psychic
 						if (psychic) {

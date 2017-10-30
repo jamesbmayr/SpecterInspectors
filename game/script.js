@@ -5,10 +5,10 @@
 		function scrollToNewest(index) {
 			if (index == "chats") {
 				try {
-					document.getElementById("chats-list").scrollBy(0, 1000000)
+					document.getElementById("chats-list").scrollBy(0, 0)
 				}
 				catch (error) {
-					document.getElementById("chats-list").scrollTop = 1000000
+					document.getElementById("chats-list").scrollTop = 0
 				}
 			}
 			else if (index == "events") {
@@ -300,8 +300,13 @@
 
 				// append
 					var chats = document.getElementById("chats-list")
-						chats.appendChild(chatBlock)
+					if (chats.firstChild) {
+						chats.insertBefore(chatBlock, chats.firstChild)
 						scrollToNewest("chats")
+					}
+					else {
+						chats.appendChild(chatBlock)
+					}
 
 				// fade in
 					var chatFadein = setInterval(function() { // fade in
@@ -440,7 +445,12 @@
 				// append
 					var events = document.getElementById("events-list")
 						events.appendChild(eventBlock)
-					if (["setup-gamecode", "setup-welcome", "setup-name", "setup-shirt", "setup-pants", "start-launch", "execution-poll", "murder-poll", "error", "start-story", "start-day", "start-night", "story-execution", "story-ghost", "story-accusation", "murder-ghost", "murder-complete", "dream-complete", "dream-color", "end-good", "end-evil", "decision-waiting", "decision-complete"].indexOf(type) !== -1) {
+					if (["setup-gamecode", "setup-welcome", "setup-name", "setup-shirt", "setup-pants", "start-launch",
+						"start-story", "start-day", "start-night", "story-day", "story-night", "error",
+						"story-accusation", "execution-poll", "story-execution", "story-ghostpoll", "story-ghost",
+						"murder-ghost", "murder-complete", "murder-poll",
+						"dream-complete", "dream-color", "random-text", "random-buttons", 
+						"decision-waiting", "decision-complete", "trigger-wake", "trigger-sleep", "end-good", "end-evil"].indexOf(type) !== -1) {
 						scrollToNewest("events")
 					}
 
@@ -460,6 +470,12 @@
 					// animate on setup, start, execution & murder, end
 						if (["setup-name", "start-story", "story-execution", "story-murder", "end-good", "end-evil"].indexOf(type) !== -1) {
 							buildGhosts(5, false)
+						}
+
+					// activate chat on telepath or killer
+						if (type == "special-telepath" || type == "start-evil") {
+							document.getElementById("chats-list").innerHTML = ""
+							document.getElementById("chats").className = ""
 						}
 						
 					// switch chats on ghost
@@ -599,11 +615,6 @@
 					// activate notes
 						if (data.start) {
 							document.getElementById("notes").className = ""
-						}
-
-					// activate chat
-						if ((data.start) && (["killer", "ghost", "telepath"].indexOf(data.role) !== -1)) {
-							document.getElementById("chats").className = ""
 						}
 
 					// new chats

@@ -57,8 +57,7 @@
 				name: null,
 				colors: {
 					shirt: null,
-					pants: null,
-					shoes: null,
+					pants: null
 				},
 				status: {
 					alive: true,
@@ -96,7 +95,7 @@
 						callback({success: false, message: "This game is maxed out!"})
 					}
 					else if (games[0].players[request.session.id]) {
-						callback({success: false, message: "You've already joined this game."})
+						callback({success: true, message: "You've already joined this game.", location: "../../game/" + games[0].id.substring(0,4)})
 					}
 					else if (games[0].state.start) {
 						callback({success: false, message: "This game has already started."})

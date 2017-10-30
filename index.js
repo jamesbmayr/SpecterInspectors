@@ -64,6 +64,8 @@
 								case (/\/favicon[.]ico$/).test(request.url):
 								case (/\/icon[.]png$/).test(request.url):
 								case (/\/logo[.]png$/).test(request.url):
+								case (/\/apple\-touch\-icon[.]png$/).test(request.url):
+								case (/\/apple\-touch\-icon\-precomposed[.]png$/).test(request.url):
 									try {
 										response.writeHead(200, {"Content-Type": "image/png"});
 										response.end(fs.readFileSync("./main/logo.png"), "binary");
