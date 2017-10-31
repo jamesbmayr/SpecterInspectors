@@ -510,11 +510,27 @@
 							}
 						}
 
-					// move triggers on decision-complete, execution-complete, murder-complete, and dream-complete
-						if (["decision-complete", "execution-complete", "murder-complete", "dream-complete"].indexOf(type) !== -1) {
-							var triggers = Array.prototype.slice.call(document.getElementsByClassName("trigger-sleep:last-child, trigger-wake:last-child"))
-							var trigger = triggers[triggers.length - 1]
-							console.log(trigger)
+					// enable force-day and force-night after 2 minutes
+						if (type == "force-day" || type == "force-night") {
+							disableEvent(event.id)
+
+							setTimeout(function () {
+								enableEvent(event.id)
+
+								// fade in
+									eventBlock.style.opacity = 0
+									var eventFadein = setInterval(function() { // fade in
+										var opacity = Number(eventBlock.style.opacity)
+
+										if (opacity < 1) {
+											eventBlock.style.opacity = ((opacity * 100) + 5) / 100
+										}
+										else {
+											clearInterval(eventFadein)
+										}
+									}, 100)
+									
+							}, 1000 * 60 * 2)
 						}
 			}
 		}

@@ -39,6 +39,8 @@
 			}
 
 			request.game.players[request.session.id] = createPlayer(request)
+			request.game.players[request.session.id].status.creator = true
+			
 			var queueEvent = game.createQueueEvent(request, {author: "welcome"})
 				request.game.events[queueEvent.id] = queueEvent
 			var welcomeEvent = game.createActionEvent(request, {type: "setup-welcome", queue: queueEvent.id})

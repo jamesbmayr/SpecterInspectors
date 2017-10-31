@@ -227,10 +227,12 @@
 
 								case "start-role":
 								case "trigger-wake":
+								case "force-day":
 									createDay(request, callback)
 								break
 
 								case "trigger-sleep":
+								case "force-night":
 									createNight(request, callback)
 								break
 
@@ -311,6 +313,10 @@
 						
 						case "start-day":
 							event.text = "Every day, each living player can nominate someone they suspect... for execution! If a simple majority approves, the player is put to death and becomes a ghost. (Only one person can be executed each day.)"
+						break
+
+						case "start-creator":
+							event.text = "You made this game, so you can force it forward if it gets stuck - a trigger will appear 2 minutes into each day and night. Only force it forward when absolutely necessary."
 						break
 						
 						case "start-evil":
@@ -547,6 +553,13 @@
 							event.options = "ready to end the night"
 						break
 
+						case "force-day":
+						case "force-night":
+							event.text = main.chooseRandom(["Did the game get stuck?", "Experiencing issues with the game?", "Did gameplay come to a screeching halt due to technical issues?", "Are there bugs? It's bugs, isn't it. Oh well... you can push the game ahead if you need to.", "Only force the game forward if there are technical problems.", "Is Specter Inspectors glitching out?", "Is everyone unable to move forward in the game because of errors?", "Do you need to force the next stage of the game due to errors?", "Did the game get stuck? You can push it forward if you need to."])
+							event.input = "okay"
+							event.options = "force it forward"
+						break
+
 					// execution
 						case "execution-nomination":
 							event.text = main.chooseRandom(["Who do you want to point the finger at for these deaths?", "Who dunnit?", "Who is the killer?", "Who do you blame for the murder?", "Somebody's gotta pay for this murder. But who?", "Who is responsible for this atrocious murder?", "Someone did it - someone killed 'em - but who?", "Who should we execute for committing these crimes?", "One of us is the killer... but which one of us?", "Who deserves to be executed?"])
@@ -698,7 +711,7 @@
 
 					case "clairvoyant":
 						var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>And you can sense magic around people - but only once their souls have left their bodies. That means you can determine if the recently deceased have special magical abilities. <br>(telepath, augur, medium, seer, psychic, empath, immortal, necromancer, spellcaster, obscurer, dreamsnatcher)"
-						var short = "good, magic; learns magic-ness of each executed or murdered player"
+						var short = "good, magic; learns if a player was magic (upon execution or murder)"
 					break
 
 					case "medium":
@@ -786,29 +799,31 @@
 					var set = {}
 						set.updated = new Date().getTime()
 						set["events." + request.event.id + ".doers"] = request.event.doers = []
-						set["events." +         queue.id + ".doers"] = queue.doers = queue.doers.filter(function (p) { return p !== request.session.id })
+
+					var pull = {}
+						pull["events." +        queue.id + ".doers"] = request.session.id
+						queue.doers = queue.doers.filter(function (p) { return p !== request.session.id })
 
 					if (typeof request.post.value !== "undefined" && request.post.value !== null) {
 						set["events." + request.event.id + ".answer"] = request.event.answer = request.post.value
 						set["events." + queue.id + ".results." + request.session.id] = queue.results[request.session.id] = request.post.value
 					}
 				
-					main.storeData("games", {id: request.game.id}, {$set: set}, {}, function (game) {
+					main.storeData("games", {id: request.game.id}, {$set: set, $pull: pull}, {}, function (game) {
 						if (!game) {
 							// undo
 								var set = {}
-								set.updated = new Date().getTime()
-								
-								request.event.doers.push(request.session.id)
-								set["events." + request.event.id + ".doers"] = request.event.doers
-								set["events." + request.event.id + ".answer"] = null
+									set.updated = new Date().getTime()
+									set["events." + request.event.id + ".doers"]  = request.event.doers  = [request.session.id]
+									set["events." + request.event.id + ".answer"] = request.event.answer = null
+									set["events." + queue.id + ".results." + request.session.id] = queue.results[request.session.id] = null
 
-								queue.doers.push(request.session.id)
-								set["events." +         queue.id + ".doers"] = queue.doers
+								var push = {}
+									queue.doers.push(request.session.id)
+									push["events." +         queue.id + ".doers"] = queue.doers
 								
 								main.logError("queue error: " + queue.id)
-								main.storeData("games", {id: request.game.id}, {$set: set}, {}, function (data) {
-									var waitingEvent = createStaticEvent(request, {type: "decision-waiting", viewers: [request.session.id]})
+								main.storeData("games", {id: request.game.id}, {$set: set, $push: push}, {}, function (data) {
 									failure({success: false, message: "Unable to submit response"})
 								})
 						}
@@ -1123,8 +1138,8 @@
 	/* createDay */
 		module.exports.createDay = createDay
 		function createDay(request, callback) {
-			if (["start-role", "trigger-wake"].indexOf(request.event.type) == -1) {
-				callback({success: false, message: "You can't create a day from this event."})
+			if (["start-role", "trigger-wake", "force-day"].indexOf(request.event.type) == -1) {
+				callback({success: false, message: "You cannot create a day from this event."})
 			}
 			else if (!request.game.state.start) {
 				callback({success: false, message: "This game has not started."})
@@ -1289,9 +1304,17 @@
 							var firstDayEvent = createStaticEvent(request, {type: "start-day"})
 							set["events." + firstDayEvent.id] = firstDayEvent
 							myEvents.push(firstDayEvent)
+
+						// start-creator
+							var creator = players.find(function (p) { return request.game.players[p].status.creator })
+							var creatorEvent = createStaticEvent(request, {type: "start-creator", viewers: [creator]})
+							set["events." + creatorEvent.id] = creatorEvent
+							if (creator == request.session.id) {
+								myEvents.push(creatorEvent)
+							}
 							
 						// start-evil
-							var evil = Object.keys(request.game.players).filter(function (p) {
+							var evil = players.filter(function (p) {
 								return !request.game.players[p].status.good
 							})
 							
@@ -1461,9 +1484,21 @@
 									if (players[p] == request.session.id) {
 										myEvents.push(sleepEvent)
 									}
-								}								
+								}
 
-							// execution-nomination and sleep								
+							// force-night
+								var creator = players.find(function (p) { return request.game.players[p].status.creator })
+								var forceQueue = createQueueEvent(request, {for: "story-night", doers: [creator]})
+								set["events." + forceQueue.id] = forceQueue
+
+								var forceEvent = createActionEvent(request, {type: "force-night", viewers: [creator], doers: [creator], queue: forceQueue.id})
+								set["events." + forceEvent.id] = forceEvent
+
+								if (creator == request.session.id) {
+									myEvents.push(forceEvent)
+								}
+
+							// execution-nomination
 								for (var a in alive) {
 									var others = alive.filter(function (p) { return p !== alive[a] })
 									var nominationEvent = createActionEvent(request, {type: "execution-nomination", viewers: [alive[a]], doers: [alive[a]], options: main.sortRandom(others)})
@@ -1496,7 +1531,7 @@
 	/* createNight */
 		module.exports.createNight = createNight
 		function createNight(request, callback) {
-			if (["trigger-sleep"].indexOf(request.event.type) == -1) {
+			if (["trigger-sleep", "force-night"].indexOf(request.event.type) == -1) {
 				callback({success: false, message: "You cannot create a night from this event."})
 			}
 			else if (!request.game.state.start) {
@@ -1633,6 +1668,18 @@
 							if (persons[p] == request.session.id) {
 								myEvents.push(randomEvent)
 							}
+						}
+
+					// force-day
+						var creator = players.find(function (p) { return request.game.players[p].status.creator })
+						var forceQueue = createQueueEvent(request, {for: "story-day", doers: [creator]})
+						set["events." + forceQueue.id] = forceQueue
+
+						var forceEvent = createActionEvent(request, {type: "force-day", viewers: [creator], doers: [creator], queue: forceQueue.id})
+						set["events." + forceEvent.id] = forceEvent
+
+						if (creator == request.session.id) {
+							myEvents.push(forceEvent)
 						}
 
 					// update data and make new events

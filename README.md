@@ -79,7 +79,7 @@ a game of ghosts and guesses: http://www.specterinspectors.com
 
 • *augur*: good, magic; learns allegiance of each executed player
 
-• *clairvoyant*: good, magic; learns magic-ness of each executed or murdered player
+• *clairvoyant*: good, magic; learns if a player was magic (upon execution or murder)
 
 • *medium*: good, magic; sees name of ghost sending each dream received
 

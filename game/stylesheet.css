@@ -459,6 +459,16 @@
 			padding-bottom: 80px;
 		}
 
+		.event.force-night, .event.force-day {
+			order: 100001;
+			padding-bottom: 80px;
+			box-shadow: 0px 0px 80px black inset;
+		}
+
+		.event.force-night[disabled]:not([disabled="false"]), .event.force-day[disabled]:not([disabled="false"]) {
+			display: none;
+		}
+
 		.event.end-good, .event.end-evil {
 			order: 100001;
 			padding-bottom: 80px;
@@ -503,4 +513,5 @@
 
 		.special-text.black {
 			color: black;
+			text-shadow: 0px 0px 2px #dddddd;
 		}
