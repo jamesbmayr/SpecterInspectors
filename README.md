@@ -140,8 +140,8 @@ a game of ghosts and guesses: http://www.specterinspectors.com
 |   |- stylesheet.css
 |   |- script.js (isNumLet, isEmail, sanitizeString, displayError, buildGhosts, animateGhosts, sendPost)
 |   |
-|   |- logo_100.png
-|   |- logo_1000.png
+|   |- banner.png
+|   |- logo.png
 |   |- logo.svg
 |   |- _404.html
 |
