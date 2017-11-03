@@ -312,7 +312,7 @@
 						day:     request.game.state.day   || 0,
 						night:   request.game.state.night || false,
 						type:    data.type    || "error",
-						viewers: data.viewers || Object.keys(request.game.players),
+						viewers: data.viewers || Object.keys(request.game.players).concat(["*"]),
 						doers:   []
 					}
 
@@ -1842,7 +1842,7 @@
 
 						//ghostpoll event
 							var ghosts = players.filter(function (p) { return !request.game.players[p].status.alive })
-							var ghostpollEvent = createStaticEvent(request, {type: "story-ghostpoll", author: request.game.players[request.session.id].name, target: request.game.players[request.post.value].name, viewers: ghosts})
+							var ghostpollEvent = createStaticEvent(request, {type: "story-ghostpoll", author: request.game.players[request.session.id].name, target: request.game.players[request.post.value].name, viewers: ghosts.concat(["*"]) })
 							set["events." + ghostpollEvent.id] = ghostpollEvent
 
 						// special-psychic
