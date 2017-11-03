@@ -144,8 +144,10 @@
 												if (!games) {
 													_302()
 												}
-												else if (Object.keys(games[0].players).indexOf(request.session.id) == -1) {
-													_302()
+												else if (Object.keys(games[0].players).indexOf(request.session.id) == -1) { // observer
+													request.session.id = "*"
+													request.game = games[0]
+													response.end(main.renderHTML(request, "./game/index.html"))
 												}
 												else {
 													request.game = games[0]
