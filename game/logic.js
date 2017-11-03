@@ -404,7 +404,7 @@
 							break
 
 							case "special-ghost":
-								event.text = "As a ghost, you can't talk to the living, but you can still communicate! Every night, you can send someone a dream to give them clues about who the killers might be! <br>Just keep in mind that " + request.game.flavor.ghost + " is also sending dreams... but is pretty clueless about who the killers are."
+								event.text = "As a ghost, you can't talk to the living, but you can still communicate! Every night, you can send someone a dream to give them clues about who the evil people might be! <br>Just keep in mind that " + request.game.flavor.ghost + " is also sending dreams... and knows exactly who the killers are."
 							break
 
 							case "murder-ghost":
@@ -1421,16 +1421,24 @@
 								// ai dream
 									var sleepers = players.filter(function(s) {
 										return (request.game.players[s].status.alive && (killed.indexOf(s) == -1) && (s !== insomniac)) // special-insomniac
-									})
+									}) || []
 
-									var suspect   = main.chooseRandom(sleepers)
-									var slumberer = main.chooseRandom(sleepers)
+									var evilLiving = players.filter(function (p) {
+										return (request.game.players[p].status.alive && !request.game.players[p].status.good) 
+									}) || []
+
+									var goodLiving = players.filter(function (p) {
+										return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (p !== insomniac) && request.game.players[p].status.good)
+									}) || []
+
+									var suspect   = main.chooseRandom(evilLiving)
+									var slumberer = main.chooseRandom(goodLiving)
 									var item      = main.chooseRandom(["shirt", "pants"])
 
-									var aiDreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [slumberer, seer, dreamsnatcher], color: request.game.players[suspect].colors[item]}) // special-seer
+									var aiDreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [slumberer, seer, dreamsnatcher], color: request.game.players[suspect].colors[item]}) // special-seer // special-dreamsnatcher
 									set["events." + aiDreamEvent.id] = aiDreamEvent
 
-									if ((slumberer == request.session.id) || (request.session.id == seer)) { // special-seer
+									if ((slumberer == request.session.id) || (request.session.id == seer) || (request.session.id == dreamsnatcher)) { // special-seer // special-dreamsnatcher
 										myEvents.push(aiDreamEvent)
 									}
 
@@ -1454,7 +1462,7 @@
 											sleepers = sleepers.filter(function (p) { return p !== dream.target })
 											
 											if (request.game.players[dream.target].status.alive && (killed.indexOf(dream.target) == -1) && (dream.target !== insomniac)) { // special-insomniac
-												var dreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [dream.target, seer, dreamsnatcher], color: dream.color}) // special-seer
+												var dreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [dream.target, seer, dreamsnatcher], color: dream.color}) // special-seer // special-dreamsnatcher
 												set["events." + dreamEvent.id] = dreamEvent
 
 												if ((dream.target == request.session.id) || request.session.id == seer || request.session.id == dreamsnatcher) { // special-seer // special-dreamsnatcher
