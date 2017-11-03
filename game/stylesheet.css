@@ -148,13 +148,6 @@
 			-ms-overflow-style: none;
 		}
 
-		@-moz-document url-prefix() {
-			#chats-list {
-				width: calc(100% + 1000px);
-				padding-right: 1000px;
-			}
-		}
-
 	/* chats input */
 		#chats-input {
 			position: absolute;
@@ -193,12 +186,6 @@
 			border-width: 1px 0px 0px 0px;
 			margin: 10px 0px 10px 0px;
 			float: left;
-		}
-
-		@-moz-document url-prefix() {
-			.chat {
-				border: 0px;
-			}
 		}
 
 		.chat-info {
@@ -263,12 +250,6 @@
 			display: flex;
 			flex-direction: column;
 			align-self: stretch;
-		}
-
-		@-moz-document url-prefix() { /* hide firefox scrollbars */
-			#events-list {
-				width: calc(100% + 15px);
-			}
 		}
 
 		.event {
