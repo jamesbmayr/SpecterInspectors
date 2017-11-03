@@ -31,57 +31,67 @@
 	/* getEnvironment */
 		module.exports.getEnvironment = getEnvironment
 		function getEnvironment(index) {
-			if (process.env.DOMAIN !== undefined) {
-				var environment = {
-					port:              process.env.PORT,
-					domain:            process.env.DOMAIN,
-					database_username: process.env.MLABS_USERNAME,
-					database_password: process.env.MLABS_PASSWORD,
-					database_url:"@" + process.env.MLABS_URL
+			try {
+				if (process.env.DOMAIN !== undefined) {
+					var environment = {
+						port:              process.env.PORT,
+						domain:            process.env.DOMAIN,
+						database_username: process.env.MLABS_USERNAME,
+						database_password: process.env.MLABS_PASSWORD,
+						database_url:"@" + process.env.MLABS_URL
+					}
 				}
-			}
-			else {
-				var environment = {
-					port:              3000,
-					domain:            "localhost",
-					database_username: "localhost",
-					database_password: "",
-					database_url:      "27017/specterinspectors"
+				else {
+					var environment = {
+						port:              3000,
+						domain:            "localhost",
+						database_username: "localhost",
+						database_password: "",
+						database_url:      "27017/specterinspectors"
+					}
 				}
-			}
 
-			return environment[index]
+				return environment[index]
+			}
+			catch (error) {
+				logError(error)
+				return false
+			}
 		}
 
 	/* getAsset */
 		module.exports.getAsset = getAsset
 		function getAsset(index) {
-			switch (index) {
+			try {
+				switch (index) {
+					case "logo":
+						return "logo.png"
+					break
+					
+					case "google fonts":
+						return '<link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700" rel="stylesheet">'
+					break
 
-				case "logo":
-					return "logo.png"
-				break
-				
-				case "google fonts":
-					return '<link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700" rel="stylesheet">'
-				break
+					case "meta":
+						return '<meta charset="UTF-8"/>\
+								<meta name="description" content="Specter Inspectors is a game of ghosts and guesses."/>\
+								<meta name="keywords" content="game,ghost,guess,mystery,deduction,bluffing,team,deception"/>\
+								<meta name="author" content="James Mayr"/>\
+								<meta property="og:title" content="Specter Inspectors: a game of ghosts and guesses"/>\
+								<meta property="og:url" content="http://www.specterinspectors.com"/>\
+								<meta property="og:description" content="Specter Inspectors is a game of ghosts and guesses."/>\
+								<meta property="og:image" content="http://www.specterinspectors.com/banner.png"/>\
+								<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>'
+					break
 
-				case "meta":
-					return '<meta charset="UTF-8"/>\
-							<meta name="description" content="Specter Inspectors is a game of ghosts and guesses."/>\
-							<meta name="keywords" content="game,ghost,guess,mystery,deduction,bluffing,team,deception"/>\
-							<meta name="author" content="James Mayr"/>\
-							<meta property="og:title" content="Specter Inspectors: a game of ghosts and guesses"/>\
-							<meta property="og:url" content="http://www.specterinspectors.com"/>\
-							<meta property="og:description" content="Specter Inspectors is a game of ghosts and guesses."/>\
-							<meta property="og:image" content="http://www.specterinspectors.com/banner.png"/>\
-							<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>'
-				break
-
-				default:
-					return null
-				break
-
+					default:
+						return null
+					break
+				}
+			}
+			catch (error) {
+				logError(error)
+				return false
 			}
 		}
 
@@ -89,63 +99,81 @@
 	/* isReserved */
 		module.exports.isReserved = isReserved
 		function isReserved(string) {
-			var reservations = ["home","welcome","admin","test","feedback","help","preferences","settings","data","database",
-				"signup","signin","signout","login","logout","verify","validate","verification","validation","verified","validated",
-				"user","users","game","games","tutorial","tutorials","statistic","statistics","guest","guests","example","examples",
-				"create","new","delete","read","start","go","all"]
+			try {
+				var reservations = ["home","welcome","admin","test","feedback","help","preferences","settings","data","database",
+					"signup","signin","signout","login","logout","verify","validate","verification","validation","verified","validated",
+					"user","users","game","games","tutorial","tutorials","statistic","statistics","guest","guests","example","examples",
+					"create","new","delete","read","start","go","all"]
 
-			return (reservations.indexOf(string.toLowerCase().replace(/\s/g,"")) > -1)
+				return (reservations.indexOf(string.toLowerCase().replace(/\s/g,"")) > -1)
+			}
+			catch (error) {
+				logError(error)
+				return true
+			}
 		}
 
 	/* isNumLet */
 		module.exports.isNumLet = isNumLet
 		function isNumLet(string) {
-			return (/^[a-z0-9A-Z_\s]+$/).test(string)
+			try {
+				return (/^[a-z0-9A-Z_\s]+$/).test(string)
+			}
+			catch (error) {
+				logError(error)
+				return false
+			}
 		}
 
 	/* isBot */
 		module.exports.isBot = isBot
 		function isBot(agent) {
-			switch (true) {
-				case (agent.indexOf("Googlebot") !== -1):
-					return "Googlebot"
-				break
-			
-				case (agent.indexOf("Google Domains") !== -1):
-					return "Google Domains"
-				break
-			
-				case (agent.indexOf("Google Favicon") !== -1):
-					return "Google Favicon"
-				break
-			
-				case (agent.indexOf("https://developers.google.com/+/web/snippet/") !== -1):
-					return "Google+ Snippet"
-				break
-			
-				case (agent.indexOf("IDBot") !== -1):
-					return "IDBot"
-				break
-			
-				case (agent.indexOf("Baiduspider") !== -1):
-					return "Baiduspider"
-				break
-			
-				case (agent.indexOf("facebook") !== -1):
-					return "Facebook"
-				break
+			try {
+				switch (true) {
+					case (agent.indexOf("Googlebot") !== -1):
+						return "Googlebot"
+					break
+				
+					case (agent.indexOf("Google Domains") !== -1):
+						return "Google Domains"
+					break
+				
+					case (agent.indexOf("Google Favicon") !== -1):
+						return "Google Favicon"
+					break
+				
+					case (agent.indexOf("https://developers.google.com/+/web/snippet/") !== -1):
+						return "Google+ Snippet"
+					break
+				
+					case (agent.indexOf("IDBot") !== -1):
+						return "IDBot"
+					break
+				
+					case (agent.indexOf("Baiduspider") !== -1):
+						return "Baiduspider"
+					break
+				
+					case (agent.indexOf("facebook") !== -1):
+						return "Facebook"
+					break
 
-				case (agent.indexOf("bingbot") !== -1):
-					return "BingBot"
-				break
+					case (agent.indexOf("bingbot") !== -1):
+						return "BingBot"
+					break
 
-				case (agent.indexOf("YandexBot") !== -1):
-					return "YandexBot"
-				break
+					case (agent.indexOf("YandexBot") !== -1):
+						return "YandexBot"
+					break
 
-				default:
-					return null
-				break
+					default:
+						return null
+					break
+				}
+			}
+			catch (error) {
+				logError(error)
+				return false
 			}
 		}
 
@@ -153,82 +181,106 @@
 	/* renderHTML */
 		module.exports.renderHTML = renderHTML
 		function renderHTML(request, file) {
-			var html = {}
-				html.original = fs.readFileSync(file).toString()
-				html.array = html.original.split(/<script\snode>|<\/script>node>/gi)
+			try {
+				var html = {}
+					html.original = fs.readFileSync(file).toString()
+					html.array = html.original.split(/<script\snode>|<\/script>node>/gi)
 
-			for (html.count = 1; html.count < html.array.length; html.count += 2) {
-				try {
-					html.temp = eval(html.array[html.count])
+				for (html.count = 1; html.count < html.array.length; html.count += 2) {
+					try {
+						html.temp = eval(html.array[html.count])
+					}
+					catch (error) {
+						html.temp = ""
+						logError("<sn>" + Math.ceil(html.count / 2) + "</sn>\n" + error)
+					}
+					html.array[html.count] = html.temp
 				}
-				catch (error) {
-					html.temp = ""
-					logError("<sn>" + Math.ceil(html.count / 2) + "</sn>\n" + error)
-				}
-				html.array[html.count] = html.temp
+
+				return html.array.join("")
 			}
-
-			return html.array.join("")
+			catch (error) {
+				logError(error)
+				return ""
+			}
 		}
 
 	/* generateRandom */
 		module.exports.generateRandom = generateRandom
 		function generateRandom(set, length) {
-			set = set || "0123456789abcdefghijklmnopqrstuvwxyz"
-			length = length || 32
-			
-			var output = ""
-			for (var i = 0; i < length; i++) {
-				output += (set[Math.floor(Math.random() * set.length)])
-			}
-
-			if ((/[a-zA-Z]/).test(set)) {
-				while (!(/[a-zA-Z]/).test(output[0])) {
-					output = (set[Math.floor(Math.random() * set.length)]) + output.substring(1)
+			try {
+				set = set || "0123456789abcdefghijklmnopqrstuvwxyz"
+				length = length || 32
+				
+				var output = ""
+				for (var i = 0; i < length; i++) {
+					output += (set[Math.floor(Math.random() * set.length)])
 				}
-			}
 
-			return output
+				if ((/[a-zA-Z]/).test(set)) {
+					while (!(/[a-zA-Z]/).test(output[0])) {
+						output = (set[Math.floor(Math.random() * set.length)]) + output.substring(1)
+					}
+				}
+
+				return output
+			}
+			catch (error) {
+				logError(error)
+				return null
+			}
 		}
 
 	/* chooseRandom */
 		module.exports.chooseRandom = chooseRandom
 		function chooseRandom(options) {
-			if (!Array.isArray(options)) {
-				return false
+			try {
+				if (!Array.isArray(options)) {
+					return false
+				}
+				else {
+					return options[Math.floor(Math.random() * options.length)]
+				}
 			}
-			else {
-				return options[Math.floor(Math.random() * options.length)]
+			catch (error) {
+				logError(error)
+				return false
 			}
 		}
 
 	/* sortRandom */
 		module.exports.sortRandom = sortRandom
 		function sortRandom(input) {
-			// duplicate array
-				var array = []
-				for (var i in input) {
-					array[i] = input[i]
-				}
+			try {
+				// duplicate array
+					var array = []
+					for (var i in input) {
+						array[i] = input[i]
+					}
 
-			// fisher-yates shuffle
-				var x = array.length
-				while (x > 0) {
-					var y = Math.floor(Math.random() * x)
-					x = x - 1
-					var temp = array[x]
-					array[x] = array[y]
-					array[y] = temp
-				}
+				// fisher-yates shuffle
+					var x = array.length
+					while (x > 0) {
+						var y = Math.floor(Math.random() * x)
+						x = x - 1
+						var temp = array[x]
+						array[x] = array[y]
+						array[y] = temp
+					}
 
-			return array
+				return array
+			}
+			catch (error) {
+				logError(error)
+				return false
+			}
 		}
 
 	/* locateIP */
 		module.exports.locateIP = locateIP
 		function locateIP(id, ip) {
-			if (ip && ip.length >= 7) {
-				try {
+			try {
+				if (ip && ip.length >= 7) {
 					var apiRequest = http.request({
 						method: "POST",
 						host: "www.ip-api.com",
@@ -268,19 +320,20 @@
 					apiRequest.write("")
 					apiRequest.end()
 				}
-				catch (error) {
-					logError(error)
-				}
+			}
+			catch (error) {
+				logError(error)
 			}
 		}
 
 	/* sanitizeString */
 		module.exports.sanitizeString = sanitizeString
 		function sanitizeString(string) {
-			if (string.length > 0) {
+			try {
 				return string.replace(/[^a-zA-Z0-9_\s\!\@\#\$\%\^\&\*\(\)\+\=\-\[\]\\\{\}\|\;\'\:\"\,\.\/\<\>\?]/gi, "")
 			}
-			else {
+			catch (error) {
+				logError(error)
 				return ""
 			}
 		}
@@ -289,93 +342,99 @@
 	/* determineSession */
 		module.exports.determineSession = determineSession
 		function determineSession(request, callback) {
-			// new activity
-				var activity = {}
-				if (!request.post || request.post.action !== "fetchData") {
-					activity.time = new Date().getTime()
-					activity.url  = request.url
-					activity.post = request.post ? request.post.action : null
-				}
+			try {
+				// new activity
+					var activity = {}
+					if (!request.post || request.post.action !== "fetchData") {
+						activity.time = new Date().getTime()
+						activity.url  = request.url
+						activity.post = request.post ? request.post.action : null
+					}
 
-			// new session
-				if (!request.cookie.session || request.cookie.session == null) {
-					request.session = {
-						id: generateRandom(),
-						created: new Date().getTime(),
-						updated: new Date().getTime(),
-						info: {
-							"ip":         request.ip,
-							"user-agent": request.headers["user-agent"],
-							"language":   request.headers["accept-language"],
-							name:         isBot(request.headers["user-agent"]),
-							org:          null,
-							isp:          null,
-							city:         null,
-							state:        null,
-							country:      null,
-						},
-						activity: [
-							activity,
-							{
-								time:         new Date().getTime(),
+				// new session
+					if (!request.cookie.session || request.cookie.session == null) {
+						request.session = {
+							id: generateRandom(),
+							created: new Date().getTime(),
+							updated: new Date().getTime(),
+							info: {
 								"ip":         request.ip,
 								"user-agent": request.headers["user-agent"],
 								"language":   request.headers["accept-language"],
-							}
-						]
+								name:         isBot(request.headers["user-agent"]),
+								org:          null,
+								isp:          null,
+								city:         null,
+								state:        null,
+								country:      null,
+							},
+							activity: [
+								activity,
+								{
+									time:         new Date().getTime(),
+									"ip":         request.ip,
+									"user-agent": request.headers["user-agent"],
+									"language":   request.headers["accept-language"],
+								}
+							]
+						}
+
+						storeData("sessions", null, request.session, {}, function (results) {
+							locateIP(request.session.id, request.ip)
+							callback()
+						})
 					}
 
-					storeData("sessions", null, request.session, {}, function (results) {
-						locateIP(request.session.id, request.ip)
-						callback()
-					})
-				}
+				// existing session
+					else {
+						var push = {}
+							push.activity = activity
+						var set = {}
+							set.updated = new Date().getTime()
 
-			// existing session
-				else {
-					var push = {}
-						push.activity = activity
-					var set = {}
-						set.updated = new Date().getTime()
+						storeData("sessions", {id: request.cookie.session}, {$push: push, $set: set}, {}, function (result) {
+							// invalid session id
+								if (!result) {
+									request.cookie.session = false
+									determineSession(request, callback)
+								}
 
-					storeData("sessions", {id: request.cookie.session}, {$push: push, $set: set}, {}, function (result) {
-						// invalid session id
-							if (!result) {
-								request.cookie.session = false
-								determineSession(request, callback)
-							}
+							// new ip address
+								else if (result.info.ip !== request.ip) {
+									request.session = result
 
-						// new ip address
-							else if (result.info.ip !== request.ip) {
-								request.session = result
+									var activity = {}
+										activity.time =          new Date().getTime()
+										activity["ip"] =         request.ip
+										activity["user-agent"] = request.headers["user-agent"]
+										activity["language"] =   request.headers["accept-language"]
 
-								var activity = {}
-									activity.time =          new Date().getTime()
-									activity["ip"] =         request.ip
-									activity["user-agent"] = request.headers["user-agent"]
-									activity["language"] =   request.headers["accept-language"]
+									var push = {}
+										push.activity = activity
+									var set = {}
+										set["info.ip"] = request.ip
+										set["info.user-agent"] = request.headers["user-agent"]
+										set["info.accept-language"] = request.headers["accept-language"]
+										set.updated = new Date().getTime()
 
-								var push = {}
-									push.activity = activity
-								var set = {}
-									set["info.ip"] = request.ip
-									set["info.user-agent"] = request.headers["user-agent"]
-									set["info.accept-language"] = request.headers["accept-language"]
-									set.updated = new Date().getTime()
+									storeData("sessions", {id: result.id}, {$push: push, $set: set}, {}, function (result) {
+										locateIP(request.session.id, request.ip)
+										callback()
+									})
+								}
 
-								storeData("sessions", {id: result.id}, {$push: push, $set: set}, {}, function (result) {
-									locateIP(request.session.id, request.ip)
+							// others
+								else {
+									request.session = result
 									callback()
-								})
-							}
-
-						// others
-							else {
-								request.session = result
-								callback()
-							}
-					})
-				}
+								}
+						})
+					}
+			}
+			catch (error) {
+				logError(error)
+				callback()
+			}
 		}
 
 	/* retrieveData */
