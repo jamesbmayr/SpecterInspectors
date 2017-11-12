@@ -16,7 +16,7 @@
 		<div id="graveyard"></div>
 		<div id="error" class="hidden"></div>
 		<div id="container">
-			<div id="notes" class="<script node>if (!request.game.state.start) { 'invisible' }</script>node>">
+			<div id="notes" class="<script node>if (!request.game.state.start || !player) { 'invisible' }</script>node>">
 				<div class="content">
 					<div class="header">Notes</div>
 					<textarea id="notes-input" placeholder="add your notes here" rows="5" value="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><script node>player ? player.notes : ""</script>node></textarea>
@@ -29,7 +29,6 @@
 					<div class="header">Specter Inspectors</div>
 					<div id="events-list">
 						<script node>
-							var playerIDs = Object.keys(request.game.players)
 							var events = Object.keys(request.game.events).filter(function(e) {
 								return request.game.events[e].viewers.indexOf(request.session.id) !== -1
 							})
@@ -121,7 +120,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="chats" class="<script node>if (player.status.alive && player.status.good && (player.status.role !== 'telepath')) { 'hidden' }</script>node>">
+			<div id="chats" class="<script node>if (!player || (player.status.alive && player.status.good && (player.status.role !== 'telepath')) ) { 'hidden' }</script>node>">
 				<button class="slideContainer" value="left">&#8594;<br><br>&#8594;<br><br>&#8594;</button>
 				<button class="slideContainer" value="right">&#8592;</button>
 				<div class="content">
@@ -129,17 +128,17 @@
 					<input id="chats-input" type="text" placeholder="type your message here" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/><button id="chats-button">&#8595;</button>
 					<div id="chats-list">
 						<script node>
-							if (!player.status.alive) {
+							if (player && !player.status.alive) {
 								var chats = request.game.chats["ghost"].sort(function (x, y) {
 									return x.created - y.created
 								})
 							}
-							else if (!player.status.good) {
+							else if (player && !player.status.good) {
 								var chats = request.game.chats["killer"].sort(function (x, y) {
 									return x.created - y.created
 								})
 							}
-							else if (player.status.role == "telepath") {
+							else if (player && player.status.role == "telepath") {
 								var chats = request.game.chats["telepath"].sort(function (x, y) {
 									return x.created - y.created
 								})

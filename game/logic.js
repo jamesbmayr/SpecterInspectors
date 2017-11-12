@@ -16,11 +16,13 @@
 							main.logError("unable to find game: " + request.path[2].toLowerCase())
 							callback({success: false, message: "This game cannot be found."})
 						}
-						else if (!games[0].players[request.session.id]) {
-							callback({success: false, message: "You're not a player of this game!"})
-						}
 						else {
-							request.game  = games[0]
+							request.game = games[0]
+							
+							// observer
+								if (!request.game.players[request.session.id]) {
+									request.session.id = "*"
+								}
 
 							// events
 								var newEvents = []
@@ -43,15 +45,15 @@
 								var chats    = []
 								var newChats = []
 								var lastChat = false
-								var player   = request.game.players[request.session.id]
+								var player   = request.game.players[request.session.id] || null
 								
-								if (!player.status.alive) { // ghost chat
+								if (player && !player.status.alive) { // ghost chat
 									chats = request.game.chats.ghost
 								}
-								else if (!player.status.good) { // killer chat
+								else if (player && !player.status.good) { // killer chat
 									chats = request.game.chats.killer
 								}
-								else if (player.status.role == "telepath") { // telepath chat
+								else if (player && player.status.role == "telepath") { // telepath chat
 									chats = request.game.chats.telepath
 								}
 
@@ -74,7 +76,7 @@
 								}
 
 							// response
-								callback({success: true, start: request.game.state.start, end: request.game.state.end, day: request.game.state.day, night: request.game.state.night, role: player.status.role, events: newEvents, chats: newChats})
+								callback({success: true, start: request.game.state.start, end: request.game.state.end, day: request.game.state.day, night: request.game.state.night, role: (player ? player.status.role : "observer"), events: newEvents, chats: newChats})
 						}
 					})
 				}
@@ -312,7 +314,7 @@
 						day:     request.game.state.day   || 0,
 						night:   request.game.state.night || false,
 						type:    data.type    || "error",
-						viewers: data.viewers || Object.keys(request.game.players),
+						viewers: data.viewers || Object.keys(request.game.players).concat(["*"]),
 						doers:   []
 					}
 
@@ -1838,7 +1840,7 @@
 
 						//ghostpoll event
 							var ghosts = players.filter(function (p) { return !request.game.players[p].status.alive })
-							var ghostpollEvent = createStaticEvent(request, {type: "story-ghostpoll", author: request.game.players[request.session.id].name, target: request.game.players[request.post.value].name, viewers: ghosts})
+							var ghostpollEvent = createStaticEvent(request, {type: "story-ghostpoll", author: request.game.players[request.session.id].name, target: request.game.players[request.post.value].name, viewers: ghosts.concat(["*"]) })
 							set["events." + ghostpollEvent.id] = ghostpollEvent
 
 						// special-psychic
