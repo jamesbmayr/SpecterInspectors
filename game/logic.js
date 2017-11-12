@@ -354,7 +354,7 @@
 
 						// morning
 							case "story-day":
-								event.text = main.chooseRandom(["The sun is rising here " + request.game.flavor.locale + ".", "A new dawn rises.", "It's the start of a brand new day here " + request.game.flavor.locale + ".", "The next day has begun.", "Goooooood morning!", "The story continues with a new day.", "Day phase, activated.", "The next day has commenced.", "Let us begin a new day.", "Here we go: another day " + request.game.flavor.locale + ".", "You wake up once again " + request.game.flavor.locale + ".", "New day. Still alive. Still " + request.game.flavor.locale + "."])
+								event.text = main.chooseRandom(["The sun is rising here " + request.game.flavor.locale + ".", "A new dawn rises.", "It's the start of a brand new day here " + request.game.flavor.locale + ".", "The next day has begun.", "Goooooood morning!", "The story continues with a new day.", "Day phase, activated.", "The next day has commenced.", "Let us begin a new day.", "Here we go: another day " + request.game.flavor.locale + ".", "You find yourself once again " + request.game.flavor.locale + ".", "New day. Still " + request.game.flavor.locale + "."])
 							break
 
 							case "story-dream":
@@ -379,11 +379,11 @@
 							break
 
 							case "story-accusation":
-								event.text = "An accusation has been made against you! " + main.chooseRandom(["It appears <span class='special-text'>" + data.author + "</span> thinks it's all your fault.", "Everyone will cast a vote on <span class='special-text'>" + data.author + "</span>'s motion... to kill you.", "Now that <span class='special-text'>" + data.author + "</span> has suggested executing you, everyone will vote... except you.", "Let's see if everyone else agrees with <span class='special-text'>" + data.author + "</span> in executing you.", "Will <span class='special-text'>" + data.author + "</span> get their way, or will you live to fight another day?", "First, <span class='special-text'>" + data.author + "</span> points the finger at you. Now everyone else decides.", "Time to find out if <span class='special-text'>" + data.author + "</span> has convinced the others that you should die."])
+								event.text = "An accusation has been made against you! " + main.chooseRandom(["It appears <span class='special-text'>" + data.author + "</span> thinks it's all your fault.", "Everyone will cast a vote on <span class='special-text'>" + data.author + "</span>'s motion... to execute you.", "Now that <span class='special-text'>" + data.author + "</span> has suggested executing you, everyone will vote... except you.", "Let's see if everyone else agrees with <span class='special-text'>" + data.author + "</span> in executing you.", "Will <span class='special-text'>" + data.author + "</span> get their way, or will you live to fight another day?", "First, <span class='special-text'>" + data.author + "</span> points the finger at you. Now everyone else decides.", "Time to find out if <span class='special-text'>" + data.author + "</span> has convinced the others that you should die."])
 							break
 
 							case "story-ghostpoll":
-								event.text = "An accusation has been made! " + main.chooseRandom(["It appears <span class='special-text'>" + data.author + "</span> thinks it's all <span class='special-text'>" + data.target + "</span>'s fault.", "Everyone will cast a vote on <span class='special-text'>" + data.author + "</span>'s motion... to kill <span class='special-text'>" + data.target + "</span>.", "Now that <span class='special-text'>" + data.author + "</span> has suggested killing <span class='special-text'>" + data.target + "</span>, everyone will vote...", "Let's see if everyone else agrees with <span class='special-text'>" + data.author + "</span> in killing <span class='special-text'>" + data.target + "</span>.", "Will <span class='special-text'>" + data.author + "</span> get their way, or will <span class='special-text'>" + data.target + "</span> live to fight another day?", "First, <span class='special-text'>" + data.author + "</span> points the finger at <span class='special-text'>" + data.target + "</span>. Then everyone else decides.", "Time to find out if <span class='special-text'>" + data.author + "</span> has convinced the others that <span class='special-text'>" + data.target + "</span> should die."])
+								event.text = "An accusation has been made! " + main.chooseRandom(["It appears <span class='special-text'>" + data.author + "</span> thinks it's all <span class='special-text'>" + data.target + "</span>'s fault.", "Everyone will cast a vote on <span class='special-text'>" + data.author + "</span>'s motion... to execute <span class='special-text'>" + data.target + "</span>.", "Now that <span class='special-text'>" + data.author + "</span> has suggested executing <span class='special-text'>" + data.target + "</span>, everyone will vote...", "Let's see if everyone else agrees with <span class='special-text'>" + data.author + "</span> in excuting <span class='special-text'>" + data.target + "</span>.", "Will <span class='special-text'>" + data.author + "</span> get their way, or will <span class='special-text'>" + data.target + "</span> live to fight another day?", "First, <span class='special-text'>" + data.author + "</span> points the finger at <span class='special-text'>" + data.target + "</span>. Then everyone else decides.", "Time to find out if <span class='special-text'>" + data.author + "</span> has convinced the others that <span class='special-text'>" + data.target + "</span> should die."])
 							break
 
 							case "story-execution":
@@ -391,7 +391,7 @@
 							break
 
 							case "story-ghost":
-								event.text = main.chooseRandom(["Well... these things happen, sometimes. Welcome to the afterlife. On the bright side - now you can chat with other ghosts (on the right).", "Not sure how to break it to you... but uh... you're a ghost now. At least there's the ghost chat (on the right)!", "You have shed your mortal skin and ascended into a higher plane of existence - complete with a new chat room (on the right)!", "This is phase 2: ghost time. Check out the ghost chat (on the right)!", "Sorry about your death and everything - but try the new ghost chat (on the right)!", "Whelp, you're dead. But you're not done playing - get in on the ghost chat (on the right)!", "Hey, now you're dead! Just like " + request.game.flavor.ghost + "! Try chatting with other ghosts in the ghost chat (on the right).", "As your soul ascends into the mystical beyond, " + request.game.flavor.ghost + " welcomes, you, saying, Check out the ghost chat on the right."])
+								event.text = main.chooseRandom(["Well... these things happen, sometimes. Welcome to the afterlife, courtesy of <span class='special-text'>" + data.name + "</span>. On the bright side - now you can chat with other ghosts (on the right).", "Not sure how to break it to you... but uh... you're a ghost now. <span class='special-text'>" + data.name + "</span> killed you. At least there's the ghost chat (on the right)!", "Well, <span class='special-text'>" + data.name + "</span> has murdered you. You have shed your mortal skin and ascended into a higher plane of existence - complete with a new chat room (on the right)!", "You're dead. <span class='special-text'>" + data.name + "</span> killed you. But this is phase 2: ghost time. Check out the ghost chat (on the right)!", "Sorry about your death and everything - <span class='special-text'>" + data.name + "</span> is to blame, really - but try the new ghost chat (on the right)!", "Whelp, you're dead, all because of <span class='special-text'>" + data.name + "</span>. But you're not done playing - get in on the ghost chat (on the right)!", "Hey, now you're dead! Just like " + request.game.flavor.ghost + "! Who killed you? <span class='special-text'>" + data.name + "</span>! Try chatting with other ghosts in the ghost chat (on the right).", "As your soul ascends into the mystical beyond, " + request.game.flavor.ghost + " welcomes, you, saying, \"<span class='special-text'>" + data.name + "</span> killed us both. But while you're here, check out the ghost chat on the right.\""])
 							break
 
 						// night
@@ -547,15 +547,15 @@
 							break
 
 							case "setup-shirt":
-								event.text = main.chooseRandom(["In this game, we're gonna need to know what color shirt you're wearing.", "And can I ask what color shirt you've got on?", "This might be a weird question, but, uh... what color is your shirt?", "All right. Can you tell me what color shirt you've got?", "Next thing, believe it or not, is your shirt color."])
+								event.text = main.chooseRandom(["In this game, we're gonna need to know what color shirt you're wearing.", "And can I ask what color shirt you've got on?", "This might be a weird question, but, uh... what color is your shirt?", "All right. Can you tell me what color shirt you've got?", "Next thing, believe it or not, is your shirt color."]) + " Which of these is closest?"
 								event.input = "select"
-								event.options = ["red","orange","yellow","green","blue","purple","brown","white","gray","black"]
+								event.options = ["red","green","blue","white","black"]
 							break
 
 							case "setup-pants":
-								event.text = main.chooseRandom(["We'll also need to know your pants color.", "And what about your pants?", "Trust me, this is important: what color are your pants?", "Great. And can you tell me what color pants you've got?", "Now I'm gonna need to get the color of your pants."])
+								event.text = main.chooseRandom(["We'll also need to know your pants color.", "And what about your pants?", "Trust me, this is important: what color are your pants?", "Great. And can you tell me what color pants you've got?", "Now I'm gonna need to get the color of your pants."]) + " Which of these is closest?"
 								event.input = "select"
-								event.options = ["red","orange","yellow","green","blue","purple","brown","white","gray","black"]
+								event.options = ["red","green","blue","white","black"]
 							break
 
 						// start
@@ -604,7 +604,7 @@
 							case "execution-poll":
 								event.text = main.chooseRandom(["An accusation has been made! " + data.author + " blames <span class='special-text'>" + data.target + "</span>; do you agree?", "What's this? " + data.author + " is pointing the finger at <span class='special-text'>" + data.target + "</span>! What do you think?", "Looks like " + data.author + " thinks <span class='special-text'>" + data.target + "</span> is to blame - do you concur?", "Well, " + data.author + " has accused <span class='special-text'>" + data.target + "</span>. Shall we commence the execution?", "Accusation! " + data.author + " accuses <span class='special-text'>" + data.target + "</span> of murder! What say you?"])
 								event.input = "buttons"
-								event.options = ["not guilty", "guilty"]
+								event.options = ["don't execute", "execute"]
 							break
 
 						// murder
@@ -636,7 +636,7 @@
 							case "dream-color":
 								event.text = main.chooseRandom(["And what color should you send?", "What color is it gonna be?", "Pick a hue:", "Let's determine the color:", "Let's make this more colorful:", "Finally, the color:", "Color it in!", "Send them a hue too...", "Select the right color:", "Let's add a little detail:", "Make everything a specific color:", "Send them a clue in color form...", "How should you shade in the details?"])
 								event.input = "select"
-								event.options = ["red","orange","yellow","green","blue","purple","brown","white","gray","black"]
+								event.options = ["red","green","blue","white","black"]
 							break
 
 						// random
@@ -1220,6 +1220,7 @@
 							var players = Object.keys(request.game.players)
 							var dreams  = Object.keys(request.game.temporary.dreams) || []
 							var killed  = request.game.temporary.killed || []
+							var killer  = request.game.temporary.killer || []
 
 						// set data
 							var myEvents = []
@@ -1428,29 +1429,32 @@
 									}) || []
 
 									var goodLiving = players.filter(function (p) {
-										return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (p !== insomniac) && request.game.players[p].status.good)
+										return (request.game.players[p].status.alive &&  request.game.players[p].status.good && (p !== insomniac))
 									}) || []
 
 									var suspect   = main.chooseRandom(evilLiving)
 									var slumberer = main.chooseRandom(goodLiving)
 									var item      = main.chooseRandom(["shirt", "pants"])
 
-									var aiDreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [slumberer, seer, dreamsnatcher], color: request.game.players[suspect].colors[item]}) // special-seer // special-dreamsnatcher
-									set["events." + aiDreamEvent.id] = aiDreamEvent
+									if (killed.indexOf(slumberer) == -1) {
 
-									if ((slumberer == request.session.id) || (request.session.id == seer) || (request.session.id == dreamsnatcher)) { // special-seer // special-dreamsnatcher
-										myEvents.push(aiDreamEvent)
-									}
+										var aiDreamEvent = createStaticEvent(request, {type: "story-dream", viewers: [slumberer, seer, dreamsnatcher], color: request.game.players[suspect].colors[item]}) // special-seer // special-dreamsnatcher
+										set["events." + aiDreamEvent.id] = aiDreamEvent
 
-									// special-medium
-										if (slumberer == medium) {
-											var mediumEvent = createStaticEvent(request, {type: "special-medium", viewers: [medium], name: request.game.flavor.ghost})
-											set["events." + mediumEvent.id] = mediumEvent
-
-											if (slumberer == request.session.id) {
-												myEvents.push(mediumEvent)
-											}
+										if ((slumberer == request.session.id) || (request.session.id == seer) || (request.session.id == dreamsnatcher)) { // special-seer // special-dreamsnatcher
+											myEvents.push(aiDreamEvent)
 										}
+
+										// special-medium
+											if (slumberer == medium) {
+												var mediumEvent = createStaticEvent(request, {type: "special-medium", viewers: [medium], name: request.game.flavor.ghost})
+												set["events." + mediumEvent.id] = mediumEvent
+
+												if (slumberer == request.session.id) {
+													myEvents.push(mediumEvent)
+												}
+											}
+									}
 
 									sleepers = sleepers.filter(function (p) { return p !== slumberer })
 
@@ -1507,7 +1511,7 @@
 									set["events." + murderEvent.id] = murderEvent
 									myEvents.push(murderEvent)
 
-									var ghostEvent = createStaticEvent(request, {type: "story-ghost", viewers: [killed[k]]})
+									var ghostEvent = createStaticEvent(request, {type: "story-ghost", viewers: [killed[k]], name: request.game.players[killer[0]].name})
 									set["events." + ghostEvent.id] = ghostEvent
 									if (killed[k] == request.session.id) {
 										myEvents.push(ghostEvent)
@@ -1588,6 +1592,7 @@
 
 						// wipe temporary
 							set["temporary.killed"] = request.game.temporary.killed = []
+							set["temporary.killer"] = request.game.temporary.killer = []
 							set["temporary.dreams"] = request.game.temporary.dreams = {}
 
 						// update data and make new events
@@ -1682,21 +1687,25 @@
 
 						// first night only
 							if (request.game.state.day == 1) {
-								var explainEvent = createStaticEvent(request, {type: "start-night"})
-								set["events." + explainEvent.id] = explainEvent
-								myEvents.push(explainEvent)
-							}
+								// explain
+									var explainEvent = createStaticEvent(request, {type: "start-night"})
+									set["events." + explainEvent.id] = explainEvent
+									myEvents.push(explainEvent)
 
-						// wake (for ghosts / killers)
-							for (var p in players) {
-								// alive/good can't see it until after randoms
-									if (persons.indexOf(players[p]) == -1) {
-										var wakeEvent = createActionEvent(request, {type: "trigger-wake", viewers: [players[p]], doers: [players[p]], queue: queueEvent.id})
-										set["events." + wakeEvent.id] = wakeEvent
+								// killers
+									var killerChatEvent = createStaticEvent(request, {type: "special-killer", viewers: killers})
+									set["events." + killerChatEvent.id] = killerChatEvent
 
-										if (players[p] == request.session.id) {
-											myEvents.push(wakeEvent)
-										}
+									if (killers.indexOf(request.session.id) !== -1) {
+										myEvents.push(killerChatEvent)
+									}
+
+								// random
+									var randomExplanation = createStaticEvent(request, {type: "random-why", viewers: persons})
+									set["events." + randomExplanation.id] = randomExplanation
+
+									if (persons.indexOf(request.session.id) !== -1) {
+										myEvents.push(randomExplanation)
 									}
 							}
 						
@@ -1718,28 +1727,11 @@
 								}
 
 								var living = alive
-								var ghostEvent = createActionEvent(request, {type: "dream-name", viewers: [ghosts[g]], doers: [ghosts[g]], queue: queueEvent.id, options: main.sortRandom(living)})
+								var ghostEvent = createActionEvent(request, {type: "dream-name", viewers: [ghosts[g]], doers: [ghosts[g]], queue: queueEvent.id, options: main.sortRandom(alive)})
 								set["events." + ghostEvent.id] = ghostEvent
 
 								if (ghosts[g] == request.session.id) {
 									myEvents.push(ghostEvent)
-								}
-							}
-
-						// first night only
-							if (request.game.state.day == 1) {
-								var killerChatEvent = createStaticEvent(request, {type: "special-killer", viewers: killers})
-								set["events." + killerChatEvent.id] = killerChatEvent
-
-								if (killers.indexOf(request.session.id) !== -1) {
-									myEvents.push(killerChatEvent)
-								}
-
-								var randomExplanation = createStaticEvent(request, {type: "random-why", viewers: persons})
-								set["events." + randomExplanation.id] = randomExplanation
-
-								if (persons.indexOf(request.session.id) !== -1) {
-									myEvents.push(randomExplanation)
 								}
 							}
 
@@ -1748,7 +1740,11 @@
 								var killerEvent = createActionEvent(request, {type: "murder-nomination", options: main.sortRandom(alive), viewers: [killers[k]], doers: [killers[k]]})
 								set["events." + killerEvent.id] = killerEvent
 
+								var wakeEvent = createActionEvent(request, {type: "trigger-wake", viewers: [killers[k]], doers: [killers[k]], queue: queueEvent.id})
+								set["events." + wakeEvent.id] = wakeEvent
+
 								if (killers[k] == request.session.id) {
+									myEvents.push(wakeEvent)
 									myEvents.push(killerEvent)
 								}
 							}
@@ -2201,6 +2197,7 @@
 						// accepted?
 							if (anti.length == 0) { // must be unanimous
 								set["temporary.killed"] = [target]
+								set["temporary.killer"] = [author]
 
 								var nominationEvents = Object.keys(request.game.events).filter(function (e) { return ((request.game.events[e].day == request.game.state.day) && (request.game.events[e].type == "murder-nomination")) })
 								for (var n in nominationEvents) {
@@ -2269,6 +2266,14 @@
 							var dreamEvent = createStaticEvent(request, {type: "dream-complete", viewers: [request.session.id]})
 							set["events." + dreamEvent.id] = dreamEvent
 							myEvents.push(dreamEvent)
+
+
+							var sampleWake = Object.keys(request.game.events).find(function (e) { return ((request.game.events[e].day == request.game.state.day) && (request.game.events[e].type == "trigger-wake"))})
+							var queueID = request.game.events[sampleWake].queue
+							
+							var wakeEvent = createActionEvent(request, {type: "trigger-wake", viewers: [request.session.id], doers: [request.session.id], queue: queueID})
+							set["events." + wakeEvent.id] = wakeEvent
+							myEvents.push(wakeEvent)
 						}
 
 					main.storeData("games", {id: request.game.id}, {$set: set}, {}, function (data) {

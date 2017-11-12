@@ -23,7 +23,8 @@
 					},
 					temporary: {
 						dreams: {},
-						killed: []
+						killed: [],
+						killer: []
 					},
 					flavor: {
 						ghost:     main.chooseRandom(["Petey McPeterson", "Gregorio the Great", "Archduke Ferdinand", "Princess Pomegranate", "Carol from HR", "Millie Miles", "Sam Pats", "Shmorko Jr.", "Anabel Lee", "Santa Claus", "Dudebro", "Vanessa Vines", "Robotron-9000", "Professor Z", "Dr. Rogers", "Gertrude Glarkenstein", "Li'l Bigs", "Mrs. Brinkley", "Paul", "NBA All-Star Jordan McDowell", "Captain Patchwork", "Lady Eliza", "Snuffles", "That Guy From That Party", "Old Man Jenkins", "Steve Stevens", "The Scientist", "Father O'Malley", "Madame LeChat", "Miss Francine"]),
