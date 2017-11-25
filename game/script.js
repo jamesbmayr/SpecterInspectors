@@ -445,12 +445,15 @@
 				// append
 					var events = document.getElementById("events-list")
 						events.appendChild(eventBlock)
-					if (["setup-gamecode", "setup-welcome", "setup-name", "setup-shirt", "setup-pants", "start-launch",
-						"start-story", "start-day", "start-night", "story-day", "story-night", "error",
+					if (["setup-gamecode", "setup-welcome", "setup-name", "setup-shirt", "setup-pants",
+						"start-launch", "start-story",
+						"start-day", "start-night", "story-day", "story-night", "error",
 						"story-accusation", "execution-poll", "story-execution", "story-ghostpoll", "story-ghost",
 						"murder-ghost", "murder-complete", "murder-poll",
-						"dream-complete", "dream-color", "random-text", "random-buttons", 
-						"decision-waiting", "decision-complete", "trigger-wake", "trigger-sleep", "end-good", "end-evil"].indexOf(type) !== -1) {
+						"dream-complete", "dream-color",
+						"random-text", "random-buttons",
+						"decision-waiting", "decision-complete",
+						"end-good", "end-evil"].indexOf(type) !== -1) {
 						scrollToNewest("events")
 					}
 
@@ -560,11 +563,10 @@
 
 	/* enableEvent */
 		function enableEvent(id) {
-			var event   = document.getElementById(id)
+			var event = document.getElementById(id)
 
 			if (event) {
-				event.setAttribute("disabled",false)
-				event.disabled = false
+				event.removeAttribute("disabled")
 				
 				var inputs  = Array.prototype.slice.call(event.querySelectorAll("input[type='text']"))
 				var selects = Array.prototype.slice.call(event.querySelectorAll("select"))
@@ -576,10 +578,8 @@
 				if (buttons) { array = array.concat(buttons) }
 
 				for (var a in array) {
-					array[a].setAttribute("disabled",false)
-					array[a].setAttribute("selected",false)
-					array[a].disabled = false
-					array[a].selected = false
+					array[a].removeAttribute("disabled")
+					array[a].removeAttribute("selected")
 				}
 			}
 		}

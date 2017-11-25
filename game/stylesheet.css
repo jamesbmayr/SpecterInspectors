@@ -446,7 +446,7 @@
 			box-shadow: 0px 0px 80px black inset;
 		}
 
-		.event.force-night[disabled]:not([disabled="false"]), .event.force-day[disabled]:not([disabled="false"]) {
+		.event.force-night[disabled], .event.force-day[disabled] {
 			display: none;
 		}
 

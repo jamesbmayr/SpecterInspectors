@@ -351,7 +351,11 @@
 							break
 
 							case "start-night":
-								event.text = "Every night, the killers can (unanimously) select one person to murder - but dead players come back as ghosts! These ghosts - including " + request.game.flavor.ghost + " - can send dreams to living players, providing clues to help find the killers."
+								event.text = "Every night, the killers can (unanimously) select one person to murder - but dead players come back as ghosts! These ghosts - including <span class='special-text'>" + request.game.flavor.ghost + "</span> - can send dreams to living players, providing clues to help find the killers."
+							break
+
+							case "start-morning":
+								event.text = "Each morning, the living will learn who's still alive - and who died in the night. <br><br>They can also choose to share their dreams - some of them clues from ghosts like <span class='special-text'>" + request.game.flavor.ghost + "</span>, some of them random nonsense. What did you dream about?"
 							break
 
 						// morning
@@ -490,7 +494,7 @@
 							break
 
 							case "special-necromancer":
-								event.text = main.chooseRandom(["Chanting the mystical, ancient words, you bring to life those who have died this night: <span class='special-text'>" + data.names.join(" & ") + "</span>.", "You sense that <span class='special-text'>" + data.names.join(" & ") + "</span>. was slain in the darkness - but through the power of the spirits, you bring air back into their lungs that they may breathe again.", "Nope. Not another murder. Not <span class='special-text'>" + data.names.join(" & ") + "</span>. Not as long as you can bring people back to life.", "When the spell is complete, the dead <span class='special-text'>" + data.names.join(" & ") + "</span> will walk again - without any knowledge of their passing onto the other side and back.", "You are a powerful sorcerer, using magic beyond all human understanding to resurrect all those who have died in the last few hours: <span class='special-text'>" + data.names.join(" & ") + "</span>.", "Hey, it worked! The dead person isn't dead anymore! Hooray for <span class='special-text'>" + data.names.join(" & ") + "</span>.", "With all sorts of whooshing sounds and flickery candles and stuff, you pull off a cool party trick - bringing a dead person back to life: <span class='special-text'>" + data.names.join(" & ") + "</span>.", "You weren't fast enough to resurrect " + request.game.flavor.ghost + ", but you have successfully brought back <span class='special-text'>" + data.names.join(" & ") + "</span>."])
+								event.text = main.chooseRandom(["Chanting the mystical, ancient words, <span class='special-text'>" + data.necromancer + "</span> the <span class='special-text'>necromancer</span> brings to life those who have died this night: <span class='special-text'>" + data.names.join(" & ") + "</span>.", "Well, <span class='special-text'>" + data.names.join(" & ") + "</span>. was slain in the darkness - but through the power of the spirits, <span class='special-text'>" + data.necromancer + "</span> the <span class='special-text'>necromancer</span> brings air back into their lungs, that they may breathe again.", "Nope. Not another murder. Not <span class='special-text'>" + data.names.join(" & ") + "</span>. Not as long as <span class='special-text'>" + data.necromancer + "</span> the <span class='special-text'>necromancer</span> can bring people back to life.", "When the spell is complete, the dead <span class='special-text'>" + data.names.join(" & ") + "</span> will walk again - thanks to the magic of <span class='special-text'>" + data.necromancer + "</span> the <span class='special-text'>necromancer</span>.", "<span class='special-text'>" + data.necromancer + "</span> is a powerful <span class='special-text'>necromancer</span>, using magic beyond all human understanding to resurrect those who have died tonight: <span class='special-text'>" + data.names.join(" & ") + "</span>.", "Hey, it worked! Thanks to the <span class='special-text'>necromancer</span>, <span class='special-text'>" + data.necromancer + "</span>, The dead person isn't dead anymore! Hooray for <span class='special-text'>" + data.names.join(" & ") + "</span>.", "With all sorts of whooshing sounds and flickery candles and stuff, <span class='special-text'>" + data.necromancer + "</span> the <span class='special-text'>necromancer</span> pulls off a pretty cool party trick - bringing a dead person back to life: <span class='special-text'>" + data.names.join(" & ") + "</span>.", "The <span class='special-text'>necromancer</span>, <span class='special-text'>" + data.necromancer + "</span>, wasn't fast enough to resurrect " + request.game.flavor.ghost + ", but has successfully brought back <span class='special-text'>" + data.names.join(" & ") + "</span>."])
 							break
 
 							case "special-obscurer":
@@ -555,7 +559,7 @@
 							break
 
 							case "setup-pants":
-								event.text = main.chooseRandom(["We'll also need to know your pants color.", "And what about your pants?", "Trust me, this is important: what color are your pants?", "Great. And can you tell me what color pants you've got?", "Now I'm gonna need to get the color of your pants."]) + " Which of these is closest?"
+								event.text = main.chooseRandom(["We'll also need to know your pants / dress color.", "And what about your pants / dress?", "Trust me, this is important: what color are your pants / dress?", "Great. And can you tell me what color pants / dress you've got?", "Now I'm gonna need to get the color of your pants / dress."]) + " Which of these is closest?"
 								event.input = "select"
 								event.options = ["red","green","blue","white","black"]
 							break
@@ -1036,14 +1040,10 @@
 							var availableEvil = []
 							if (players.length >= 5) {
 								availableEvil.push("dreamsnatcher")
-							}
-							if (players.length >= 7) {
 								availableEvil.push("obscurer")
 							}
-							if (players.length >= 9) {
+							if (players.length >= 8) {
 								availableEvil.push("cheater")
-							}
-							if (players.length >= 11) {
 								availableEvil.push("spellcaster")
 							}
 
@@ -1063,27 +1063,29 @@
 					// good
 						// get list
 							var availableGood = []
-							roles.push(main.chooseRandom(["necromancer", "immortal", "illusionist"]))
+							roles.push(main.chooseRandom(["necromancer", "immortal", "illusionist", "watchkeeper"]))
 
 							if (players.length >= 5) {
-								availableGood.push("necromancer")
 								availableGood.push("illusionist")
-								availableGood.push("augur")
 								availableGood.push("clairvoyant")
 								availableGood.push("medium")
 								availableGood.push("seer")
-							}
-							if (players.length >= 7) {
-								availableGood.push("immortal")
-								availableGood.push("insomniac")
 								availableGood.push("psychic")
 							}
-							if (players.length >= 9) {
-								availableGood.push("empath")
+							if (players.length >= 6) {
+								availableGood.push("augur")
+								availableGood.push("insomniac")
+							}
+							if (players.length >= 7) {
+								availableGood.push("insomniac")
 								availableGood.push("telepath")
 								availableGood.push("telepath")
 							}
-							if (players.length >= 11) {
+							if (players.length >= 8) {
+								availableGood.push("immortal")
+								availableGood.push("empath")
+							}
+							if (players.length >= 10) {
 								roles.push("detective")
 								roles.push("watchkeeper")
 
@@ -1314,10 +1316,10 @@
 										killedNames.push(request.game.players[killed[k]].name)
 									}
 									
-									var necromancerEvent = createStaticEvent(request, {type: "special-necromancer", viewers: [necromancer], names: killedNames})
+									var necromancerEvent = createStaticEvent(request, {type: "special-necromancer", viewers: killed.concat(necromancer), names: killedNames, necromancer: request.game.players[necromancer].name})
 									set["events." + necromancerEvent.id] = necromancerEvent
 
-									if (necromancer == request.session.id) {
+									if ((necromancer == request.session.id) || (killed.indexOf(request.session.id) !== -1)) {
 										myEvents.push(necromancerEvent)
 									}
 
@@ -1421,6 +1423,13 @@
 
 						// dreams (subsequent days)
 							else if (request.game.state.day > 1) {
+								// second day only
+									if (request.game.state.day == 2) {
+										var secondDayEvent = createStaticEvent(request, {type: "start-morning"})
+										set ["events." + secondDayEvent.id] = secondDayEvent
+										myEvents.push(secondDayEvent)
+									}
+
 								// ai dream
 									var sleepers = players.filter(function(s) {
 										return (request.game.players[s].status.alive && (killed.indexOf(s) == -1) && (s !== insomniac)) // special-insomniac
@@ -2010,7 +2019,7 @@
 								set["events." + executionEvent.id] = executionEvent
 								myEvents.push(executionEvent)
 
-								var ghostEvent = createStaticEvent(request, {type: "story-ghost", viewers: [target]})
+								var ghostEvent = createStaticEvent(request, {type: "story-ghost", viewers: [target], name: "the people"})
 								set["events." + ghostEvent.id] = ghostEvent
 								if (target == request.session.id) {
 									myEvents.push(ghostEvent)
