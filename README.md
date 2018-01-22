@@ -75,7 +75,7 @@ a game of ghosts and guesses: http://www.specterinspectors.com
 
 • *illusionist*: good, not magic; escapes from murder on first attempt
 
-• *necromancer*: good, magic; immediately resurrects murdered players every night
+• *healer*: good, magic; immediately resurrects murdered players every night
 
 • *augur*: good, magic; learns allegiance of each executed player
 
@@ -108,7 +108,7 @@ a game of ghosts and guesses: http://www.specterinspectors.com
 
 • *cheater*: evil, not magic; one random vote is switched to match this player's during each poll
 
-• *spellcaster*: evil, magic; prevents all other magic abilities from working
+• *spellcaster*: evil, magic; unknown to player ghosts
 
 
 

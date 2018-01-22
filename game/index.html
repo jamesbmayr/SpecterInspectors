@@ -18,8 +18,55 @@
 		<div id="container">
 			<div id="notes" class="<script node>if (!request.game.state.start || !player) { 'invisible' }</script>node>">
 				<div class="content">
-					<div class="header">Notes</div>
+					<div id="notes-header" class="header">Notes</div>
 					<textarea id="notes-input" placeholder="add your notes here" rows="5" value="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><script node>player ? player.notes : ""</script>node></textarea>
+					<div id="facts">
+						<div class="header">Facts</div>
+						<div class="content">
+							<script node>
+								if (request.game.state.start && player) {
+									var roles = []
+									var playersBlock = "<div id='facts-players'>"
+									var players = Object.keys(request.game.players)
+									
+									for (var p in players) {
+										var player = request.game.players[players[p]]
+										playersBlock += "<span class='special-text'>" + player.name + "</span> : <span class='special-text " + player.colors.shirt + "'>" + player.colors.shirt + "</span> & <span class='special-text " + player.colors.pants + "'>" + player.colors.pants + "</span><br>"
+
+										roles.push(player.status.role)
+									}
+
+									playersBlock += "</div>"
+									playersBlock || ""
+								}
+								else {
+									"<div id='facts-players'></div>"
+								}
+							</script>node><script node>
+								if (request.game.state.start && player) {
+									roles = sortRandom(roles) || []
+									var rolesBlock = "<br><div id='facts-roles'>"
+									
+									for (var r in roles) {
+										if (["killer", "deceptor", "obscurer", "dreamsnatcher", "cheater"].indexOf(roles[r]) !== -1) {
+											var color = "red"
+										}
+										else {
+											var color = "blue"
+										}
+							
+										rolesBlock += "<details><summary class='special-text " + color + "'>" + roles[r] + "</summary><p>" + game.getRoleDescription(roles[r], true) + "</p></details>"
+									}
+
+									rolesBlock += "</div><br><br><br>"
+									rolesBlock || ""
+								}
+								else {
+									"<br><div id='facts-roles'></div><br><br><br>"
+								}
+							</script>node>
+						</div>
+					</div>
 				</div>
 				<button value="left" class="slideContainer">&#8594;</button>
 				<button value="right" class="slideContainer" >&#8592;<br><br>&#8592;<br><br>&#8592;</button>

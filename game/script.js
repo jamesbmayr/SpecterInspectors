@@ -470,6 +470,15 @@
 					}, 100)
 
 				// special events
+					// add facts on start-players
+						console.log("here")
+						if (["start-players"].indexOf(type) !== -1) {
+							console.log("here")
+							console.log(JSON.stringify(event))
+							document.getElementById("facts-players").innerHTML = event.players.join("<br>") + "<br>"
+							document.getElementById("facts-roles"  ).innerHTML = event.roles.join("")
+						}
+
 					// animate on setup, start, execution & murder, end
 						if (["setup-name", "start-story", "story-execution", "story-murder", "end-good", "end-evil"].indexOf(type) !== -1) {
 							buildGhosts(5, false)

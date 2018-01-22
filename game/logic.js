@@ -119,9 +119,6 @@
 						else if (games[0].players[request.session.id].status.alive && (games[0].players[request.session.id].status.role == "telepath") && games[0].state.night) {
 							callback({success: false, message: "Telepaths can only communicate during the day."})
 						}
-						else if (games[0].players[request.session.id].status.alive && (games[0].players[request.session.id].status.role == "telepath") && Object.keys(games[0].players).filter(function(p) { return (games[0].players[p].status.role == "spellcaster" && games[0].players[p].status.alive) }).length) {
-							callback({success: false, message: "A spellcaster is interrupting your telepathy."})
-						}
 						else {
 							request.game = games[0]
 							var player = request.game.players[request.session.id]
@@ -331,7 +328,7 @@
 							break
 
 							case "start-players":
-								event.text = "Here are all the suspects: <br>" + main.sortRandom(data.players).join("<br>") + "<br><br>And here are all the roles: <br>" + main.sortRandom(data.roles).join(" ")
+								event.text = "Here are all the suspects: <br>" + data.players.join("<br>") + "<br><br>And here are all the roles: <br>" + data.roles.join(" ")
 							break
 
 							case "start-notes":
@@ -414,7 +411,7 @@
 							break
 
 							case "murder-ghost":
-								event.text = main.chooseRandom(["Using your ethereal hearing, you learn the murderers are considering killing <span class='special-text'>" + data.target + "</span>.", "As a ghost, you can listen in on all kinds of conversations. Like the one about possibly murdering <span class='special-text'>" + data.target + "</span>.", "Your ghostly senses suggest that <span class='special-text'>" + data.target + "</span> might be the next victim.", "One perk of being dead? You know what the living are up to - like discussing the murder of <span class='special-text'>" + data.target + "</span>.", "The spectral plane reveals the murderers' next possible victim: <span class='special-text'>" + data.target + "</span>.", "Floating between the walls, you see that the killers are plotting the murder of <span class='special-text'>" + data.target + "</span> next.", "As you hover in eternal purgatory, you pick up on a fun fact: the killers want to go after <span class='special-text'>" + data.target + "</span> now.", "Looks like <span class='special-text'>" + data.target + "</span> might be joining you in the afterlife if the murderers all agree.", "Things are looking dire for <span class='special-text'>" + data.target + "</span>, at least as far as those ghostly vibes are going.", "You begin to wonder what it would be like for <span class='special-text'>" + data.target + "</span> to join you as a spirit - you know, if the killers go through with it."])
+								event.text = main.chooseRandom(["Using your ethereal hearing, you learn that <span class='special-text'>" + data.killer + "</span> is considering killing <span class='special-text'>" + data.target + "</span>.", "As a ghost, you can listen in on all kinds of conversations. Like <span class='special-text'>" + data.killer + "</span>'s suggestion to murder <span class='special-text'>" + data.target + "</span>.", "Your ghostly senses suggest that <span class='special-text'>" + data.target + "</span> might be the next victim, courtesy of <span class='special-text'>" + data.killer + "</span>.", "One perk of being dead? You know what the living are up to - like <span class='special-text'>" + data.killer + "</span> discussing the murder of <span class='special-text'>" + data.target + "</span>.", "The spectral plane reveals <span class='special-text'>" + data.killer + "</span>'s next possible victim: <span class='special-text'>" + data.target + "</span>.", "Floating between the walls, you see that <span class='special-text'>" + data.killer + "</span> is plotting the murder of <span class='special-text'>" + data.target + "</span> next.", "As you hover in eternal purgatory, you pick up on a fun fact: <span class='special-text'>" + data.killer + "</span> wants to go and murder <span class='special-text'>" + data.target + "</span> now.", "Looks like <span class='special-text'>" + data.target + "</span> might be joining you in the afterlife if the murderers all agree with <span class='special-text'>" + data.killer + "</span>.", "Things are looking dire for <span class='special-text'>" + data.target + "</span>, at least as far as those ghostly vibes are going - <span class='special-text'>" + data.killer + "</span> wants 'em dead@", "You begin to wonder what it would be like for <span class='special-text'>" + data.target + "</span> to join you as a spirit - you know, if <span class='special-text'>" + data.killer + "</span> goes through with it."])
 							break
 
 							case "random-why":
@@ -493,16 +490,12 @@
 								event.text = main.chooseRandom(["You did some digging, and came up with this: <span class='special-text'>" + data.name + "</span> is <span class='special-text'>" + data.team + "</span>.", "Excellent detective work, you think to yourself. Yeah - <span class='special-text'>" + data.name + "</span> is definitely <span class='special-text'>" + data.team + "</span>.", "Based on what you've observed - and your years of police training - you've figured out that <span class='special-text'>" + data.name + "</span> is most certainly on the <span class='special-text'>" + data.team + "</span> team.", "The skills you picked up at the academy have served you well: <span class='special-text'>" + data.name + "</span> is one of the <span class='special-text'>" + data.team + "</span> folks.", "How do you know <span class='special-text'>" + data.name + "</span> is <span class='special-text'>" + data.team + "</span>? Simple. You're good at what you do.", "Piecing the clues together, you conclude that <span class='special-text'>" + data.name + "</span> is <span class='special-text'>" + data.team + "</span> - for sure.", "Is <span class='special-text'>" + data.name + "</span> with the <span class='special-text'>" + data.team + "</span>team? Are you a fantastic detective who stops at nothing to uncover the truth? ...Yes. The answer is yes.", "Pretty opened and closed this time around: <span class='special-text'>" + data.name + "</span> is definitely <span class='special-text'>" + data.team + "</span>."])
 							break
 
-							case "special-necromancer":
-								event.text = main.chooseRandom(["Chanting the mystical, ancient words, <span class='special-text'>" + data.necromancer + "</span> the <span class='special-text'>necromancer</span> brings to life those who have died this night: <span class='special-text'>" + data.names.join(" & ") + "</span>.", "Well, <span class='special-text'>" + data.names.join(" & ") + "</span>. was slain in the darkness - but through the power of the spirits, <span class='special-text'>" + data.necromancer + "</span> the <span class='special-text'>necromancer</span> brings air back into their lungs, that they may breathe again.", "Nope. Not another murder. Not <span class='special-text'>" + data.names.join(" & ") + "</span>. Not as long as <span class='special-text'>" + data.necromancer + "</span> the <span class='special-text'>necromancer</span> can bring people back to life.", "When the spell is complete, the dead <span class='special-text'>" + data.names.join(" & ") + "</span> will walk again - thanks to the magic of <span class='special-text'>" + data.necromancer + "</span> the <span class='special-text'>necromancer</span>.", "<span class='special-text'>" + data.necromancer + "</span> is a powerful <span class='special-text'>necromancer</span>, using magic beyond all human understanding to resurrect those who have died tonight: <span class='special-text'>" + data.names.join(" & ") + "</span>.", "Hey, it worked! Thanks to the <span class='special-text'>necromancer</span>, <span class='special-text'>" + data.necromancer + "</span>, The dead person isn't dead anymore! Hooray for <span class='special-text'>" + data.names.join(" & ") + "</span>.", "With all sorts of whooshing sounds and flickery candles and stuff, <span class='special-text'>" + data.necromancer + "</span> the <span class='special-text'>necromancer</span> pulls off a pretty cool party trick - bringing a dead person back to life: <span class='special-text'>" + data.names.join(" & ") + "</span>.", "The <span class='special-text'>necromancer</span>, <span class='special-text'>" + data.necromancer + "</span>, wasn't fast enough to resurrect " + request.game.flavor.ghost + ", but has successfully brought back <span class='special-text'>" + data.names.join(" & ") + "</span>."])
+							case "special-healer":
+								event.text = main.chooseRandom(["Chanting the mystical, ancient words, <span class='special-text'>" + data.healer + "</span> the <span class='special-text'>healer</span> brings to life those who have died this night: <span class='special-text'>" + data.names.join(" & ") + "</span>.", "Well, <span class='special-text'>" + data.names.join(" & ") + "</span>. was slain in the darkness - but through the power of the spirits, <span class='special-text'>" + data.healer + "</span> the <span class='special-text'>healer</span> brings air back into their lungs, that they may breathe again.", "Nope. Not another murder. Not <span class='special-text'>" + data.names.join(" & ") + "</span>. Not as long as <span class='special-text'>" + data.healer + "</span> the <span class='special-text'>healer</span> can bring people back to life.", "When the spell is complete, the dead <span class='special-text'>" + data.names.join(" & ") + "</span> will walk again - thanks to the magic of <span class='special-text'>" + data.healer + "</span> the <span class='special-text'>healer</span>.", "<span class='special-text'>" + data.healer + "</span> is a powerful <span class='special-text'>healer</span>, using magic beyond all human understanding to resurrect those who have died tonight: <span class='special-text'>" + data.names.join(" & ") + "</span>.", "Hey, it worked! Thanks to the <span class='special-text'>healer</span>, <span class='special-text'>" + data.healer + "</span>, The dead person isn't dead anymore! Hooray for <span class='special-text'>" + data.names.join(" & ") + "</span>.", "With all sorts of whooshing sounds and flickery candles and stuff, <span class='special-text'>" + data.healer + "</span> the <span class='special-text'>healer</span> pulls off a pretty cool party trick - bringing a dead person back to life: <span class='special-text'>" + data.names.join(" & ") + "</span>.", "The <span class='special-text'>healer</span>, <span class='special-text'>" + data.healer + "</span>, wasn't fast enough to resurrect " + request.game.flavor.ghost + ", but has successfully brought back <span class='special-text'>" + data.names.join(" & ") + "</span>."])
 							break
 
 							case "special-obscurer":
 								event.text = main.chooseRandom(["Some strange magic is obscuring the names - you can't tell who voted how!", "Evil magic blinds you to the identities of the voters.", "Until the obscurer is dead, you won't know which people are voting yes and no.", "Mystery surrounds these votes - the work of the magical obscurer!", "The names cannot be known - they are... obscured."])
-							break
-
-							case "special-spellcaster":
-								event.text = "The spellcaster is blocking all magical abilities."
 							break
 
 						// other
@@ -559,7 +552,7 @@
 							break
 
 							case "setup-pants":
-								event.text = main.chooseRandom(["We'll also need to know your pants / dress color.", "And what about your pants / dress?", "Trust me, this is important: what color are your pants / dress?", "Great. And can you tell me what color pants / dress you've got?", "Now I'm gonna need to get the color of your pants / dress."]) + " Which of these is closest?"
+								event.text = main.chooseRandom(["We'll also need to know your pants / skirt color.", "And what about your pants / skirt?", "Trust me, this is important: what color are your pants / skirt?", "Great. And can you tell me what color pants / skirt you've got?", "Now I'm gonna need to get the color of your pants / skirt."]) + " Which of these is closest?"
 								event.input = "select"
 								event.options = ["red","green","blue","white","black"]
 							break
@@ -722,9 +715,9 @@
 				// role descriptions		
 					switch (role) {
 						// evil magic
-							case "spellcaster":
-								var long = "You are <span class='special-text red'>evil</span>. You are <span class='special-text purple'>magic</span>. <br>As long as you're alive, no one's magic abilities will work! Mwuahahahahaha!"
-								var short = "evil, magic; prevents all other magic abilities from working"
+							case "deceptor":
+								var long = "You are <span class='special-text red'>evil</span>. You are <span class='special-text purple'>magic</span>. <br>Ghosts can see who proposes murders - including their own. But they can't see you!"
+								var short = "evil, magic; invisible to ghosts"
 							break
 
 							case "obscurer":
@@ -760,7 +753,7 @@
 							break
 
 							case "clairvoyant":
-								var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>And you can sense magic around people - but only once their souls have left their bodies. That means you can determine if the recently deceased have special magical abilities. <br>(telepath, augur, medium, seer, psychic, empath, immortal, necromancer, spellcaster, obscurer, dreamsnatcher)"
+								var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>And you can sense magic around people - but only once their souls have left their bodies. That means you can determine if the recently deceased have special magical abilities. <br>(telepath, augur, medium, seer, psychic, empath, immortal, healer, deceptor, obscurer, dreamsnatcher)"
 								var short = "good, magic; learns if a player was magic (upon execution or murder)"
 							break
 
@@ -789,7 +782,7 @@
 								var short = "good, magic; cannot be murdered at night"
 							break
 
-							case "necromancer":
+							case "healer":
 								var long = "You are <span class='special-text blue'>good</span>. You are <span class='special-text purple'>magic</span>. <br>As long as you're alive, you can bring back the dead - and that means anyone who's murdered at night will wake up all the same the next morning."
 								var short = "good, magic; immediately resurrects murdered players every night"
 							break
@@ -1044,7 +1037,7 @@
 							}
 							if (players.length >= 8) {
 								availableEvil.push("cheater")
-								availableEvil.push("spellcaster")
+								availableEvil.push("deceptor")
 							}
 
 						// generate specials
@@ -1063,7 +1056,7 @@
 					// good
 						// get list
 							var availableGood = []
-							roles.push(main.chooseRandom(["necromancer", "immortal", "illusionist", "watchkeeper"]))
+							roles.push(main.chooseRandom(["healer", "immortal", "illusionist", "watchkeeper"]))
 
 							if (players.length >= 5) {
 								availableGood.push("illusionist")
@@ -1089,8 +1082,8 @@
 								roles.push("detective")
 								roles.push("watchkeeper")
 
-								availableGood = availableGood.filter(function (a) { return a !== "necromancer" })
-								roles = roles.filter(function (r) { return r !== "necromancer" })
+								availableGood = availableGood.filter(function (a) { return a !== "healer" })
+								roles = roles.filter(function (r) { return r !== "healer" })
 							}
 
 						// generate specials
@@ -1135,12 +1128,13 @@
 						var infoArray = []
 						for (var p in players) {
 							var player = request.game.players[players[p]]
-							infoArray.push("<span class='special-text'>" + player.name + "</span> : <span class='special-text " + player.colors.shirt + "'>" + player.colors.shirt + "</span> shirt, <span class='special-text " + player.colors.pants + "'>" + player.colors.pants + "</span> pants... ")
+							infoArray.push("<span class='special-text'>" + player.name + "</span> : <span class='special-text " + player.colors.shirt + "'>" + player.colors.shirt + "</span> & <span class='special-text " + player.colors.pants + "'>" + player.colors.pants + "</span>")
 						}
+						infoArray = main.sortRandom(infoArray)
 
 						var rolesArray = []
 						for (var r in roles)  {
-							if (["killer", "spellcaster", "obscurer", "dreamsnatcher", "cheater"].indexOf(roles[r]) !== -1) {
+							if (["killer", "deceptor", "obscurer", "dreamsnatcher", "cheater"].indexOf(roles[r]) !== -1) {
 								var color = "red"
 							}
 							else {
@@ -1149,8 +1143,11 @@
 							
 							rolesArray.push("<details><summary class='special-text " + color + "'>" + roles[r] + "</summary><p>" + getRoleDescription(roles[r], true) + "</p></details>")
 						}
+						rolesArray = main.sortRandom(rolesArray)
 
 						var playersEvent = createStaticEvent(request, {type: "start-players", players: infoArray, roles: rolesArray})
+							playersEvent.players = infoArray
+							playersEvent.roles = rolesArray
 						set["events." + playersEvent.id] = playersEvent
 						myEvents.push(playersEvent)
 
@@ -1169,11 +1166,11 @@
 							var roleEvent = createActionEvent(request, {type: "start-role", viewers: [players[p]], doers: [players[p]], role: roles[p], queue: queueEvent.id})
 							set["events." + roleEvent.id] = roleEvent
 
-							if (["killer", "spellcaster", "obscurer", "dreamsnatcher", "cheater"].indexOf(roles[p]) !== -1) {
+							if (["killer", "deceptor", "obscurer", "dreamsnatcher", "cheater"].indexOf(roles[p]) !== -1) {
 								set["players." + players[p] + ".status.good"] = request.game.players[players[p]].status.good = false
 							}
 
-							if (["telepath", "augur", "clairvoyant", "medium", "psychic", "seer", "necromancer", "empath", "immortal", "spellcaster", "obscurer", "dreamcatcher"].indexOf(roles[p]) !== -1) {
+							if (["telepath", "augur", "clairvoyant", "medium", "psychic", "seer", "healer", "empath", "immortal", "deceptor", "obscurer", "dreamcatcher"].indexOf(roles[p]) !== -1) {
 								set["players." + players[p] + ".status.magic"] = request.game.players[players[p]].status.magic = true
 							}
 
@@ -1243,12 +1240,12 @@
 
 						// preventing death
 							// specials
-								var spellcaster = players.find(function (p) { // special-spellcaster
-									return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "spellcaster"))
+								var deceptor = players.find(function (p) { // special-deceptor
+									return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "deceptor"))
 								}) || null
 
-								var necromancer = players.find(function (p) { // special-necromancer
-									return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "necromancer"))
+								var healer = players.find(function (p) { // special-healer
+									return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "healer"))
 								}) || null
 
 								var watchkeeper = players.find(function (p) { // special-watchkeeper
@@ -1260,7 +1257,7 @@
 								}) || null
 
 								var immortal = players.find(function (p) { // special-immortal
-									return (request.game.players[p].status.alive && !spellcaster && (request.game.players[p].status.role == "immortal"))
+									return (request.game.players[p].status.alive && (request.game.players[p].status.role == "immortal"))
 								}) || null
 
 								var killers = players.filter(function (p) {
@@ -1309,18 +1306,18 @@
 									killed = killed.filter(function (k) { return k !== illusionist })
 								}
 
-							// special-necromancer
-								if (necromancer && killed.length) {
+							// special-healer
+								if (healer && killed.length) {
 									var killedNames = []
 									for (var k in killed) {
 										killedNames.push(request.game.players[killed[k]].name)
 									}
 									
-									var necromancerEvent = createStaticEvent(request, {type: "special-necromancer", viewers: killed.concat(necromancer), names: killedNames, necromancer: request.game.players[necromancer].name})
-									set["events." + necromancerEvent.id] = necromancerEvent
+									var healerEvent = createStaticEvent(request, {type: "special-healer", viewers: killed.concat(healer), names: killedNames, healer: request.game.players[healer].name})
+									set["events." + healerEvent.id] = healerEvent
 
-									if ((necromancer == request.session.id) || (killed.indexOf(request.session.id) !== -1)) {
-										myEvents.push(necromancerEvent)
+									if ((healer == request.session.id) || (killed.indexOf(request.session.id) !== -1)) {
+										myEvents.push(healerEvent)
 									}
 
 									killed = []				
@@ -1328,7 +1325,7 @@
 
 						// more specials
 							var seer = players.find(function (p) { // special-seer
-								return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "seer"))
+								return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "seer"))
 							}) || null
 
 							var insomniac = players.find(function (p) { // special-insomniac
@@ -1336,11 +1333,11 @@
 							}) || null
 
 							var medium = players.find(function (p) { // special-medium
-								return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "medium"))
+								return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "medium"))
 							}) || null
 
 							var clairvoyant = players.find(function (p) { // special-clairvoyant
-								return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "clairvoyant"))
+								return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "clairvoyant"))
 							}) || null
 
 							var detective = players.find(function (p) { // special-detective
@@ -1348,11 +1345,11 @@
 							}) || null
 
 							var dreamsnatcher = players.find(function (p) { // special-dreamsnatcher
-								return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "dreamsnatcher"))
+								return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "dreamsnatcher"))
 							}) || null
 
 							var telepaths = players.filter(function (p) { // special-telepath
-								return (request.game.players[p].status.alive && !spellcaster && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "telepath"))
+								return (request.game.players[p].status.alive && (killed.indexOf(p) == -1) && (request.game.players[p].status.role == "telepath"))
 							}) || []
 
 						// special-detective
@@ -1401,13 +1398,6 @@
 								
 								if (evil.indexOf(request.session.id) !== -1) {
 									myEvents.push(evilEvent)
-								}
-						
-							// special-spellcaster
-								if (spellcaster) {
-									var spellcasterEvent = createStaticEvent(request, {type: "special-spellcaster"})
-									set["events." + spellcasterEvent.id] = spellcasterEvent
-									myEvents.push(spellcasterEvent)
 								}
 
 							// special-telepath
@@ -1522,7 +1512,7 @@
 									set["events." + murderEvent.id] = murderEvent
 									myEvents.push(murderEvent)
 
-									var ghostEvent = createStaticEvent(request, {type: "story-ghost", viewers: [killed[k]], name: request.game.players[killer[0]].name})
+									var ghostEvent = createStaticEvent(request, {type: "story-ghost", viewers: [killed[k]], name: (killer[0] == deceptor ? "the deceptor" : request.game.players[killer[0]].name)})
 									set["events." + ghostEvent.id] = ghostEvent
 									if (killed[k] == request.session.id) {
 										myEvents.push(ghostEvent)
@@ -1818,12 +1808,12 @@
 								set["events." + request.event.id + ".doers"]  = request.event.doers  = []
 
 						// specials
-							var spellcaster = Object.keys(request.game.players).find(function (p) { // special-spellcaster
-								return (request.game.players[p].status.alive && (request.game.players[p].status.role == "spellcaster"))
+							var deceptor = Object.keys(request.game.players).find(function (p) { // special-deceptor
+								return (request.game.players[p].status.alive && (request.game.players[p].status.role == "deceptor"))
 							}) || null
 
 							var psychic = Object.keys(request.game.players).find(function (p) { // special-psychic
-								return (request.game.players[p].status.alive && !spellcaster && (request.game.players[p].status.role == "psychic"))
+								return (request.game.players[p].status.alive && (request.game.players[p].status.role == "psychic"))
 							}) || null
 
 						// create queue
@@ -1899,20 +1889,20 @@
 								set.updated = new Date().getTime()
 
 						// specials
-							var spellcaster = Object.keys(request.game.players).find(function (p) { // special-spellcaster
-								return (request.game.players[p].status.alive && (request.game.players[p].status.role == "spellcaster"))
+							var deceptor = Object.keys(request.game.players).find(function (p) { // special-deceptor
+								return (request.game.players[p].status.alive && (request.game.players[p].status.role == "deceptor"))
 							}) || null
 
 							var clairvoyant = Object.keys(request.game.players).find(function (p) { // special-clairvoyant
-								return (request.game.players[p].status.alive && !spellcaster && (p !== target) && (request.game.players[p].status.role == "clairvoyant"))
+								return (request.game.players[p].status.alive && (p !== target) && (request.game.players[p].status.role == "clairvoyant"))
 							}) || null
 
 							var augur = Object.keys(request.game.players).find(function (p) { // special-augur
-								return (request.game.players[p].status.alive && !spellcaster && (p !== target) && (request.game.players[p].status.role == "augur"))
+								return (request.game.players[p].status.alive && (p !== target) && (request.game.players[p].status.role == "augur"))
 							}) || null
 
 							var empath = Object.keys(request.game.players).find(function (p) { // special-empath
-								return (request.game.players[p].status.alive && !spellcaster && (p !== target) && (request.game.players[p].status.role == "empath"))
+								return (request.game.players[p].status.alive && (p !== target) && (request.game.players[p].status.role == "empath"))
 							}) || null
 
 							var cheater = Object.keys(request.game.players).find(function (p) { // special-cheater
@@ -1920,7 +1910,7 @@
 							}) || null
 
 							var obscurer = Object.keys(request.game.players).find(function (p) { // special-obscurer
-								return (request.game.players[p].status.alive && !spellcaster && (request.game.players[p].status.role == "obscurer"))
+								return (request.game.players[p].status.alive && (request.game.players[p].status.role == "obscurer"))
 							}) || null
 
 						// determine pro and anti
@@ -2129,7 +2119,11 @@
 						// specials
 							var insomniac = Object.keys(request.game.players).find(function (p) { // special-insomniac
 								return (request.game.players[p].status.alive && (request.game.players[p].status.role == "insomniac"))
-							}) || null					
+							}) || null
+
+							var deceptor = Object.keys(request.game.players).find(function (p) { // special-insomniac
+								return (request.game.players[p].status.alive && (request.game.players[p].status.role == "deceptor"))
+							}) || null		
 
 						// create queue
 							var killerList = Object.keys(request.game.players).filter(function(p) { return ((!request.game.players[p].status.good) && (request.game.players[p].status.alive)) })
@@ -2149,7 +2143,7 @@
 						// create ghost event
 							var ghosts = Object.keys(request.game.players).filter(function (p) { return !request.game.players[p].status.alive }) || []
 							if (ghosts.length) {
-								var ghostEvent = createStaticEvent(request, {type: "murder-ghost", target: request.game.players[request.post.value].name, viewers: ghosts})
+								var ghostEvent = createStaticEvent(request, {type: "murder-ghost", killer: (deceptor == request.session.id ? "the deceptor" : request.game.players[request.session.id].name) , target: request.game.players[request.post.value].name, viewers: ghosts})
 								set["events." + ghostEvent.id] = ghostEvent
 							}
 

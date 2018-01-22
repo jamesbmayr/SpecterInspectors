@@ -99,14 +99,22 @@
 		}
 
 	/* notes-input */
+		#notes-header {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			width: calc(80vw - 20px);
+			height: 60px;
+		}
+
 		#notes-input {
 			position: absolute;
 			top: 80px;
 			left: 0px;
 			min-width: calc(80vw - 20px);
 			max-width: calc(80vw - 20px);
-			min-height: calc(100vh - 105px);
-			max-height: calc(100vh - 105px);
+			min-height: calc(40vh - 100px);
+			max-height: calc(40vh - 100px);
 			padding: 10px;
 			margin: 0px;
 			resize: none;
@@ -117,6 +125,36 @@
 
 		#notes.invisible .slideContainer {
 			display: none;
+		}
+
+	/* facts */
+		#facts {
+			position: absolute;
+			top: 40vh;
+			left: 0px;
+			height: calc(60vh - 20px);
+			padding: 10px;
+			margin: 0px;
+			width: calc(80vw - 20px);
+		}
+
+		#facts .header {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			width: calc(80vw - 20px);
+			height: 60px;
+		}
+
+		#facts .content {
+			position: absolute;
+			top: 80px;
+			left: 0px;
+			width: calc(80vw - 20px);
+			height: calc(60vh - 80px);
+			overflow-x: hidden;
+			overflow-y: scroll;
+			text-align: left;
 		}
 
 /*** chats ***/

@@ -4,6 +4,7 @@
 	var mongo    = require("mongodb").MongoClient
 	var database = "mongodb://" + getEnvironment("database_username") + ":" + getEnvironment("database_password") + getEnvironment("database_url")
 	module.exports = {}
+	var game     = require("../game/logic")
 
 /*** logs ***/
 	/* logError */
