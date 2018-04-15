@@ -9,7 +9,7 @@
 		function createGame(request, callback) {
 			try {
 				request.game = {
-					id: main.generateRandom(),
+					id: main.generateRandom("abcdefghijklmnopqrstuvwxyz"),
 					created: new Date().getTime(),
 					updated: new Date().getTime(),
 					state: {

@@ -131,6 +131,10 @@
 		function isBot(agent) {
 			try {
 				switch (true) {
+					case (typeof agent == "undefined" || !agent):
+						return "no-agent"
+					break
+					
 					case (agent.indexOf("Googlebot") !== -1):
 						return "Googlebot"
 					break
