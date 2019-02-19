@@ -11,7 +11,7 @@
 					callback({success: false, message: "That's not a valid fetch request..."})
 				}
 				else {
-					main.retrieveData("games", {$where: "this.id.substring(0,4) === '" + request.path[2].toLowerCase() + "'"}, {$multi: true}, function (games) {
+					main.retrieveData("games", {id: request.path[2].toLowerCase()}, {$multi: true}, function (games) {
 						if (!games) {
 							main.logError("unable to find game: " + request.path[2].toLowerCase())
 							callback({success: false, message: "This game cannot be found."})
@@ -96,7 +96,7 @@
 					callback({success: false, message: "No message was submitted."})
 				}
 				else {
-					main.retrieveData("games", {$where: "this.id.substring(0,4) === '" + request.path[2].toLowerCase() + "'"}, {$multi: true}, function (games) {
+					main.retrieveData("games", {id: request.path[2].toLowerCase()}, {$multi: true}, function (games) {
 						if (!games) {
 							main.logError("unable to find game: " + request.path[2].toLowerCase())
 							callback({success: false, message: "This game cannot be found."})
@@ -166,7 +166,7 @@
 					callback({success: false, message: "No notes were submitted."})
 				}
 				else {
-					main.retrieveData("games", {$where: "this.id.substring(0,4) === '" + request.path[2].toLowerCase() + "'"}, {$multi: true}, function (games) {
+					main.retrieveData("games", {id: request.path[2].toLowerCase()}, {$multi: true}, function (games) {
 						if (!games) {
 							main.logError("unable to find game: " + request.path[2].toLowerCase())
 							callback({success: false, message: "This game not found."})
@@ -209,7 +209,7 @@
 					callback({success: false, message: "No event response data was submitted."})
 				}
 				else {
-					main.retrieveData("games", {$where: "this.id.substring(0,4) === '" + request.path[2].toLowerCase() + "'"}, {$multi: true}, function (games) {
+					main.retrieveData("games", {id: request.path[2].toLowerCase()}, {$multi: true}, function (games) {
 						if (!games) {
 							main.logError("unable to find game: " + request.path[2].toLowerCase())
 							callback({success: false, message: "This game cannot be found."})
@@ -319,7 +319,7 @@
 					switch (data.type) {
 						// setup
 							case "setup-gamecode":
-								event.text = "Your friends can join using this code: <span class='special-text'>" + request.game.id.substring(0,4).toUpperCase() + "</span>..."
+								event.text = "Your friends can join using this code: <span class='special-text'>" + request.game.id.toUpperCase() + "</span>..."
 							break
 
 						// start

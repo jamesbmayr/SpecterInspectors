@@ -140,7 +140,7 @@
 								// game
 									case (/^\/game\/[0-9a-zA-Z_]*\/?$/).test(request.url):
 										try {
-											main.retrieveData("games", {$where: "this.id.substring(0,4) === '" + request.path[2].toLowerCase() + "'"}, {$multi: true}, function (games) {
+											main.retrieveData("games", {id: request.path[2].toLowerCase()}, {$multi: true}, function (games) {
 												if (!games) {
 													_302()
 												}

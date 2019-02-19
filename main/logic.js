@@ -37,9 +37,9 @@
 					var environment = {
 						port:              process.env.PORT,
 						domain:            process.env.DOMAIN,
-						database_username: process.env.MLABS_USERNAME,
-						database_password: process.env.MLABS_PASSWORD,
-						database_url:"@" + process.env.MLABS_URL
+						database_username: process.env.DB_USERNAME,
+						database_password: process.env.DB_PASSWORD,
+						database_url:"@" + process.env.DB_URL
 					}
 				}
 				else {
