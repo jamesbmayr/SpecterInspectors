@@ -457,7 +457,8 @@
 				var sort = options["$sort"] || {created: -1}
 				var limit = options["$limit"] || 100
 
-			mongo.connect(database, { useNewUrlParser: true }, function(error, db) {
+			mongo.connect(database, { useNewUrlParser: true }, function(error, client) {
+				var db = client.db("specterinspectors")
 				if (error) {
 					logError(error)
 					callback(null)
@@ -477,7 +478,7 @@
 							}
 							callback(resultArray)
 						}
-						db.close()
+						client.close()
 					})
 				}
 
@@ -495,7 +496,7 @@
 							}
 							callback(resultArray)
 						}
-						db.close()
+						client.close()
 					})
 				}
 
@@ -510,7 +511,7 @@
 						else {
 							callback(result)
 						}
-						db.close()
+						client.close()
 					})
 				}
 
@@ -528,7 +529,7 @@
 							}
 							callback(resultArray)
 						}
-						db.close()
+						client.close()
 					})
 				}
 
@@ -549,7 +550,8 @@
 				var sort = options["$sort"] || {created: -1}
 				var limit = options["$limit"] || 100
 
-			mongo.connect(database, { useNewUrlParser: true }, function(error, db) {
+			mongo.connect(database, { useNewUrlParser: true }, function(error, client) {
+				var db = client.db("specterinspectors")
 				if (error) {
 					logError(error)
 					callback(null)
@@ -566,7 +568,7 @@
 						else {
 							callback(result.nInserted)
 						}
-						db.close()
+						client.close()
 					})
 				}
 
@@ -581,7 +583,7 @@
 						else {
 							callback(result.value)
 						}
-						db.close()
+						client.close()
 					})
 				}
 
@@ -605,7 +607,7 @@
 									}
 									callback(resultArray)
 								}
-								db.close()
+								client.close()
 							})
 						}
 					})
@@ -624,7 +626,7 @@
 						else {
 							callback(result.nRemoved)
 						}
-						db.close()
+						client.close()
 					})
 				}
 
