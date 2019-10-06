@@ -1,6 +1,6 @@
 # Specter Inspectors
 
-a game of ghosts and guesses: http://www.specterinspectors.com
+a game of ghosts and guesses: http://specterinspectors.herokuapp.com
 
 <pre style='line-height: 0.5; text-align: center'>
       --------      
