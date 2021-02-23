@@ -11,7 +11,7 @@
   "author": "jamesbmayr",
   "license": "ISC",
   "engines": {
-    "node": "6.11.1"
+    "node": "12.18.4"
   },
   "dependencies": {
     "mongodb": "^3.1.13"
