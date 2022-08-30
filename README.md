@@ -1,6 +1,6 @@
 # Specter Inspectors
 
-a game of ghosts and guesses: http://specterinspectors.herokuapp.com
+a game of ghosts and guesses: https://jamesmayr.com/specterinspectors
 
 <pre style='line-height: 0.5; text-align: center'>
       --------      
@@ -25,7 +25,7 @@ a game of ghosts and guesses: http://specterinspectors.herokuapp.com
 
 • 5-25 players
 
-• 1 smartphone/computer each
+• 1 smartphone/computer each
 
 • 30-60 minutes
 
@@ -39,7 +39,7 @@ a game of ghosts and guesses: http://specterinspectors.herokuapp.com
 
 • Each player inputs a name and some clothing color info.
 
-• On launch, each player will be given a secret special role. (2/3 good, 1/3 evil) (1/2 of the good and 1/2 of the evil get special abilities) 
+• On launch, each player will be given a secret special role. (2/3 good, 1/3 evil) (1/2 of the good and 1/2 of the evil get special abilities) 
 
 
 
@@ -75,7 +75,7 @@ a game of ghosts and guesses: http://specterinspectors.herokuapp.com
 
 • *illusionist*: good, not magic; escapes from murder on first attempt
 
-• *healer*: good, magic; immediately resurrects murdered players every night
+• *healer*: good, magic; immediately resurrects murdered players every night
 
 • *augur*: good, magic; learns allegiance of each executed player
 
@@ -83,15 +83,15 @@ a game of ghosts and guesses: http://specterinspectors.herokuapp.com
 
 • *medium*: good, magic; sees name of ghost sending each dream received
 
-• *seer*: good, magic; sees all ghost dreams every night
+• *seer*: good, magic; sees all ghost dreams every night
 
-• *immortal*: good, magic; cannot be murdered at night
+• *immortal*: good, magic; cannot be murdered at night
 
-• *insomniac*: good, not magic; sees names of murder nomination targets, but cannot receive dreams
+• *insomniac*: good, not magic; sees names of murder nomination targets, but cannot receive dreams
 
-• *psychic*: good, magic; learns if allegiance of accused and accuser matches during each execution nomination
+• *psychic*: good, magic; learns if allegiance of accused and accuser matches during each execution nomination
 
-• *empath*: good, magic; one random vote is switched to match this player's during each poll
+• *empath*: good, magic; one random vote is switched to match this player's during each poll
 
 • *telepath*: good, magic; can chat with the other telepath during the day
 
@@ -100,11 +100,11 @@ a game of ghosts and guesses: http://specterinspectors.herokuapp.com
 • *detective*: good, not magic; learns allegiance of one random player every night
 
 
-• *killer*: evil, not magic; can chat with other evil players at night
+• *killer*: evil, not magic; can chat with other evil players at night
 
 • *dreamsnatcher*: evil, magic; sees all ghost dreams every night
 
-• *obscurer*: evil, magic; when poll results are revealed, names will be hidden
+• *obscurer*: evil, magic; when poll results are revealed, names will be hidden
 
 • *cheater*: evil, not magic; one random vote is switched to match this player's during each poll
 
@@ -114,9 +114,9 @@ a game of ghosts and guesses: http://specterinspectors.herokuapp.com
 
 ## Ending
 
-• *good*: all evil players are dead
+• *good*: all evil players are dead
 
-• *evil*: # evil players alive >= # good players alive
+• *evil*: # evil players alive >= # good players alive
 
 
 
